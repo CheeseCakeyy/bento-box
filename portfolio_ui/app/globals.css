@@ -30,6 +30,8 @@
   --ghost-strong: rgba(233, 233, 226, 0.18);
   --grid-line: rgba(233, 233, 226, 0.035);
   --theme-icon-filter: invert(1);
+  --accent-glow: transparent;
+  --accent-glow-opacity: 0;
   color-scheme: dark;
 }
 
@@ -46,7 +48,105 @@
   --ghost-strong: rgba(30, 30, 30, 0.14);
   --grid-line: rgba(30, 30, 30, 0.035);
   --theme-icon-filter: none;
+  --accent-glow: transparent;
+  --accent-glow-opacity: 0;
   color-scheme: light;
+}
+
+[data-theme="dark"][data-color-theme="red"] {
+  --background: oklch(0.0807 0.0331 29.23);
+  --panel: oklch(0 0 0);
+  --panel-raised: oklch(0.2187 0.0701 31.58);
+  --panel-border: oklch(0.6644 0.223 30.14 / 0.15);
+  --panel-shadow: oklch(0.4934 0.2025 29.23 / 0.2);
+  --text: oklch(0.6644 0.223 30.14);
+  --text-muted: oklch(0.49 0.163 30.14 / 0.62);
+  --chip: oklch(0.2187 0.0701 31.58);
+  --ghost: oklch(0.6644 0.223 30.14 / 0.1);
+  --ghost-strong: oklch(0.6644 0.223 30.14 / 0.18);
+  --grid-line: oklch(0.6644 0.223 30.14 / 0.08);
+  --accent-glow: oklch(0.6644 0.223 30.14);
+  --accent-glow-opacity: 0.1;
+}
+
+[data-theme="light"][data-color-theme="red"] {
+  --background: oklch(1 0 0);
+  --panel: oklch(1 0 0);
+  --panel-raised: oklch(0.9719 0.0153 48.56);
+  --panel-border: oklch(0.6517 0.2094 35.01 / 0.15);
+  --panel-shadow: oklch(0.6517 0.2094 35.01 / 0.12);
+  --text: oklch(0.6517 0.2094 35.01);
+  --text-muted: oklch(0.6517 0.2094 35.01 / 0.48);
+  --chip: oklch(0.9719 0.0153 48.56);
+  --ghost: oklch(0.6517 0.2094 35.01 / 0.08);
+  --ghost-strong: oklch(0.6517 0.2094 35.01 / 0.16);
+  --grid-line: oklch(0.6517 0.2094 35.01 / 0.07);
+  --accent-glow: oklch(0.6517 0.2094 35.01);
+  --accent-glow-opacity: 0.11;
+}
+
+[data-theme="dark"][data-color-theme="green"] {
+  --background: oklch(0.084 0.0286 142.5);
+  --panel: oklch(0 0 0);
+  --panel-raised: oklch(0.2315 0.038 145.55);
+  --panel-border: oklch(0.8167 0.0783 144.82 / 0.15);
+  --panel-shadow: oklch(0.5615 0.0844 144.35 / 0.2);
+  --text: oklch(0.8167 0.0783 144.82);
+  --text-muted: oklch(0.5967 0.0783 144.82 / 0.65);
+  --chip: oklch(0.2315 0.038 145.55);
+  --ghost: oklch(0.8167 0.0783 144.82 / 0.1);
+  --ghost-strong: oklch(0.8167 0.0783 144.82 / 0.18);
+  --grid-line: oklch(0.8167 0.0783 144.82 / 0.08);
+  --accent-glow: oklch(0.8167 0.0783 144.82);
+  --accent-glow-opacity: 0.09;
+}
+
+[data-theme="light"][data-color-theme="green"] {
+  --background: oklch(0.9777 0.0078 139.44);
+  --panel: oklch(1 0 0);
+  --panel-raised: oklch(0.9499 0.0237 145.39);
+  --panel-border: oklch(0.448 0.0861 144.43 / 0.15);
+  --panel-shadow: oklch(0.448 0.0861 144.43 / 0.12);
+  --text: oklch(0.448 0.0861 144.43);
+  --text-muted: oklch(0.448 0.0861 144.43 / 0.48);
+  --chip: oklch(0.9499 0.0237 145.39);
+  --ghost: oklch(0.448 0.0861 144.43 / 0.08);
+  --ghost-strong: oklch(0.448 0.0861 144.43 / 0.16);
+  --grid-line: oklch(0.448 0.0861 144.43 / 0.07);
+  --accent-glow: oklch(0.448 0.0861 144.43);
+  --accent-glow-opacity: 0.1;
+}
+
+[data-theme="dark"][data-color-theme="blue"] {
+  --background: oklch(0.1061 0.0428 281.41);
+  --panel: oklch(0 0 0);
+  --panel-raised: oklch(0.1978 0.0618 271.4);
+  --panel-border: oklch(0.6193 0.2045 267.08 / 0.15);
+  --panel-shadow: oklch(0.4104 0.2033 267.51 / 0.2);
+  --text: oklch(0.6193 0.2045 267.08);
+  --text-muted: oklch(0.49 0.1845 267.08 / 0.62);
+  --chip: oklch(0.1978 0.0618 271.4);
+  --ghost: oklch(0.6193 0.2045 267.08 / 0.1);
+  --ghost-strong: oklch(0.6193 0.2045 267.08 / 0.18);
+  --grid-line: oklch(0.6193 0.2045 267.08 / 0.08);
+  --accent-glow: oklch(0.6193 0.2045 267.08);
+  --accent-glow-opacity: 0.1;
+}
+
+[data-theme="light"][data-color-theme="blue"] {
+  --background: oklch(0.9883 0.0045 214.33);
+  --panel: oklch(1 0 0);
+  --panel-raised: oklch(0.9673 0.0153 269.99);
+  --panel-border: oklch(0.4628 0.3059 264.18 / 0.15);
+  --panel-shadow: oklch(0.4628 0.3059 264.18 / 0.12);
+  --text: oklch(0.4628 0.3059 264.18);
+  --text-muted: oklch(0.4628 0.3059 264.18 / 0.48);
+  --chip: oklch(0.9673 0.0153 269.99);
+  --ghost: oklch(0.4628 0.3059 264.18 / 0.08);
+  --ghost-strong: oklch(0.4628 0.3059 264.18 / 0.16);
+  --grid-line: oklch(0.4628 0.3059 264.18 / 0.07);
+  --accent-glow: oklch(0.4628 0.3059 264.18);
+  --accent-glow-opacity: 0.1;
 }
 
 * {
@@ -93,13 +193,31 @@ a:focus-visible {
 }
 
 .site-shell {
+  position: relative;
   min-height: 100vh;
   max-width: 1336px;
   margin: 0 auto;
 }
 
+.site-shell::before {
+  position: fixed;
+  top: 30px;
+  left: max(0px, calc((100vw - 1336px) / 2));
+  z-index: 0;
+  width: min(520px, 72vw);
+  height: min(520px, 72vw);
+  pointer-events: none;
+  content: "";
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow), transparent 68%);
+  filter: blur(24px);
+  opacity: var(--accent-glow-opacity);
+  transition: opacity 280ms ease;
+}
+
 .site-header {
-  position: static;
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -167,10 +285,19 @@ a:focus-visible {
   display: block;
   width: 18px;
   height: 18px;
-  object-fit: contain;
   opacity: 0.5;
-  filter: var(--theme-icon-filter);
+  background: currentColor;
   transition: opacity 180ms ease;
+}
+
+.theme-option-icon--dark {
+  -webkit-mask: url("/icons/theme-dark.png") center / contain no-repeat;
+  mask: url("/icons/theme-dark.png") center / contain no-repeat;
+}
+
+.theme-option-icon--light {
+  -webkit-mask: url("/icons/theme-light.png") center / contain no-repeat;
+  mask: url("/icons/theme-light.png") center / contain no-repeat;
 }
 
 .theme-switcher button:hover .theme-option-icon,
@@ -203,6 +330,8 @@ a:focus-visible {
 }
 
 .about-page {
+  position: relative;
+  z-index: 1;
   padding: 36px 20px 116px;
 }
 
@@ -405,7 +534,10 @@ a:focus-visible {
 
 .panel--color {
   grid-area: color;
-  min-height: 260px;
+  width: 100%;
+  min-height: 0;
+  align-self: start;
+  aspect-ratio: 1;
 }
 
 .color-grid,
@@ -419,18 +551,119 @@ a:focus-visible {
 
 .color-grid {
   display: flex;
-  height: 100%;
+  min-height: 0;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
 }
 
-.color-grid span {
+.color-theme-card {
+  display: grid;
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr) 24px;
+  gap: 12px;
+}
+
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--panel);
+}
+
+.color-option {
+  position: relative;
+  display: grid;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--panel-border);
+  cursor: pointer;
+  place-items: center;
+  border: 2px solid var(--panel-border);
   border-radius: 50%;
-  background: var(--panel);
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.color-option:hover {
+  border-color: var(--text-muted);
+  transform: translateY(-1px);
+}
+
+.color-option.is-active {
+  border-color: var(--text);
+}
+
+.color-option-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.color-card-footer {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.color-card-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.color-reset {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  place-items: center;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.color-reset:disabled {
+  cursor: default;
+}
+
+.panel,
+.theme-switcher,
+.floating-nav,
+.discipline-row a,
+.color-picker,
+.color-grid {
+  transition:
+    color 260ms ease,
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.panel--color::after {
+  display: none;
+}
+
+.color-grid {
+  background-color: color-mix(in srgb, var(--panel) 92%, transparent);
+}
+
+.color-picker {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--text) 5%, transparent);
 }
 
 .panel--sneak {
@@ -678,9 +911,12 @@ a:focus-visible {
     min-height: 200px;
   }
 
-  .panel--pantone,
-  .panel--color {
+  .panel--pantone {
     min-height: 310px;
+  }
+
+  .panel--color {
+    min-height: 0;
   }
 
   .panel--sneak,

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
+type ColorTheme = "red" | "green" | "blue";
 
 const themeOptions: Array<{
   value: Theme;
@@ -13,6 +14,12 @@ const themeOptions: Array<{
   { value: "dark", icon: "/icons/theme-dark.png", label: "Use dark theme" },
   { value: "light", icon: "/icons/theme-light.png", label: "Use light theme" },
   { value: "system", symbol: "▣", label: "Use system theme" },
+];
+
+const colorThemes: Array<{ value: ColorTheme; label: string }> = [
+  { value: "red", label: "R" },
+  { value: "green", label: "G" },
+  { value: "blue", label: "B" },
 ];
 
 function EmptyLines({ count = 3 }: { count?: number }) {
@@ -27,6 +34,7 @@ function EmptyLines({ count = 3 }: { count?: number }) {
 
 export default function AboutPage() {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -58,6 +66,14 @@ export default function AboutPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (colorTheme) {
+      document.documentElement.dataset.colorTheme = colorTheme;
+    } else {
+      delete document.documentElement.dataset.colorTheme;
+    }
+  }, [colorTheme]);
+
   return (
     <div className="site-shell">
       <header className="site-header">
@@ -78,7 +94,10 @@ export default function AboutPage() {
               onClick={() => setTheme(option.value)}
             >
               {option.icon ? (
-                <img className="theme-option-icon" src={option.icon} alt="" />
+                <span
+                  className={`theme-option-icon theme-option-icon--${option.value}`}
+                  aria-hidden="true"
+                />
               ) : (
                 <span className="theme-option-symbol" aria-hidden="true">
                   {option.symbol}
@@ -129,10 +148,42 @@ export default function AboutPage() {
           </article>
 
           <article className="panel panel--color" aria-label="Interactive color section">
-            <div className="color-grid" aria-hidden="true">
-              <span />
-              <span />
-              <span />
+            <div className="color-theme-card">
+              <div className="color-grid">
+                <div className="color-picker" role="group" aria-label="Choose an accent color">
+                  {colorThemes.map((option) => {
+                    const isActive = colorTheme === option.value;
+
+                    return (
+                      <button
+                        key={option.value}
+                        className={`color-option ${isActive ? "is-active" : ""}`}
+                        type="button"
+                        aria-label={`Use ${option.value} color theme`}
+                        aria-pressed={isActive}
+                        onClick={() => setColorTheme(option.value)}
+                      >
+                        {isActive ? <span className="color-option-dot" /> : option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="color-card-footer">
+                <span className="color-card-label" aria-live="polite">
+                  {colorTheme ? "Bring back grayscale" : "Pick a color"}
+                </span>
+                <button
+                  className="color-reset"
+                  type="button"
+                  aria-label="Reset color theme"
+                  disabled={!colorTheme}
+                  onClick={() => setColorTheme(null)}
+                >
+                  <span aria-hidden="true">{colorTheme ? "↶" : "↑"}</span>
+                </button>
+              </div>
             </div>
           </article>
 
