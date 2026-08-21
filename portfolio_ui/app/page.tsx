@@ -4,9 +4,14 @@ import { useEffect, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
 
-const themeOptions: Array<{ value: Theme; symbol: string; label: string }> = [
-  { value: "dark", symbol: "◐", label: "Use dark theme" },
-  { value: "light", symbol: "☼", label: "Use light theme" },
+const themeOptions: Array<{
+  value: Theme;
+  label: string;
+  icon?: string;
+  symbol?: string;
+}> = [
+  { value: "dark", icon: "/icons/theme-dark.png", label: "Use dark theme" },
+  { value: "light", icon: "/icons/theme-light.png", label: "Use light theme" },
   { value: "system", symbol: "▣", label: "Use system theme" },
 ];
 
@@ -57,7 +62,7 @@ export default function AboutPage() {
     <div className="site-shell">
       <header className="site-header">
         <a className="identity" href="#about" aria-label="Go to the About page">
-          <span className="identity-mark" aria-hidden="true" />
+          <img className="identity-mark" src="/icons/identity-mark.png" alt="" />
           <span>Adwait Tagalpallewar</span>
         </a>
 
@@ -72,7 +77,13 @@ export default function AboutPage() {
               aria-pressed={theme === option.value}
               onClick={() => setTheme(option.value)}
             >
-              <span aria-hidden="true">{option.symbol}</span>
+              {option.icon ? (
+                <img className="theme-option-icon" src={option.icon} alt="" />
+              ) : (
+                <span className="theme-option-symbol" aria-hidden="true">
+                  {option.symbol}
+                </span>
+              )}
             </button>
           ))}
         </div>

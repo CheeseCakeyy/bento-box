@@ -29,6 +29,7 @@
   --ghost: rgba(233, 233, 226, 0.1);
   --ghost-strong: rgba(233, 233, 226, 0.18);
   --grid-line: rgba(233, 233, 226, 0.035);
+  --theme-icon-filter: invert(1);
   color-scheme: dark;
 }
 
@@ -44,6 +45,7 @@
   --ghost: rgba(30, 30, 30, 0.075);
   --ghost-strong: rgba(30, 30, 30, 0.14);
   --grid-line: rgba(30, 30, 30, 0.035);
+  --theme-icon-filter: none;
   color-scheme: light;
 }
 
@@ -118,34 +120,11 @@ a:focus-visible {
 }
 
 .identity-mark {
-  position: relative;
-  width: 16px;
-  height: 20px;
-}
-
-.identity-mark::before,
-.identity-mark::after {
-  position: absolute;
-  content: "";
-  border: 1px solid currentColor;
-}
-
-.identity-mark::before {
-  left: 4px;
-  bottom: 1px;
-  width: 8px;
-  height: 11px;
-  border-radius: 2px 2px 6px 6px;
-  transform: rotate(-8deg);
-}
-
-.identity-mark::after {
-  top: 1px;
-  left: 7px;
-  width: 1px;
-  height: 10px;
-  border-width: 0 0 0 1px;
-  box-shadow: -3px 2px 0 -0.2px currentColor, 3px 1px 0 -0.2px currentColor;
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: var(--theme-icon-filter);
 }
 
 .theme-switcher {
@@ -179,7 +158,22 @@ a:focus-visible {
   color: var(--text);
 }
 
-.theme-switcher button span {
+.theme-option-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.5;
+  filter: var(--theme-icon-filter);
+  transition: opacity 180ms ease;
+}
+
+.theme-switcher button:hover .theme-option-icon,
+.theme-switcher button.is-active .theme-option-icon {
+  opacity: 1;
+}
+
+.theme-option-symbol {
   line-height: 1;
   font-size: 17px;
 }
