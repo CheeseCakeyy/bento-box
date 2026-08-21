@@ -196,7 +196,7 @@
     </div>
 
     <div class="hud" id="edition">
-      Interactive record<br /><b>Tracks 01 &mdash; 08</b>
+      Interactive record<br /><b>Tracks 01 &mdash; 10</b>
     </div>
 
     <div class="hud" id="counter">
@@ -214,8 +214,34 @@
     <script src="/paper-roll/vendor/three.min.js"></script>
     <script src="/paper-roll/vendor/gsap.min.js"></script>
     <script>
-      (function () {
+      (async function () {
         "use strict";
+
+        var TRACKS = [
+          { title: "Attention", artist: "Charlie Puth", poster: "/songs-on-loop/posters/01-attention-charlie-puth.webp" },
+          { title: "Mirrors", artist: "Justin Timberlake", poster: "/songs-on-loop/posters/02-mirrors-justin-timberlake.png" },
+          { title: "Love Me Not", artist: "Ravyn Lenae", poster: "/songs-on-loop/posters/03-love-me-not-ravyn-lenae.png" },
+          { title: "Best Friend", artist: "Rex Orange County", poster: "/songs-on-loop/posters/04-best-friend-rex-orange-county.png" },
+          { title: "High on You", artist: "Jind Universe", poster: "/songs-on-loop/posters/05-high-on-you-jind-universe.jpg" },
+          { title: "Long Way 2 Go", artist: "Cassie", poster: "/songs-on-loop/posters/06-long-way-to-go-cassie.jpg" },
+          { title: "505", artist: "Arctic Monkeys", poster: "/songs-on-loop/posters/07-505-arctic-monkeys.png" },
+          { title: "Can’t Take My Eyes off You", artist: "Frankie Valli", poster: "/songs-on-loop/posters/08-cant-take-my-eyes-off-you-frankie-valli.jpg" },
+          { title: "The Less I Know the Better", artist: "Tame Impala", poster: "/songs-on-loop/posters/09-the-less-i-know-the-better-tame-impala.jpg" },
+          { title: "I Love You So", artist: "The Walters", poster: "/songs-on-loop/posters/10-i-love-you-so-the-walters.jpg" },
+        ];
+
+        function loadPoster(src) {
+          return new Promise(function (resolve) {
+            var image = new Image();
+            image.onload = function () { resolve(image); };
+            image.onerror = function () { resolve(null); };
+            image.src = src;
+          });
+        }
+
+        var posterImages = await Promise.all(
+          TRACKS.map(function (track) { return loadPoster(track.poster); }),
+        );
 
         /* ============================================================
      VX — THE PRINTING ROLL
@@ -227,7 +253,7 @@
 
         // ---------- Constants ----------
         var RIBBON_W = 1.5; // paper width
-        var ATLAS_N = 8; // pages in the atlas
+        var ATLAS_N = TRACKS.length; // album covers in the atlas
         var ROLL_R = 1.75;
         // one full revolution lays down exactly one atlas — this is what makes the
         // print on the barrel hand off to the floor with zero drift, forever
@@ -384,6 +410,43 @@
             g.fillRect(x, y, w, h * 0.5);
           }
 
+          function posterCard(f, index) {
+            var image = posterImages[index];
+            if (!image) return false;
+
+            var inset = 10;
+            var x = f.x + inset;
+            var y = f.y + inset;
+            var w = f.w - inset * 2;
+            var h = f.h - inset * 2;
+            var sourceAspect = image.width / image.height;
+            var targetAspect = w / h;
+            var sx = 0;
+            var sy = 0;
+            var sw = image.width;
+            var sh = image.height;
+
+            if (sourceAspect > targetAspect) {
+              sw = image.height * targetAspect;
+              sx = (image.width - sw) / 2;
+            } else {
+              sh = image.width / targetAspect;
+              sy = (image.height - sh) / 2;
+            }
+
+            g.drawImage(image, sx, sy, sw, sh, x, y, w, h);
+
+            var fade = g.createLinearGradient(x, y + h * 0.62, x, y + h);
+            fade.addColorStop(0, "rgba(0,0,0,0)");
+            fade.addColorStop(1, "rgba(0,0,0,0.78)");
+            g.fillStyle = fade;
+            g.fillRect(x, y + h * 0.58, w, h * 0.42);
+            label(x + 18, y + h - 42, TRACKS[index].title, "#ffffff", 15);
+            mono(x + 18, y + h - 22, TRACKS[index].artist.toUpperCase(), "rgba(255,255,255,0.76)", 10);
+
+            return true;
+          }
+
           var M = 30; // card inset inside cell
 
           function cardFrame(cx) {
@@ -410,7 +473,7 @@
             mono(
               0,
               0,
-              "0" + String(n) + String.fromCharCode(47) + "008",
+              String(n).padStart(2, "0") + String.fromCharCode(47) + "010",
               "#9a9994",
               11,
             );
@@ -605,7 +668,7 @@
 
           for (var c = 0; c < ATLAS_N; c++) {
             var frame = cardFrame(c * CELL);
-            draws[c](frame);
+            if (!posterCard(frame, c)) draws[c % draws.length](frame);
             indexTag(frame, c + 1);
           }
 

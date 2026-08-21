@@ -803,7 +803,7 @@ a:focus-visible {
 
 .panel--songs {
   grid-area: stamps;
-  min-height: 330px;
+  min-height: 560px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
@@ -835,7 +835,7 @@ a:focus-visible {
 
 .songs-embed {
   position: relative;
-  min-height: 240px;
+  min-height: 500px;
   overflow: hidden;
   border: 1px solid var(--panel-border);
   border-radius: 6px;
@@ -847,6 +847,151 @@ a:focus-visible {
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+.songs-deck {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2;
+  display: grid;
+  width: min(380px, calc(100% - 24px));
+  max-height: calc(100% - 24px);
+  grid-template-rows: auto auto auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--text) 38%, transparent);
+  background: color-mix(in srgb, var(--panel) 94%, transparent);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+}
+
+.songs-deck-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--panel-border);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.song-select-wrap {
+  position: relative;
+  padding: 8px 10px;
+}
+
+.song-select-wrap::after {
+  position: absolute;
+  top: 50%;
+  right: 21px;
+  pointer-events: none;
+  content: "⌄";
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1;
+  transform: translateY(-58%);
+}
+
+.song-select {
+  width: 100%;
+  min-height: 36px;
+  cursor: pointer;
+  appearance: none;
+  padding: 7px 34px 7px 10px;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.song-select:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 2px;
+}
+
+.song-select option {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.songs-now-playing {
+  display: grid;
+  grid-template-columns: 38px 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--panel-border);
+  background: color-mix(in srgb, var(--background) 88%, var(--panel));
+}
+
+.song-poster {
+  width: 38px;
+  height: 38px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.song-playback {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--background);
+  font-size: 12px;
+}
+
+.song-current-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.song-current-copy strong,
+.song-current-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-current-copy strong {
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.song-current-copy span,
+.song-time {
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.song-time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.song-progress {
+  width: 100%;
+  height: 3px;
+  grid-column: 2 / -1;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--text);
+}
+
+.panel--songs audio {
+  display: none;
 }
 
 .panel--notes {
@@ -981,11 +1126,11 @@ a:focus-visible {
   }
 
   .panel--songs {
-    min-height: 520px;
+    min-height: 620px;
   }
 
   .songs-embed {
-    min-height: 420px;
+    min-height: 560px;
   }
 }
 
@@ -1062,7 +1207,7 @@ a:focus-visible {
   }
 
   .panel--songs {
-    min-height: 330px;
+    min-height: 560px;
   }
 
   .sketch-grid {
@@ -1070,7 +1215,30 @@ a:focus-visible {
   }
 
   .songs-embed {
-    min-height: 240px;
+    min-height: 500px;
+  }
+
+  .songs-deck {
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .songs-now-playing {
+    grid-template-columns: 34px 32px minmax(0, 1fr);
+  }
+
+  .song-poster {
+    width: 34px;
+    height: 34px;
+  }
+
+  .song-time {
+    display: none;
+  }
+
+  .song-progress {
+    grid-column: 2 / -1;
   }
 
   .floating-nav-wrap {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
 type ColorTheme = "red" | "green" | "blue";
@@ -22,6 +22,80 @@ const colorThemes: Array<{ value: ColorTheme; label: string }> = [
   { value: "blue", label: "B" },
 ];
 
+const songs = [
+  {
+    title: "Attention",
+    artist: "Charlie Puth",
+    poster: "/songs-on-loop/posters/01-attention-charlie-puth.webp",
+    audio: "/songs-on-loop/tracks/01-attention-charlie-puth.mp3",
+  },
+  {
+    title: "Mirrors",
+    artist: "Justin Timberlake",
+    poster: "/songs-on-loop/posters/02-mirrors-justin-timberlake.png",
+    audio: "/songs-on-loop/tracks/02-mirrors-justin-timberlake.mp3",
+  },
+  {
+    title: "Love Me Not",
+    artist: "Ravyn Lenae",
+    poster: "/songs-on-loop/posters/03-love-me-not-ravyn-lenae.png",
+    audio: "/songs-on-loop/tracks/03-love-me-not-ravyn-lenae.mp3",
+  },
+  {
+    title: "Best Friend",
+    artist: "Rex Orange County",
+    poster: "/songs-on-loop/posters/04-best-friend-rex-orange-county.png",
+    audio: "/songs-on-loop/tracks/04-best-friend-rex-orange-county.mp3",
+  },
+  {
+    title: "High on You",
+    artist: "Jind Universe",
+    poster: "/songs-on-loop/posters/05-high-on-you-jind-universe.jpg",
+    audio: "/songs-on-loop/tracks/05-high-on-you-jind-universe.mp3",
+  },
+  {
+    title: "Long Way 2 Go",
+    artist: "Cassie",
+    poster: "/songs-on-loop/posters/06-long-way-to-go-cassie.jpg",
+    audio: "/songs-on-loop/tracks/06-long-way-to-go-cassie.mp3",
+  },
+  {
+    title: "505",
+    artist: "Arctic Monkeys",
+    poster: "/songs-on-loop/posters/07-505-arctic-monkeys.png",
+    audio: "/songs-on-loop/tracks/07-505-arctic-monkeys.mp3",
+  },
+  {
+    title: "Can’t Take My Eyes off You",
+    artist: "Frankie Valli",
+    poster: "/songs-on-loop/posters/08-cant-take-my-eyes-off-you-frankie-valli.jpg",
+    audio: "/songs-on-loop/tracks/08-cant-take-my-eyes-off-you-frankie-valli.mp3",
+  },
+  {
+    title: "The Less I Know the Better",
+    artist: "Tame Impala",
+    poster: "/songs-on-loop/posters/09-the-less-i-know-the-better-tame-impala.jpg",
+    audio: "/songs-on-loop/tracks/09-the-less-i-know-the-better-tame-impala.mp3",
+  },
+  {
+    title: "I Love You So",
+    artist: "The Walters",
+    poster: "/songs-on-loop/posters/10-i-love-you-so-the-walters.jpg",
+    audio: "/songs-on-loop/tracks/10-i-love-you-so-the-walters.mp3",
+  },
+];
+
+function formatTime(value: number) {
+  if (!Number.isFinite(value)) return "0:00";
+
+  const minutes = Math.floor(value / 60);
+  const seconds = Math.floor(value % 60)
+    .toString()
+    .padStart(2, "0");
+
+  return `${minutes}:${seconds}`;
+}
+
 function EmptyLines({ count = 3 }: { count?: number }) {
   return (
     <div className="empty-lines" aria-hidden="true">
@@ -35,7 +109,42 @@ function EmptyLines({ count = 3 }: { count?: number }) {
 export default function AboutPage() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
+  const [selectedSong, setSelectedSong] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const activeSong = songs[selectedSong];
+
+  const startSong = (index: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const nextSong = songs[index];
+    const nextSource = new URL(nextSong.audio, window.location.origin).href;
+
+    if (audio.src !== nextSource) {
+      audio.src = nextSource;
+      audio.load();
+      setCurrentTime(0);
+      setDuration(0);
+    }
+
+    setSelectedSong(index);
+    void audio.play().catch(() => setIsPlaying(false));
+  };
+
+  const togglePlayback = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      void audio.play().catch(() => setIsPlaying(false));
+    } else {
+      audio.pause();
+    }
+  };
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("portfolio-theme") as Theme | null;
@@ -229,7 +338,7 @@ export default function AboutPage() {
             <div className="songs-header">
               <h2 className="songs-title">Songs on Loop</h2>
               <span className="songs-index" aria-hidden="true">
-                01—08
+                01—10
               </span>
             </div>
             <div className="songs-embed">
@@ -238,7 +347,72 @@ export default function AboutPage() {
                 title="Interactive Songs on Loop paper roll"
                 loading="lazy"
               />
+
+              <section className="songs-deck" aria-label="Songs on Loop player">
+                <div className="songs-deck-heading">
+                  <span>Choose a track</span>
+                  <span>Tracks / {songs.length}</span>
+                </div>
+
+                <div className="song-select-wrap">
+                  <select
+                    className="song-select"
+                    aria-label="Choose a song"
+                    value={selectedSong}
+                    onChange={(event) => startSong(Number(event.target.value))}
+                  >
+                    {songs.map((song, index) => (
+                      <option key={song.audio} value={index}>
+                        {String(index + 1).padStart(2, "0")} · {song.title} — {song.artist}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="songs-now-playing">
+                  <img className="song-poster" src={activeSong.poster} alt="" />
+                  <button
+                    className="song-playback"
+                    type="button"
+                    aria-label={isPlaying ? "Pause current song" : "Play current song"}
+                    onClick={togglePlayback}
+                  >
+                    <span aria-hidden="true">{isPlaying ? "Ⅱ" : "▶"}</span>
+                  </button>
+                  <div className="song-current-copy">
+                    <strong>{activeSong.title}</strong>
+                    <span>{activeSong.artist}</span>
+                  </div>
+                  <span className="song-time">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
+                  <input
+                    className="song-progress"
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    step="0.1"
+                    value={Math.min(currentTime, duration || 0)}
+                    aria-label="Song progress"
+                    onChange={(event) => {
+                      const nextTime = Number(event.target.value);
+                      if (audioRef.current) audioRef.current.currentTime = nextTime;
+                      setCurrentTime(nextTime);
+                    }}
+                  />
+                </div>
+              </section>
             </div>
+            <audio
+              ref={audioRef}
+              src={activeSong.audio}
+              preload="metadata"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+              onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
+              onEnded={() => startSong((selectedSong + 1) % songs.length)}
+            />
           </article>
 
           <article className="panel panel--notes" aria-label="Notes section">
