@@ -62,7 +62,7 @@ export default function AboutPage() {
     <div className="site-shell">
       <header className="site-header">
         <a className="identity" href="#about" aria-label="Go to the About page">
-          <img className="identity-mark" src="/icons/identity-mark.png" alt="" />
+          <span className="identity-mark" aria-hidden="true" />
           <span>Adwait Tagalpallewar</span>
         </a>
 

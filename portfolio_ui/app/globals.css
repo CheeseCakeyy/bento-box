@@ -112,19 +112,24 @@ a:focus-visible {
 .identity {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-height: 34px;
+  gap: 8px;
+  min-height: 25px;
+  color: var(--text);
   border-radius: 999px;
-  font-size: 14px;
-  font-weight: 560;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
 }
 
 .identity-mark {
   display: block;
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  filter: var(--theme-icon-filter);
+  flex: 0 0 25px;
+  width: 25px;
+  height: 25px;
+  background: currentColor;
+  -webkit-mask: url("/icons/identity-mark.png") center / contain no-repeat;
+  mask: url("/icons/identity-mark.png") center / contain no-repeat;
 }
 
 .theme-switcher {
