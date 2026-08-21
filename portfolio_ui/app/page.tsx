@@ -225,9 +225,20 @@ export default function AboutPage() {
             <div className="sketch-grid" aria-hidden="true" />
           </article>
 
-          <article className="panel panel--stamps" aria-label="Collection section">
-            <div className="stamp-grid" aria-hidden="true" />
-            <EmptyLines count={3} />
+          <article className="panel panel--songs" aria-label="Songs on Loop section">
+            <div className="songs-header">
+              <h2 className="songs-title">Songs on Loop</h2>
+              <span className="songs-index" aria-hidden="true">
+                01—08
+              </span>
+            </div>
+            <div className="songs-embed">
+              <iframe
+                src="/paper-roll/index.html"
+                title="Interactive Songs on Loop paper roll"
+                loading="lazy"
+              />
+            </div>
           </article>
 
           <article className="panel panel--notes" aria-label="Notes section">
