@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio — About",
-  description: "A modular personal portfolio about page.",
+  title: "Adwait Tagalpallewar — Engineer",
+  description: "Engineer crafting intelligent systems and experiments.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

@@ -76,7 +76,7 @@ a:focus-visible {
 
 .site-shell {
   min-height: 100vh;
-  max-width: 1536px;
+  max-width: 1664px;
   margin: 0 auto;
 }
 
@@ -197,26 +197,14 @@ a:focus-visible {
   padding-top: 4px;
 }
 
-.headline-placeholder {
-  display: grid;
-  width: min(82vw, 1000px);
-  gap: 10px;
+.hero-heading {
+  max-width: 1180px;
   margin: 0 0 40px;
-}
-
-.headline-placeholder span {
-  display: block;
-  height: clamp(54px, 7.1vw, 104px);
-  border-radius: 8px;
-  background: var(--ghost-strong);
-}
-
-.headline-placeholder span:first-child {
-  width: 68%;
-}
-
-.headline-placeholder span:last-child {
-  width: 94%;
+  font-size: clamp(3.8rem, 7.2vw, 7rem);
+  font-weight: 420;
+  letter-spacing: -0.065em;
+  line-height: 0.96;
+  text-wrap: balance;
 }
 
 .discipline-row {
@@ -227,28 +215,22 @@ a:focus-visible {
 }
 
 .discipline-label {
-  width: 62px;
-  height: 11px;
   margin-right: 6px;
-  border-radius: 999px;
-  background: var(--ghost-strong);
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .discipline-row a {
-  display: block;
-  width: 74px;
-  height: 26px;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
   border-radius: 999px;
   background: var(--chip);
+  font-size: 12px;
+  white-space: nowrap;
   transition: transform 180ms ease, background-color 180ms ease;
-}
-
-.discipline-row a:nth-of-type(2) {
-  width: 66px;
-}
-
-.discipline-row a:nth-of-type(3) {
-  width: 84px;
 }
 
 .discipline-row a:hover {
@@ -714,14 +696,10 @@ a:focus-visible {
     padding: 28px 16px 104px;
   }
 
-  .headline-placeholder {
-    width: 100%;
-    gap: 7px;
+  .hero-heading {
     margin-bottom: 28px;
-  }
-
-  .headline-placeholder span {
-    height: clamp(42px, 14vw, 66px);
+    font-size: clamp(3.25rem, 14vw, 5.2rem);
+    line-height: 0.98;
   }
 
   .discipline-row {

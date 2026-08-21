@@ -58,7 +58,7 @@ export default function AboutPage() {
       <header className="site-header">
         <a className="identity" href="#about" aria-label="Go to the About page">
           <span className="identity-mark" aria-hidden="true" />
-          <span>Your Name</span>
+          <span>Adwait Tagalpallewar</span>
         </a>
 
         <div className="theme-switcher" aria-label="Theme controls">
@@ -80,15 +80,13 @@ export default function AboutPage() {
 
       <main id="about" className="about-page">
         <section className="intro" aria-label="Introductory heading and disciplines">
-          <div className="headline-placeholder" aria-hidden="true">
-            <span />
-            <span />
-          </div>
+          <h1 className="hero-heading">Engineer crafting intelligent systems and experiments.</h1>
           <div className="discipline-row" aria-label="Discipline links">
-            <span className="discipline-label" aria-hidden="true" />
-            <a href="#portfolio-grid" aria-label="First discipline" />
-            <a href="#portfolio-grid" aria-label="Second discipline" />
-            <a href="#portfolio-grid" aria-label="Third discipline" />
+            <span className="discipline-label">What I do</span>
+            <a href="#portfolio-grid">Train models</a>
+            <a href="#portfolio-grid">Analyze results</a>
+            <a href="#portfolio-grid">Experiments</a>
+            <a href="#portfolio-grid">Competitive ML</a>
           </div>
         </section>
 
