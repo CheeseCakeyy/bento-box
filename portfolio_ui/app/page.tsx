@@ -280,6 +280,9 @@ export default function AboutPage() {
                   <a href="https://www.kaggle.com/adwaittagalpallewar" target="_blank" rel="noreferrer" aria-label="Kaggle profile">
                     <i className="fab fa-kaggle" aria-hidden="true" />
                   </a>
+                  <a href="https://discord.com/users/1215365835393343590" target="_blank" rel="noreferrer" aria-label="Discord profile">
+                    <i className="fa-brands fa-discord" aria-hidden="true" />
+                  </a>
                 </div>
               </div>
               <Link className="bio-talk" href="/contact">

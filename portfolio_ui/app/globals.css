@@ -3108,124 +3108,64 @@ a:focus-visible {
   min-height: 100vh;
 }
 
-.contact-header-label {
-  color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
 .contact-page {
-  width: min(1440px, 100%);
-  min-height: 100vh;
+  display: grid;
+  width: 100%;
+  min-height: calc(100vh - 57px);
   margin: 0 auto;
-  padding: 88px 28px 130px;
+  padding: 40px 20px 120px;
+  place-items: center;
 }
 
-.contact-kicker {
+.contact-center {
+  display: grid;
+  width: min(760px, 100%);
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+  transform: translateY(-1vh);
+}
+
+.contact-center > p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.contact-center h1 {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(3rem, 5vw, 4.25rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.contact-pills {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--panel-border);
-  color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 22px;
 }
 
-.contact-hero {
-  display: grid;
-  max-width: 1160px;
-  gap: 28px;
-  padding: clamp(72px, 10vw, 150px) 0 clamp(80px, 11vw, 160px);
-}
-
-.contact-hero h1 {
-  max-width: 1120px;
-  margin: 0;
-  font-family: "Archivo", sans-serif;
-  font-size: clamp(3.4rem, 8.4vw, 8.2rem);
-  font-weight: 300;
-  letter-spacing: -0.075em;
-  line-height: 0.89;
-}
-
-.contact-hero p {
-  max-width: 620px;
-  margin: 0;
-  color: var(--text-muted);
-  font-size: clamp(15px, 1.45vw, 20px);
-  line-height: 1.6;
-}
-
-.contact-primary {
+.contact-pills a {
   display: inline-flex;
-  width: fit-content;
-  min-height: 48px;
+  min-height: 36px;
   align-items: center;
-  gap: 38px;
-  padding: 10px 18px;
-  border: 1px solid var(--text);
+  justify-content: center;
+  padding: 7px 16px;
   border-radius: 999px;
-  background: var(--text);
-  color: var(--background);
-  font-size: 13px;
-  font-weight: 650;
-  transition: gap 180ms ease, transform 180ms ease;
-}
-
-.contact-primary:hover {
-  gap: 48px;
-  transform: translateY(-2px);
-}
-
-.contact-links {
-  border-top: 1px solid var(--panel-border);
-}
-
-.contact-links__label {
-  display: block;
-  padding: 16px 0 10px;
-  color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.contact-links a {
-  display: grid;
-  min-height: 74px;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 18px;
-  border-bottom: 1px solid var(--panel-border);
+  background: var(--panel-raised);
   color: var(--text);
-  transition: padding 180ms ease, background-color 180ms ease;
+  font-size: 13px;
+  transition: background-color 180ms ease, transform 180ms ease;
 }
 
-.contact-links a:hover {
-  padding: 0 14px;
-  background: var(--ghost);
-}
-
-.contact-links a > span:first-child {
-  color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 9px;
-}
-
-.contact-links a strong {
-  font-size: clamp(20px, 2.2vw, 30px);
-  font-weight: 520;
-  letter-spacing: -0.035em;
+.contact-pills a:hover {
+  background: var(--ghost-strong);
+  transform: translateY(-1px);
 }
 
 .floating-nav-wrap {
@@ -3360,7 +3300,6 @@ a:focus-visible {
     padding: 14px 16px;
   }
 
-  .contact-header-label,
   .collection-header-label {
     display: none;
   }
@@ -3410,25 +3349,24 @@ a:focus-visible {
   }
 
   .contact-page {
-    padding: 72px 16px 112px;
+    min-height: calc(100vh - 61px);
+    padding: 32px 16px 108px;
   }
 
-  .contact-kicker {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
+  .contact-center {
+    gap: 14px;
   }
 
-  .contact-hero {
-    padding: 72px 0 96px;
+  .contact-center > p {
+    font-size: 14px;
   }
 
-  .contact-hero h1 {
-    font-size: clamp(3rem, 15vw, 5rem);
+  .contact-center h1 {
+    font-size: clamp(2.75rem, 14vw, 4rem);
   }
 
-  .contact-links a {
-    min-height: 64px;
+  .contact-pills {
+    margin-top: 18px;
   }
 
   .identity span:last-child {
