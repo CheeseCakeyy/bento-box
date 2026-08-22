@@ -2229,7 +2229,7 @@ a:focus-visible {
   grid-area: sketch;
   min-height: 0;
   align-self: start;
-  padding: 0;
+  padding: 12px;
 }
 
 .panel--sketch::after {
@@ -2248,6 +2248,9 @@ a:focus-visible {
   height: 100%;
   min-height: 400px;
   grid-template-rows: auto minmax(330px, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
   background: var(--moire-paper);
   color: var(--moire-ink);
 }
@@ -2293,6 +2296,13 @@ a:focus-visible {
   font-weight: 520;
   letter-spacing: -0.045em;
   line-height: 0.95;
+}
+
+.moire-maker.is-idle h2 {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
 }
 
 .moire-maker__state {
@@ -2361,6 +2371,10 @@ a:focus-visible {
   text-align: left;
 }
 
+.moire-maker.is-idle .moire-launch {
+  background-size: 40px 40px;
+}
+
 .moire-launch::after {
   position: absolute;
   inset: 0;
@@ -2401,10 +2415,12 @@ a:focus-visible {
 }
 
 .moire-launch__copy strong {
-  font-size: clamp(20px, 3vw, 30px);
-  font-weight: 560;
-  letter-spacing: -0.045em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .moire-launch__copy small {
@@ -2430,6 +2446,13 @@ a:focus-visible {
   position: absolute;
   inset: 42px 8px 58px;
   z-index: 2;
+  opacity: 0.62;
+  transition: opacity 240ms ease;
+}
+
+.moire-launch:hover .moire-launch__art,
+.moire-launch:focus-visible .moire-launch__art {
+  opacity: 0.9;
 }
 
 .moire-launch__ray {
