@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
 
 type Theme = "dark" | "light" | "system";
@@ -381,8 +382,8 @@ export default function AboutPage() {
             </div>
           </article>
 
-          <article className="panel panel--pantone" aria-label="Color swatch section">
-            <div className="pantone-swatch" aria-hidden="true" />
+          <article className="panel panel--pantone panel--latent" aria-label="Interactive latent space section">
+            <LatentSpace />
           </article>
 
           <article className="panel panel--color" aria-label="Interactive color section">
