@@ -1451,6 +1451,7 @@ a:focus-visible {
 }
 
 .pipeline-builder {
+  isolation: isolate;
   display: grid;
   grid-template-rows: 20px auto minmax(0, 1fr) auto;
   gap: 10px;
@@ -1501,12 +1502,20 @@ a:focus-visible {
   background: color-mix(in srgb, var(--panel-raised) 72%, var(--panel));
 }
 
-.pipeline-builder__intro strong {
-  flex: 0 0 auto;
+.pipeline-builder__intro select {
+  min-width: 180px;
+  max-width: 100%;
+  min-height: 26px;
+  padding: 4px 28px 4px 8px;
+  cursor: pointer;
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+  background: var(--panel);
+  color: var(--text);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -1521,7 +1530,8 @@ a:focus-visible {
 .pipeline-builder__workspace {
   display: grid;
   min-height: 0;
-  grid-template-columns: minmax(0, 1.35fr) minmax(190px, 0.65fr);
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(204px, 1fr) auto;
   gap: 10px;
 }
 
@@ -1722,7 +1732,7 @@ a:focus-visible {
 .module-tray {
   display: grid;
   min-width: 0;
-  min-height: 204px;
+  min-height: 132px;
   padding: 10px;
   grid-template-rows: 20px minmax(0, 1fr) auto;
   gap: 8px;
@@ -1749,8 +1759,9 @@ a:focus-visible {
 .module-tray__modules {
   display: grid;
   min-height: 0;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(28px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 30px);
+  align-content: start;
   gap: 6px;
 }
 
@@ -1762,7 +1773,8 @@ a:focus-visible {
 .module-tray__modules button {
   display: flex;
   min-width: 0;
-  min-height: 28px;
+  height: 30px;
+  min-height: 30px;
   padding: 5px 7px;
   cursor: grab;
   align-items: center;
@@ -1826,6 +1838,64 @@ a:focus-visible {
   box-shadow: 0 0 14px color-mix(in srgb, var(--accent-glow) 14%, transparent);
 }
 
+.pipeline-celebration {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.pipeline-celebration__popper {
+  position: absolute;
+  bottom: 12px;
+  font-size: 28px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.22));
+  animation: pipeline-popper 1.25s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+
+.pipeline-celebration__popper--left {
+  left: 8%;
+  transform-origin: bottom left;
+}
+
+.pipeline-celebration__popper--right {
+  right: 8%;
+  transform: scaleX(-1);
+  transform-origin: bottom right;
+}
+
+.pipeline-confetti {
+  position: absolute;
+  bottom: 42px;
+  width: 6px;
+  height: 10px;
+  border-radius: 1px;
+  opacity: 0;
+  animation: pipeline-confetti-burst 1.25s cubic-bezier(0.12, 0.72, 0.2, 1) var(--confetti-delay) both;
+}
+
+.pipeline-confetti--1 {
+  background: #ff4d2e;
+}
+
+.pipeline-confetti--2 {
+  background: #ffd84a;
+}
+
+.pipeline-confetti--3 {
+  background: #4b7dff;
+}
+
+.pipeline-confetti--4 {
+  background: #45c878;
+}
+
+.pipeline-confetti--5 {
+  background: var(--text);
+}
+
 @keyframes pipeline-wrong {
   0%,
   100% {
@@ -1865,26 +1935,45 @@ a:focus-visible {
   }
 }
 
+@keyframes pipeline-popper {
+  0% {
+    opacity: 0;
+    scale: 0.35;
+  }
+  18%,
+  74% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 0.92;
+  }
+}
+
+@keyframes pipeline-confetti-burst {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.35);
+  }
+  14% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--confetti-x), var(--confetti-y), 0) rotate(var(--confetti-r)) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pipeline-slot.is-wrong,
   .pipeline-slot.is-locking,
   .pipeline-map.is-complete .pipeline-connector {
     animation: none;
   }
-}
 
-@media (max-width: 1100px) {
-  .pipeline-builder__workspace {
-    grid-template-columns: 1fr;
-  }
-
-  .module-tray {
-    min-height: 132px;
-  }
-
-  .module-tray__modules {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(28px, 1fr));
+  .pipeline-celebration {
+    display: none;
   }
 }
 
