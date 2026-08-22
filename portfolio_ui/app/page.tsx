@@ -5,6 +5,7 @@ import Link from "next/link";
 import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
+import PipelineBuilder from "./PipelineBuilder";
 
 type Theme = "dark" | "light" | "system";
 type ColorTheme = "red" | "green" | "blue";
@@ -427,34 +428,11 @@ export default function AboutPage() {
             </div>
           </article>
 
-          <article className="panel panel--sneak" aria-label="In progress section">
-            <div className="sneak-heading" aria-hidden="true">
-              <span />
-              <span />
-            </div>
-            <div className="reveal-bar" aria-hidden="true" />
-            <div className="sneak-media placeholder-surface" aria-hidden="true" />
-          </article>
-
           <article className="panel panel--photos" aria-label="Camera roll section">
             <CameraRoll />
           </article>
 
-          <article className="panel panel--code" aria-label="Code explorer section">
-            <div className="code-tree" aria-hidden="true">
-              {Array.from({ length: 9 }, (_, index) => (
-                <span key={index} />
-              ))}
-            </div>
-          </article>
-
-          <article className="panel panel--tools" aria-label="Tools section">
-            <div className="tool-slots" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </div>
-          </article>
+          <PipelineBuilder />
 
           <article className="panel panel--sketch" aria-label="Interactive moiré spaceship design maker">
             <MoireDesigner />
