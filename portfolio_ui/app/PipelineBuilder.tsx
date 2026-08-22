@@ -83,6 +83,7 @@ function getPipeline(pipelineId: PipelineId) {
 }
 
 export default function PipelineBuilder() {
+  const [hasStarted, setHasStarted] = useState(false);
   const [pipelineId, setPipelineId] = useState<PipelineId>("rag");
   const activePipeline = useMemo(() => getPipeline(pipelineId), [pipelineId]);
   const [slots, setSlots] = useState<Array<string | null>>(() => Array(getPipeline("rag").modules.length).fill(null));
@@ -228,7 +229,42 @@ export default function PipelineBuilder() {
   };
 
   return (
-    <article className="panel panel--code pipeline-builder" aria-labelledby="pipeline-builder-title">
+    <article
+      className={`panel panel--code pipeline-builder ${hasStarted ? "is-active" : "is-launching"}`}
+      aria-labelledby={hasStarted ? "pipeline-builder-title" : "pipeline-launch-title"}
+    >
+      {!hasStarted ? (
+        <button className="pipeline-launch" type="button" onClick={() => setHasStarted(true)}>
+          <span className="pipeline-launch__topline">
+            <span id="pipeline-launch-title">System builder</span>
+            <span className="pipeline-launch__ready"><i aria-hidden="true" /> Ready</span>
+          </span>
+
+          <span className="pipeline-launch__preview" aria-hidden="true">
+            <span className="pipeline-launch__preview-row">
+              <i><b /></i><em>→</em><i><b /></i>
+            </span>
+            <span className="pipeline-launch__preview-turn">↓</span>
+            <span className="pipeline-launch__preview-row is-reversed">
+              <i><b /></i><em>←</em><i><b /></i>
+            </span>
+            <span className="pipeline-launch__preview-turn is-left">↓</span>
+            <span className="pipeline-launch__preview-row">
+              <i><b /></i><em>→</em><i><b /></i>
+            </span>
+          </span>
+
+          <span className="pipeline-launch__copy">
+            <span>
+              <small>From my project workflow</small>
+              <strong>Try completing the pipelines behind my projects</strong>
+              <span>RAG · ML · Agile lifecycles</span>
+            </span>
+            <span className="pipeline-launch__action">Explore the flows <i aria-hidden="true">↗</i></span>
+          </span>
+        </button>
+      ) : (
+        <>
       <header className="pipeline-builder__header">
         <h2 id="pipeline-builder-title">Build the flow</h2>
         <span>{complete ? "Pipeline online" : `${placedCount} / ${activePipeline.modules.length} placed`}</span>
@@ -237,7 +273,7 @@ export default function PipelineBuilder() {
       <div className="pipeline-builder__intro">
         <select
           value={pipelineId}
-          aria-label="Choose a pipeline challenge"
+          aria-label="Choose a pipeline or lifecycle"
           onChange={(event) => changePipeline(event.target.value as PipelineId)}
         >
           {PIPELINES.map((pipeline) => (
@@ -349,6 +385,8 @@ export default function PipelineBuilder() {
             return <span key={index} className={`pipeline-confetti pipeline-confetti--${(index % 5) + 1}`} style={style} />;
           })}
         </div>
+      )}
+        </>
       )}
     </article>
   );
