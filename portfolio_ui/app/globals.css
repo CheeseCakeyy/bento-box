@@ -815,19 +815,99 @@ a:focus-visible {
   .workspace-window > img {
     transition: none;
   }
+
+  .system-ticker {
+    animation: none;
+  }
 }
 
 .panel--system {
   grid-area: system;
-  min-height: 90px;
-  padding-top: 40px;
+  min-height: 104px;
+  display: grid;
+  grid-template-rows: auto 38px;
+  gap: 18px;
+}
+
+.system-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.system-live {
+  color: var(--text-muted);
+  font-size: 8px;
+}
+
+.system-live::before {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 7px;
+  content: "";
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  vertical-align: 1px;
 }
 
 .system-screen {
+  position: relative;
   height: 38px;
+  overflow: hidden;
   border: 1px solid var(--panel-border);
   border-radius: 7px;
-  background: color-mix(in srgb, var(--background) 86%, #000);
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 0 0.65px, transparent 0.8px) 0 0 / 4px 4px,
+    #080808;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.system-screen::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(90deg, #080808, transparent 5%, transparent 95%, #080808);
+}
+
+.system-ticker {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  align-items: center;
+  animation: system-roll 32s linear infinite;
+  will-change: transform;
+}
+
+.system-ticker span {
+  flex: 0 0 auto;
+  padding-right: 48px;
+  background: radial-gradient(circle, #e7e7df 0 1px, transparent 1.2px) 0 0 / 4px 4px;
+  background-clip: text;
+  color: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.045em;
+  line-height: 38px;
+  white-space: nowrap;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes system-roll {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .panel--pantone {
@@ -1971,7 +2051,7 @@ a:focus-visible {
   }
 
   .panel--system {
-    min-height: 200px;
+    min-height: 104px;
   }
 
   .panel--pantone {

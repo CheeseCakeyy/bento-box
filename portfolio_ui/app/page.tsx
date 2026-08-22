@@ -113,6 +113,7 @@ export default function AboutPage() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
   const [workspacePhase, setWorkspacePhase] = useState<WorkspacePhase>("average");
+  const [localTime, setLocalTime] = useState("--:-- IST");
   const [selectedSong, setSelectedSong] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -186,6 +187,25 @@ export default function AboutPage() {
       delete document.documentElement.dataset.colorTheme;
     }
   }, [colorTheme]);
+
+  useEffect(() => {
+    const updateLocalTime = () => {
+      const time = new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+        .format(new Date())
+        .toUpperCase();
+
+      setLocalTime(`${time} IST`);
+    };
+
+    updateLocalTime();
+    const timer = window.setInterval(updateLocalTime, 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
     <div className="site-shell">
@@ -342,7 +362,23 @@ export default function AboutPage() {
           </article>
 
           <article className="panel panel--system" aria-label="System monitor section">
-            <div className="system-screen" aria-hidden="true" />
+            <div className="system-heading">
+              <span>System monitor</span>
+              <span className="system-live"><span aria-hidden="true">←→←→</span> Live</span>
+            </div>
+            <div
+              className="system-screen"
+              role="status"
+              aria-label={`System online. Currently building EmbeddingVC. Local time ${localTime}. Open to interesting problems.`}
+            >
+              <div className="system-ticker" aria-hidden="true">
+                {[0, 1].map((copy) => (
+                  <span key={copy}>
+                    SYS.ONLINE · BUILDING EMBEDDINGVC · AI / DATA / SOFTWARE · {localTime} · OPEN TO INTERESTING PROBLEMS ·
+                  </span>
+                ))}
+              </div>
+            </div>
           </article>
 
           <article className="panel panel--pantone" aria-label="Color swatch section">
