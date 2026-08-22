@@ -2274,35 +2274,20 @@ a:focus-visible {
   border-bottom: 1px solid var(--moire-hairline);
 }
 
-.moire-maker__eyebrow,
 .moire-maker__state,
 .moire-steering small {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   text-transform: uppercase;
 }
 
-.moire-maker__eyebrow {
-  display: block;
-  margin-bottom: 5px;
-  font-size: var(--block-topic-size);
-  font-weight: 700;
-  letter-spacing: 0.19em;
-  opacity: 0.55;
-}
-
 .moire-maker h2 {
   margin: 0;
-  font-size: clamp(22px, 3vw, 34px);
-  font-weight: 520;
-  letter-spacing: -0.045em;
-  line-height: 0.95;
-}
-
-.moire-maker.is-idle h2 {
-  font-size: clamp(18px, 2vw, 22px);
-  font-weight: 500;
-  letter-spacing: -0.025em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--block-topic-size);
+  font-weight: 600;
+  letter-spacing: 0.2em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .moire-maker__state {

@@ -387,7 +387,6 @@ export default function MoireDesigner() {
     <section className={`moire-maker ${hasStarted ? "is-active" : "is-idle"}`} aria-labelledby="moire-maker-title">
       <header className="moire-maker__header">
         <div>
-          <span className="moire-maker__eyebrow">Interactive sketch 01</span>
           <h2 id="moire-maker-title">Pilot the line</h2>
         </div>
         <span className={`moire-maker__state ${!hasStarted ? "is-ready" : isPaused ? "is-paused" : ""}`}>
