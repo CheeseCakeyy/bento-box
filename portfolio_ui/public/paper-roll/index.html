@@ -963,7 +963,9 @@
 
         var SPRING = 16.0;
         var DAMP = 5.4;
-        var MAX_SPEED = 9.0;
+        // Keep each poster in view long enough to be recognized while the roll
+        // still feels continuously animated and responsive to steering.
+        var MAX_SPEED = 4.1;
 
         // path history — preallocated ring of plain records
         var hx = new Float32Array(MAX_PTS);
