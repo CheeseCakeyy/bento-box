@@ -2348,16 +2348,12 @@ a:focus-visible {
   overflow: hidden;
   border: 0;
   background:
-    linear-gradient(var(--moire-hairline) 1px, transparent 1px),
-    linear-gradient(90deg, var(--moire-hairline) 1px, transparent 1px),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
     var(--moire-paper);
-  background-size: 32px 32px;
+  background-size: 20px 20px;
   color: var(--moire-ink);
   text-align: left;
-}
-
-.moire-maker.is-idle .moire-launch {
-  background-size: 40px 40px;
 }
 
 .moire-launch::after {
