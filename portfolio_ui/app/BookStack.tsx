@@ -52,6 +52,7 @@ export default function BookStack() {
   };
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if ((event.target as HTMLElement).closest(".interactive-book-nav")) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     startX.current = event.clientX;
     didDrag.current = false;
@@ -143,9 +144,23 @@ export default function BookStack() {
           })}
 
           <div className="interactive-book-nav">
-            <button type="button" aria-label="Previous book" onClick={() => selectRelative(-1)}>←</button>
+            <button
+              type="button"
+              aria-label="Previous book"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={() => selectRelative(-1)}
+            >
+              ←
+            </button>
             <span>Drag · swipe · arrows</span>
-            <button type="button" aria-label="Next book" onClick={() => selectRelative(1)}>→</button>
+            <button
+              type="button"
+              aria-label="Next book"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={() => selectRelative(1)}
+            >
+              →
+            </button>
           </div>
         </div>
 
