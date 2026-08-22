@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import BookStack from "../BookStack";
 
 export const metadata: Metadata = {
   title: "Collection — Adwait Tagalpallewar",
@@ -41,24 +42,7 @@ export default function CollectionPage() {
           </header>
 
           <div className="collection-bento__grid">
-            <article className="collection-card collection-card--books">
-              <header className="collection-card__header">
-                <span>Books / Featured</span>
-                <span>01</span>
-              </header>
-              <div className="collection-books__body">
-                <div className="collection-book-stack" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="collection-card__copy">
-                  <small>Cover · passage · margin note</small>
-                  <h3>The marked shelf</h3>
-                  <p>A featured home for the books and passages that stayed after the final page.</p>
-                </div>
-              </div>
-            </article>
+            <BookStack />
 
             <article className="collection-card collection-card--poems">
               <header className="collection-card__header">
@@ -96,10 +80,10 @@ export default function CollectionPage() {
             <article className="collection-card collection-card--index">
               <header className="collection-card__header">
                 <span>Archive index</span>
-                <span>00</span>
+                <span>03</span>
               </header>
               <div className="collection-counts">
-                <span><strong>Books</strong><i>—</i></span>
+                <span><strong>Books</strong><i>03</i></span>
                 <span><strong>Poems</strong><i>—</i></span>
                 <span><strong>Fragments</strong><i>—</i></span>
               </div>
