@@ -58,21 +58,6 @@
         opacity: 0;
       }
 
-      #brand {
-        top: 34px;
-        left: 40px;
-        display: flex;
-        align-items: baseline;
-        gap: 14px;
-      }
-      #brand .sub {
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.32em;
-        text-transform: uppercase;
-        color: var(--roll-muted);
-      }
-
       #edition {
         top: 40px;
         right: 40px;
@@ -89,9 +74,9 @@
       }
 
       #counter {
-        bottom: 36px;
-        right: 40px;
-        text-align: right;
+        top: 30px;
+        left: 40px;
+        text-align: left;
       }
       #counter .num {
         font-size: 40px;
@@ -141,8 +126,8 @@
       }
 
       #meter {
-        bottom: 108px;
-        right: 40px;
+        top: 102px;
+        left: 40px;
         width: 120px;
         height: 2px;
         background: var(--roll-meter);
@@ -156,17 +141,13 @@
       }
 
       @media (max-width: 720px) {
-        #brand {
-          top: 22px;
-          left: 22px;
-        }
         #edition {
           top: 26px;
           right: 22px;
         }
         #counter {
-          bottom: 24px;
-          right: 22px;
+          top: 20px;
+          left: 22px;
         }
         #counter .num {
           font-size: 30px;
@@ -189,10 +170,6 @@
   </head>
   <body>
     <canvas id="stage"></canvas>
-
-    <div class="hud" id="brand">
-      <div class="sub">Songs on Loop</div>
-    </div>
 
     <div class="hud" id="edition">
       Interactive record<br /><b>Tracks 01 &mdash; 10</b>
