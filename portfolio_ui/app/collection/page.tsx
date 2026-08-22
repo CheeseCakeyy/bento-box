@@ -6,24 +6,6 @@ export const metadata: Metadata = {
   description: "Books, poems, quotes, one-liners, and unresolved questions collected by Adwait Tagalpallewar.",
 };
 
-const shelves = [
-  {
-    number: "01",
-    title: "Books",
-    description: "Books I return to, passages I underline, and ideas that follow me out of the final chapter.",
-  },
-  {
-    number: "02",
-    title: "Poems",
-    description: "Things I write when an idea refuses to fit neatly into prose.",
-  },
-  {
-    number: "03",
-    title: "Fragments",
-    description: "Stray quotes, one-liners, and questions that end one thought by starting another.",
-  },
-];
-
 export default function CollectionPage() {
   return (
     <div className="site-shell collection-shell">
@@ -52,21 +34,77 @@ export default function CollectionPage() {
           </div>
         </section>
 
-        <section className="collection-index" aria-labelledby="collection-index-title">
-          <header className="collection-index__header">
-            <h2 id="collection-index-title">The shelves</h2>
-            <span>{String(shelves.length).padStart(2, "0")} sections</span>
+        <section className="collection-bento" aria-labelledby="collection-bento-title">
+          <header className="collection-bento__heading">
+            <h2 id="collection-bento-title">The shelves</h2>
+            <span>Editorial bento / mockup 01</span>
           </header>
 
-          <div className="collection-shelves">
-            {shelves.map((shelf) => (
-              <article className="collection-shelf" key={shelf.title}>
-                <span className="collection-shelf__number">{shelf.number}</span>
-                <h3>{shelf.title}</h3>
-                <p>{shelf.description}</p>
-                <span className="collection-shelf__status">Being arranged</span>
-              </article>
-            ))}
+          <div className="collection-bento__grid">
+            <article className="collection-card collection-card--books">
+              <header className="collection-card__header">
+                <span>Books / Featured</span>
+                <span>01</span>
+              </header>
+              <div className="collection-books__body">
+                <div className="collection-book-stack" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                <div className="collection-card__copy">
+                  <small>Cover · passage · margin note</small>
+                  <h3>The marked shelf</h3>
+                  <p>A featured home for the books and passages that stayed after the final page.</p>
+                </div>
+              </div>
+            </article>
+
+            <article className="collection-card collection-card--poems">
+              <header className="collection-card__header">
+                <span>Poems / Reading room</span>
+                <span>02</span>
+              </header>
+              <div className="collection-poem-sheet" aria-label="Placeholder for a poem">
+                <span />
+                <span />
+                <span />
+                <span />
+                <p>A quieter column for poems, drafts, and the occasional line that arrived first.</p>
+              </div>
+              <footer className="collection-card__footer">
+                <span>Read slowly</span>
+                <span aria-hidden="true">↓</span>
+              </footer>
+            </article>
+
+            <article className="collection-card collection-card--fragments">
+              <header className="collection-card__header">
+                <span>Fragments / Loose ends</span>
+                <span>03</span>
+              </header>
+              <div className="collection-fragments__body">
+                <h3>Small things that stayed.</h3>
+                <div className="collection-fragment-types" aria-label="Fragment categories">
+                  <span>Quotes</span>
+                  <span>One-liners</span>
+                  <span>Questions…</span>
+                </div>
+              </div>
+            </article>
+
+            <article className="collection-card collection-card--index">
+              <header className="collection-card__header">
+                <span>Archive index</span>
+                <span>00</span>
+              </header>
+              <div className="collection-counts">
+                <span><strong>Books</strong><i>—</i></span>
+                <span><strong>Poems</strong><i>—</i></span>
+                <span><strong>Fragments</strong><i>—</i></span>
+              </div>
+              <p>Counts appear as the shelves fill.</p>
+            </article>
           </div>
         </section>
 
