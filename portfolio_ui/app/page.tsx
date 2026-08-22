@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import MoireDesigner from "./MoireDesigner";
 
 type Theme = "dark" | "light" | "system";
 type ColorTheme = "red" | "green" | "blue";
@@ -330,8 +331,8 @@ export default function AboutPage() {
             </div>
           </article>
 
-          <article className="panel panel--sketch" aria-label="Sketchbook section">
-            <div className="sketch-grid" aria-hidden="true" />
+          <article className="panel panel--sketch" aria-label="Interactive moiré spaceship design maker">
+            <MoireDesigner />
           </article>
 
           <article className="panel panel--songs" aria-label="Songs on Loop section">

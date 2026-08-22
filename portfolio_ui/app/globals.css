@@ -791,14 +791,220 @@ a:focus-visible {
 
 .panel--sketch {
   grid-area: sketch;
-  min-height: 324px;
+  min-height: 500px;
+  padding: 0;
 }
 
-.sketch-grid {
+.panel--sketch::after {
+  display: none;
+}
+
+.moire-maker {
+  display: grid;
   height: 100%;
-  min-height: 300px;
-  border: 1px solid var(--panel-border);
-  border-radius: 6px;
+  min-height: 500px;
+  grid-template-rows: auto minmax(330px, 1fr) auto;
+  background: #f7f5ef;
+  color: #111111;
+}
+
+.moire-maker__header,
+.moire-maker__footer {
+  position: relative;
+  z-index: 3;
+  padding: 12px;
+  background: #f7f5ef;
+}
+
+.moire-maker__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.2);
+}
+
+.moire-maker__eyebrow,
+.moire-maker__state,
+.moire-maker__footer,
+.moire-steering small {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+.moire-maker__eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  opacity: 0.55;
+}
+
+.moire-maker h2 {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 520;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.moire-maker__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.moire-maker__state::before {
+  width: 6px;
+  height: 6px;
+  content: "";
+  border-radius: 50%;
+  background: #ff4d2e;
+  box-shadow: 0 0 0 4px rgba(255, 77, 46, 0.13);
+}
+
+.moire-maker__state.is-paused::before {
+  background: #111111;
+  box-shadow: none;
+}
+
+.moire-stage {
+  position: relative;
+  min-height: 330px;
+  overflow: hidden;
+  outline: none;
+  background: #f7f5ef;
+  touch-action: manipulation;
+}
+
+.moire-stage:focus-visible {
+  box-shadow: inset 0 0 0 2px #ff4d2e;
+}
+
+.moire-stage__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.moire-stage__hint {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 2;
+  margin: 0;
+  padding: 4px 7px;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background: rgba(247, 245, 239, 0.78);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+.moire-steering {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.moire-steering button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  user-select: none;
+  place-items: center;
+  border: 1px solid #111111;
+  border-radius: 50%;
+  background: rgba(247, 245, 239, 0.9);
+  color: #111111;
+  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.12);
+  touch-action: none;
+}
+
+.moire-steering button:active {
+  background: #111111;
+  color: #f7f5ef;
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.moire-steering__thrust {
+  margin-bottom: 18px;
+}
+
+.moire-steering button span {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.moire-steering small {
+  margin-top: -7px;
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.moire-maker__footer {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid rgba(17, 17, 17, 0.2);
+}
+
+.moire-maker__footer p {
+  min-height: 10px;
+  margin: 0;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  opacity: 0.58;
+}
+
+.moire-maker__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.moire-maker__actions button {
+  min-height: 32px;
+  cursor: pointer;
+  border: 1px solid rgba(17, 17, 17, 0.32);
+  border-radius: 3px;
+  background: transparent;
+  color: #111111;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.moire-maker__actions button:hover {
+  background: rgba(17, 17, 17, 0.08);
+  transform: translateY(-1px);
+}
+
+.moire-maker__actions .moire-maker__send {
+  border-color: #111111;
+  background: #111111;
+  color: #f7f5ef;
+}
+
+.moire-maker__actions .moire-maker__send:hover {
+  background: #ff4d2e;
+  border-color: #ff4d2e;
 }
 
 .panel--songs {
@@ -1122,7 +1328,7 @@ a:focus-visible {
   }
 
   .panel--sketch {
-    min-height: 324px;
+    min-height: 500px;
   }
 
   .panel--songs {
@@ -1203,15 +1409,15 @@ a:focus-visible {
   }
 
   .panel--sketch {
-    min-height: 324px;
+    min-height: 500px;
   }
 
   .panel--songs {
     min-height: 560px;
   }
 
-  .sketch-grid {
-    min-height: 300px;
+  .moire-maker {
+    min-height: 500px;
   }
 
   .songs-embed {
