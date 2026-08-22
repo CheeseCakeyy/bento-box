@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import MoireDesigner from "./MoireDesigner";
 
 type Theme = "dark" | "light" | "system";
@@ -232,11 +233,44 @@ export default function AboutPage() {
 
         <section id="portfolio-grid" className="portfolio-grid" aria-label="About page sections">
           <article className="panel panel--bio" aria-label="Profile and biography section">
-            <div className="bio-media placeholder-surface" />
-            <EmptyLines count={3} />
-            <div className="bio-actions" aria-hidden="true">
-              <span />
-              <span />
+            <div className="bio-media" aria-hidden="true">
+              <span className="bio-media__index">About / 01</span>
+              <div className="bio-monogram">
+                <span>A</span>
+                <span>T</span>
+              </div>
+              <span className="bio-media__caption">AI · Data · Software</span>
+            </div>
+
+            <p className="bio-copy">
+              I&apos;m a <strong>Computer Science student</strong> working across <strong>AI, data,
+              and software</strong>, with a particular interest in building intelligent systems
+              from messy real-world problems. I&apos;ve spent my time experimenting with <strong>machine
+              learning, research, competitions, and AI-powered products</strong>, which gradually
+              pulled me from simply training models into designing and building the systems around
+              them. When I&apos;m not working on a project, I&apos;m probably exploring another idea that
+              sounded simple five minutes ago.
+            </p>
+
+            <div className="bio-actions">
+              <div className="bio-socials">
+                <span>See what I&apos;ve been doing on</span>
+                <div className="bio-social-links" aria-label="Social profiles">
+                  <a href="https://github.com/CheeseCakeyy" target="_blank" rel="noreferrer" aria-label="GitHub profile">
+                    <i className="fab fa-github" aria-hidden="true" />
+                  </a>
+                  <a href="https://in.linkedin.com/in/adwait-tagalpallewar" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
+                    <i className="fab fa-linkedin" aria-hidden="true" />
+                  </a>
+                  <a href="https://www.kaggle.com/adwaittagalpallewar" target="_blank" rel="noreferrer" aria-label="Kaggle profile">
+                    <i className="fab fa-kaggle" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+              <Link className="bio-talk" href="/contact">
+                <span>Let&apos;s talk</span>
+                <span aria-hidden="true">→</span>
+              </Link>
             </div>
           </article>
 
@@ -429,7 +463,7 @@ export default function AboutPage() {
             About
           </a>
           <a href="#shop">Shop</a>
-          <a href="#contact">Contact</a>
+          <Link href="/contact">Contact</Link>
         </nav>
         <button
           className={`scroll-top ${scrolled ? "is-visible" : ""}`}
