@@ -102,16 +102,6 @@ function formatTime(value: number) {
   return `${minutes}:${seconds}`;
 }
 
-function EmptyLines({ count = 3 }: { count?: number }) {
-  return (
-    <div className="empty-lines" aria-hidden="true">
-      {Array.from({ length: count }, (_, index) => (
-        <span key={index} />
-      ))}
-    </div>
-  );
-}
-
 export default function AboutPage() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
@@ -519,8 +509,18 @@ export default function AboutPage() {
             />
           </article>
 
-          <article className="panel panel--notes" aria-label="Notes section">
-            <EmptyLines count={2} />
+          <article className="panel panel--notes collection-invite" aria-labelledby="collection-invite-title">
+            <div className="collection-invite__copy">
+              <span id="collection-invite-title">Collected along the way</span>
+              <p>
+                I read books and write poems sometimes. I also collect stray quotes, one-liners,
+                and questions that leave you hanging. A few of them live here.
+              </p>
+            </div>
+            <Link className="collection-invite__link" href="/collection">
+              <span>Browse the collection</span>
+              <span aria-hidden="true">↗</span>
+            </Link>
           </article>
         </section>
       </main>
@@ -531,7 +531,7 @@ export default function AboutPage() {
           <a className="is-current" href="#about" aria-current="page">
             About
           </a>
-          <a href="#shop">Shop</a>
+          <Link href="/collection">Collection</Link>
           <Link href="/contact">Contact</Link>
         </nav>
         <button

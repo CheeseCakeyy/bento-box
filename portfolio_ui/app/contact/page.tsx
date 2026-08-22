@@ -62,7 +62,7 @@ export default function ContactPage() {
         <nav className="floating-nav" aria-label="Primary navigation">
           <Link href="/#work">Work</Link>
           <Link href="/#about">About</Link>
-          <Link href="/#shop">Shop</Link>
+          <Link href="/collection">Collection</Link>
           <Link className="is-current" href="/contact" aria-current="page">Contact</Link>
         </nav>
       </div>

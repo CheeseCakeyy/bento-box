@@ -2879,12 +2879,229 @@ a:focus-visible {
 .panel--notes {
   grid-area: notes;
   min-height: 125px;
-  display: flex;
-  align-items: flex-end;
+  display: grid;
 }
 
-.panel--notes .empty-lines {
-  width: 80%;
+.collection-invite {
+  min-height: 124px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(20px, 4vw, 48px);
+  padding: 16px 18px;
+}
+
+.collection-invite__copy {
+  display: grid;
+  max-width: 900px;
+  gap: 8px;
+}
+
+.collection-invite__copy > span,
+.collection-header-label,
+.collection-kicker,
+.collection-index__header,
+.collection-shelf__number,
+.collection-shelf__status,
+.collection-footnote > span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--block-topic-size);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.collection-invite__copy p {
+  max-width: 850px;
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: -0.008em;
+  line-height: 1.58;
+}
+
+.collection-invite__link {
+  display: inline-flex;
+  min-height: 38px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--panel-raised);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: gap 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.collection-invite__link:hover {
+  gap: 44px;
+  background: var(--ghost-strong);
+  transform: translateY(-1px);
+}
+
+.collection-shell {
+  min-height: 100vh;
+}
+
+.collection-header-label {
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.collection-page {
+  position: relative;
+  z-index: 1;
+  width: min(1440px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 88px 28px 140px;
+}
+
+.collection-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.collection-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  align-items: end;
+  gap: clamp(36px, 8vw, 120px);
+  padding: clamp(72px, 10vw, 150px) 0 clamp(82px, 11vw, 160px);
+}
+
+.collection-hero h1 {
+  max-width: 880px;
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 300;
+  letter-spacing: -0.075em;
+  line-height: 0.86;
+}
+
+.collection-hero__copy {
+  display: grid;
+  gap: 20px;
+  padding-bottom: 8px;
+}
+
+.collection-hero__copy p {
+  margin: 0;
+  font-size: clamp(16px, 1.6vw, 22px);
+  line-height: 1.5;
+}
+
+.collection-hero__copy span {
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.collection-index {
+  border-top: 1px solid var(--panel-border);
+}
+
+.collection-index__header {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+}
+
+.collection-index__header h2 {
+  margin: 0;
+  color: var(--text);
+  font: inherit;
+}
+
+.collection-shelf {
+  display: grid;
+  min-height: 146px;
+  grid-template-columns: 52px minmax(180px, 0.65fr) minmax(280px, 1fr) auto;
+  align-items: center;
+  gap: clamp(18px, 4vw, 64px);
+  padding: 22px 0;
+  border-top: 1px solid var(--panel-border);
+  transition: padding 180ms ease, background-color 180ms ease;
+}
+
+.collection-shelf:hover {
+  padding-right: 14px;
+  padding-left: 14px;
+  background: var(--ghost);
+}
+
+.collection-shelf__number,
+.collection-shelf__status {
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.collection-shelf h3 {
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(28px, 3.2vw, 46px);
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.collection-shelf p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.collection-shelf__status {
+  white-space: nowrap;
+}
+
+.collection-footnote {
+  display: grid;
+  min-height: 180px;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: end;
+  gap: 28px;
+  padding: 64px 0 0;
+  border-top: 1px solid var(--panel-border);
+}
+
+.collection-footnote > span {
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.collection-footnote p {
+  max-width: 740px;
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(24px, 3.2vw, 44px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
 }
 
 .contact-shell {
@@ -3143,8 +3360,53 @@ a:focus-visible {
     padding: 14px 16px;
   }
 
-  .contact-header-label {
+  .contact-header-label,
+  .collection-header-label {
     display: none;
+  }
+
+  .collection-page {
+    padding: 72px 16px 112px;
+  }
+
+  .collection-kicker {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .collection-hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 38px;
+    padding: 72px 0 96px;
+  }
+
+  .collection-hero h1 {
+    font-size: clamp(3.7rem, 18vw, 6rem);
+  }
+
+  .collection-shelf {
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px 16px;
+    padding: 24px 0;
+  }
+
+  .collection-shelf p,
+  .collection-shelf__status {
+    grid-column: 2;
+  }
+
+  .collection-shelf:hover {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .collection-footnote {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 18px;
   }
 
   .contact-page {
@@ -3207,6 +3469,18 @@ a:focus-visible {
       "stamps"
       "notes";
     gap: 14px;
+  }
+
+  .collection-invite {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    align-content: space-between;
+    gap: 22px;
+    padding: 16px;
+  }
+
+  .collection-invite__link {
+    width: fit-content;
   }
 
   .panel--bio {
