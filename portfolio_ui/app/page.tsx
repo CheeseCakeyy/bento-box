@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
 
@@ -436,12 +437,7 @@ export default function AboutPage() {
           </article>
 
           <article className="panel panel--photos" aria-label="Camera roll section">
-            <div className="photo-dots" aria-hidden="true">
-              {Array.from({ length: 9 }, (_, index) => (
-                <span key={index} />
-              ))}
-            </div>
-            <div className="photo-frame placeholder-surface" aria-hidden="true" />
+            <CameraRoll />
           </article>
 
           <article className="panel panel--code" aria-label="Code explorer section">
