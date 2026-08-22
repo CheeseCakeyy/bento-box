@@ -1,6 +1,7 @@
 # Local reference material
 /reference/
 /paper-roll-main/
+/moire-master/
 
 # Dependencies
 node_modules/
