@@ -800,12 +800,13 @@ a:focus-visible {
 }
 
 .moire-maker {
-  --moire-paper: #ffffff;
-  --moire-ink: #111111;
-  --moire-hairline: rgba(17, 17, 17, 0.2);
-  --moire-control: rgba(255, 255, 255, 0.92);
-  --moire-overlay: rgba(255, 255, 255, 0.82);
-  --moire-shadow: rgba(17, 17, 17, 0.12);
+  --moire-paper: var(--panel);
+  --moire-ink: var(--text);
+  --moire-accent: #ff4d2e;
+  --moire-hairline: color-mix(in srgb, var(--moire-ink) 20%, transparent);
+  --moire-control: color-mix(in srgb, var(--moire-paper) 92%, transparent);
+  --moire-overlay: color-mix(in srgb, var(--moire-paper) 82%, transparent);
+  --moire-shadow: rgba(0, 0, 0, 0.32);
   display: grid;
   height: 100%;
   min-height: 500px;
@@ -814,13 +815,8 @@ a:focus-visible {
   color: var(--moire-ink);
 }
 
-[data-theme="dark"] .moire-maker {
-  --moire-paper: #101010;
-  --moire-ink: #f2f2ec;
-  --moire-hairline: rgba(242, 242, 236, 0.2);
-  --moire-control: rgba(16, 16, 16, 0.9);
-  --moire-overlay: rgba(16, 16, 16, 0.82);
-  --moire-shadow: rgba(0, 0, 0, 0.38);
+[data-color-theme] .moire-maker {
+  --moire-accent: var(--moire-ink);
 }
 
 .moire-maker__header,
@@ -878,8 +874,8 @@ a:focus-visible {
   height: 6px;
   content: "";
   border-radius: 50%;
-  background: #ff4d2e;
-  box-shadow: 0 0 0 4px rgba(255, 77, 46, 0.13);
+  background: var(--moire-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--moire-accent) 18%, transparent);
 }
 
 .moire-maker__state.is-paused::before {
@@ -897,21 +893,13 @@ a:focus-visible {
 }
 
 .moire-stage:focus-visible {
-  box-shadow: inset 0 0 0 2px #ff4d2e;
+  box-shadow: inset 0 0 0 2px var(--moire-accent);
 }
 
 .moire-stage__canvas {
   position: absolute;
   inset: 0;
   display: block;
-}
-
-.moire-stage__ink {
-  transition: filter 220ms ease;
-}
-
-[data-theme="dark"] .moire-stage__ink {
-  filter: invert(1);
 }
 
 .moire-stage__hint {
@@ -1026,8 +1014,8 @@ a:focus-visible {
 }
 
 .moire-maker__actions .moire-maker__send:hover {
-  background: #ff4d2e;
-  border-color: #ff4d2e;
+  background: var(--moire-accent);
+  border-color: var(--moire-accent);
 }
 
 .panel--songs {

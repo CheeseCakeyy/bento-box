@@ -3,6 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Control = "left" | "thrust" | "right";
+type TrailSegment = [number, number, number, number, number, number];
+
+type MoirePalette = {
+  paper: string;
+  ink: string;
+  accent: string;
+};
 
 const rotate = (angle: number, x: number, y: number) => [
   Math.cos(angle) * x - Math.sin(angle) * y,
@@ -18,7 +25,12 @@ export default function MoireDesigner() {
   const positionRef = useRef<[number, number]>([80, 180]);
   const velocityRef = useRef<[number, number]>([2.4, 0]);
   const angleRef = useRef(0);
-  const darkThemeRef = useRef(true);
+  const segmentsRef = useRef<TrailSegment[]>([]);
+  const paletteRef = useRef<MoirePalette>({
+    paper: "rgb(255, 255, 255)",
+    ink: "rgb(17, 17, 17)",
+    accent: "rgb(255, 77, 46)",
+  });
   const controlsRef = useRef<Record<Control, boolean>>({
     left: false,
     thrust: false,
@@ -42,7 +54,8 @@ export default function MoireDesigner() {
 
     context.save();
     context.setTransform(sizeRef.current.dpr, 0, 0, sizeRef.current.dpr, 0, 0);
-    context.fillStyle = "#ffffff";
+    segmentsRef.current = [];
+    context.fillStyle = paletteRef.current.paper;
     context.fillRect(0, 0, width, height);
     context.restore();
 
@@ -58,23 +71,6 @@ export default function MoireDesigner() {
         const source = inkCanvasRef.current;
         if (!source) {
           resolve(null);
-          return;
-        }
-
-        if (document.documentElement.dataset.theme !== "light") {
-          const exported = document.createElement("canvas");
-          exported.width = source.width;
-          exported.height = source.height;
-          const context = exported.getContext("2d");
-          if (!context) {
-            resolve(null);
-            return;
-          }
-
-          context.filter = "invert(1)";
-          context.drawImage(source, 0, 0);
-          context.filter = "none";
-          exported.toBlob(resolve, "image/png");
           return;
         }
 
@@ -144,6 +140,59 @@ export default function MoireDesigner() {
     const shipCanvas = shipCanvasRef.current;
     if (!stage || !inkCanvas || !shipCanvas) return;
 
+    const colorProbe = document.createElement("canvas");
+    colorProbe.width = 1;
+    colorProbe.height = 1;
+    const colorContext = colorProbe.getContext("2d", { willReadFrequently: true });
+
+    const resolveCanvasColor = (value: string, fallback: string) => {
+      if (!colorContext) return fallback;
+      colorContext.clearRect(0, 0, 1, 1);
+      colorContext.fillStyle = fallback;
+      colorContext.fillStyle = value || fallback;
+      colorContext.fillRect(0, 0, 1, 1);
+      const [red, green, blue] = colorContext.getImageData(0, 0, 1, 1).data;
+      return `rgb(${red}, ${green}, ${blue})`;
+    };
+
+    const readPalette = (): MoirePalette => {
+      const styles = getComputedStyle(stage);
+      return {
+        paper: resolveCanvasColor(styles.getPropertyValue("--moire-paper").trim(), "#ffffff"),
+        ink: resolveCanvasColor(styles.getPropertyValue("--moire-ink").trim(), "#111111"),
+        accent: resolveCanvasColor(styles.getPropertyValue("--moire-accent").trim(), "#ff4d2e"),
+      };
+    };
+
+    const redrawDesign = () => {
+      const { width, height, dpr } = sizeRef.current;
+      const ink = inkCanvas.getContext("2d");
+      if (!ink || !width || !height) return;
+
+      ink.save();
+      ink.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ink.fillStyle = paletteRef.current.paper;
+      ink.fillRect(0, 0, width, height);
+      ink.strokeStyle = paletteRef.current.ink;
+      ink.globalAlpha = 0.5;
+      ink.lineWidth = 0.72;
+
+      for (const segment of segmentsRef.current) {
+        ink.beginPath();
+        ink.moveTo(segment[0] * width, segment[1] * height);
+        ink.lineTo(segment[2] * width, segment[3] * height);
+        ink.lineTo(segment[4] * width, segment[5] * height);
+        ink.stroke();
+      }
+
+      ink.restore();
+    };
+
+    const syncTheme = () => {
+      paletteRef.current = readPalette();
+      redrawDesign();
+    };
+
     const resizeCanvas = () => {
       const bounds = stage.getBoundingClientRect();
       const width = Math.max(1, Math.floor(bounds.width));
@@ -155,14 +204,6 @@ export default function MoireDesigner() {
         return;
       }
 
-      const backup = document.createElement("canvas");
-      backup.width = inkCanvas.width;
-      backup.height = inkCanvas.height;
-      const backupContext = backup.getContext("2d");
-      if (backup.width && backup.height && backupContext) {
-        backupContext.drawImage(inkCanvas, 0, 0);
-      }
-
       for (const canvas of [inkCanvas, shipCanvas]) {
         canvas.width = Math.floor(width * dpr);
         canvas.height = Math.floor(height * dpr);
@@ -172,14 +213,7 @@ export default function MoireDesigner() {
       }
 
       sizeRef.current = { width, height, dpr };
-      const ink = inkCanvas.getContext("2d");
-      if (ink) {
-        ink.fillStyle = "#ffffff";
-        ink.fillRect(0, 0, width, height);
-        if (backup.width && backup.height) {
-          ink.drawImage(backup, 0, 0, backup.width, backup.height, 0, 0, width, height);
-        }
-      }
+      redrawDesign();
 
       if (!previous.width) {
         positionRef.current = [width * 0.24, height * 0.5];
@@ -193,16 +227,13 @@ export default function MoireDesigner() {
 
     const observer = new ResizeObserver(resizeCanvas);
     observer.observe(stage);
+    syncTheme();
     resizeCanvas();
 
-    const syncTheme = () => {
-      darkThemeRef.current = document.documentElement.dataset.theme !== "light";
-    };
     const themeObserver = new MutationObserver(syncTheme);
-    syncTheme();
     themeObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"],
+      attributeFilter: ["data-theme", "data-color-theme"],
     });
 
     let previousTime = performance.now();
@@ -254,9 +285,23 @@ export default function MoireDesigner() {
           ink.moveTo(position[0] + leftRay[0], position[1] + leftRay[1]);
           ink.lineTo(position[0], position[1]);
           ink.lineTo(position[0] + rightRay[0], position[1] + rightRay[1]);
-          ink.strokeStyle = "rgba(13, 13, 13, 0.5)";
+          ink.strokeStyle = paletteRef.current.ink;
+          ink.globalAlpha = 0.5;
           ink.lineWidth = 0.72;
           ink.stroke();
+          ink.globalAlpha = 1;
+
+          segmentsRef.current.push([
+            (position[0] + leftRay[0]) / width,
+            (position[1] + leftRay[1]) / height,
+            position[0] / width,
+            position[1] / height,
+            (position[0] + rightRay[0]) / width,
+            (position[1] + rightRay[1]) / height,
+          ]);
+          if (segmentsRef.current.length > 50_000) {
+            segmentsRef.current.splice(0, 5_000);
+          }
         }
 
         const radians = angleRef.current * (Math.PI / 180);
@@ -270,7 +315,7 @@ export default function MoireDesigner() {
         ship.lineTo(position[0] + nose[0], position[1] + nose[1]);
         ship.lineTo(position[0] + rearBottom[0], position[1] + rearBottom[1]);
         ship.closePath();
-        ship.fillStyle = darkThemeRef.current ? "#f2f2ec" : "#111111";
+        ship.fillStyle = paletteRef.current.ink;
         ship.fill();
 
         if (controls.thrust && !pausedRef.current) {
@@ -280,7 +325,7 @@ export default function MoireDesigner() {
           ship.lineTo(position[0] + flame[0], position[1] + flame[1]);
           ship.lineTo(position[0] + rearBottom[0] * 0.92, position[1] + rearBottom[1] * 0.92);
           ship.closePath();
-          ship.fillStyle = "#ff4d2e";
+          ship.fillStyle = paletteRef.current.accent;
           ship.fill();
         }
       }
