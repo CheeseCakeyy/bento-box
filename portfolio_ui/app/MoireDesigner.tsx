@@ -36,9 +36,11 @@ export default function MoireDesigner() {
     thrust: false,
     right: false,
   });
+  const startedRef = useRef(false);
   const pausedRef = useRef(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [status, setStatus] = useState("Drawing live");
+  const [status, setStatus] = useState("Ready when you are");
 
   const setControl = useCallback((control: Control, active: boolean) => {
     controlsRef.current[control] = active;
@@ -132,6 +134,15 @@ export default function MoireDesigner() {
     pausedRef.current = !pausedRef.current;
     setIsPaused(pausedRef.current);
     setStatus(pausedRef.current ? "Drawing paused" : "Drawing live");
+  }, []);
+
+  const startExperience = useCallback(() => {
+    startedRef.current = true;
+    pausedRef.current = false;
+    setHasStarted(true);
+    setIsPaused(false);
+    setStatus("Drawing live");
+    window.requestAnimationFrame(() => stageRef.current?.focus());
   }, []);
 
   useEffect(() => {
@@ -244,7 +255,7 @@ export default function MoireDesigner() {
       const step = Math.min((time - previousTime) / (1000 / 60), 2);
       previousTime = time;
 
-      if (width && height && ink && ship) {
+      if (width && height && ink && ship && startedRef.current) {
         const controls = controlsRef.current;
         if (!pausedRef.current) {
           if (controls.left) angleRef.current -= 1.25 * step;
@@ -342,6 +353,7 @@ export default function MoireDesigner() {
   }, []);
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!startedRef.current) return;
     const key = event.key.toLowerCase();
     if (key === "a" || key === "arrowleft") setControl("left", true);
     if (key === "d" || key === "arrowright") setControl("right", true);
@@ -378,17 +390,17 @@ export default function MoireDesigner() {
           <span className="moire-maker__eyebrow">Interactive sketch 01</span>
           <h2 id="moire-maker-title">Pilot the line</h2>
         </div>
-        <span className={`moire-maker__state ${isPaused ? "is-paused" : ""}`}>
-          {isPaused ? "Paused" : "Live"}
+        <span className={`moire-maker__state ${!hasStarted ? "is-ready" : isPaused ? "is-paused" : ""}`}>
+          {!hasStarted ? "Ready" : isPaused ? "Paused" : "Live"}
         </span>
       </header>
 
       <div
         ref={stageRef}
         className="moire-stage"
-        role="application"
-        tabIndex={0}
-        aria-label="Moiré spaceship canvas. Use A and D to turn, W to thrust, space to pause, and C to clear."
+        role={hasStarted ? "application" : undefined}
+        tabIndex={hasStarted ? 0 : -1}
+        aria-label={hasStarted ? "Moiré spaceship canvas. Use A and D to turn, W to thrust, space to pause, and C to clear." : undefined}
         onKeyDown={onKeyDown}
         onKeyUp={onKeyUp}
         onBlur={() => {
@@ -397,32 +409,56 @@ export default function MoireDesigner() {
       >
         <canvas ref={inkCanvasRef} className="moire-stage__canvas moire-stage__ink" aria-hidden="true" />
         <canvas ref={shipCanvasRef} className="moire-stage__canvas" aria-hidden="true" />
-        <p className="moire-stage__hint">Hold to steer · leave a trail</p>
-        <div className="moire-steering" aria-label="Spaceship controls">
-          <button type="button" aria-label="Turn left" {...controlButtonProps("left")}>
-            <span aria-hidden="true">↶</span>
-            <small>A</small>
+        {!hasStarted ? (
+          <button className="moire-launch" type="button" onClick={startExperience}>
+            <span className="moire-launch__meta">Interactive canvas · Click to enter</span>
+            <span className="moire-launch__art" aria-hidden="true">
+              {Array.from({ length: 5 }, (_, index) => (
+                <span className="moire-launch__ray" key={index} />
+              ))}
+              <span className="moire-launch__orbit" />
+              <span className="moire-launch__ship" />
+            </span>
+            <span className="moire-launch__copy">
+              <strong>Launch the sketch</strong>
+              <small>Motion begins only when you choose.</small>
+            </span>
+            <span className="moire-launch__arrow" aria-hidden="true">↗</span>
           </button>
-          <button className="moire-steering__thrust" type="button" aria-label="Thrust" {...controlButtonProps("thrust")}>
-            <span aria-hidden="true">↑</span>
-            <small>W</small>
-          </button>
-          <button type="button" aria-label="Turn right" {...controlButtonProps("right")}>
-            <span aria-hidden="true">↷</span>
-            <small>D</small>
-          </button>
-        </div>
-      </div>
+        ) : (
+          <>
+            <p className="moire-stage__hint">Hold to steer · leave a trail</p>
+            <aside className="moire-control-panel" aria-label="Moiré drawing controls">
+              <div className="moire-control-panel__header">
+                <span>Flight deck</span>
+                <strong aria-live="polite">{status}</strong>
+              </div>
 
-      <footer className="moire-maker__footer">
-        <p aria-live="polite">{status}</p>
-        <div className="moire-maker__actions">
-          <button type="button" onClick={clearDesign}>Clear</button>
-          <button type="button" onClick={togglePaused}>{isPaused ? "Resume" : "Pause"}</button>
-          <button type="button" onClick={downloadPng}>Save PNG</button>
-          <button className="moire-maker__send" type="button" onClick={shareDesign}>Send design ↗</button>
-        </div>
-      </footer>
+              <div className="moire-steering" aria-label="Spaceship steering controls">
+                <button type="button" aria-label="Turn left" {...controlButtonProps("left")}>
+                  <span aria-hidden="true">↶</span>
+                  <small>A</small>
+                </button>
+                <button className="moire-steering__thrust" type="button" aria-label="Thrust" {...controlButtonProps("thrust")}>
+                  <span aria-hidden="true">↑</span>
+                  <small>W</small>
+                </button>
+                <button type="button" aria-label="Turn right" {...controlButtonProps("right")}>
+                  <span aria-hidden="true">↷</span>
+                  <small>D</small>
+                </button>
+              </div>
+
+              <div className="moire-panel-actions">
+                <button type="button" onClick={clearDesign}>Clear</button>
+                <button type="button" onClick={togglePaused}>{isPaused ? "Resume" : "Pause"}</button>
+                <button type="button" onClick={downloadPng}>Save PNG</button>
+                <button className="moire-panel-actions__send" type="button" onClick={shareDesign}>Send ↗</button>
+              </div>
+            </aside>
+          </>
+        )}
+      </div>
     </section>
   );
 }
