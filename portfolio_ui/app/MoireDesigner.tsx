@@ -18,6 +18,7 @@ export default function MoireDesigner() {
   const positionRef = useRef<[number, number]>([80, 180]);
   const velocityRef = useRef<[number, number]>([2.4, 0]);
   const angleRef = useRef(0);
+  const darkThemeRef = useRef(true);
   const controlsRef = useRef<Record<Control, boolean>>({
     left: false,
     thrust: false,
@@ -41,7 +42,7 @@ export default function MoireDesigner() {
 
     context.save();
     context.setTransform(sizeRef.current.dpr, 0, 0, sizeRef.current.dpr, 0, 0);
-    context.fillStyle = "#f7f5ef";
+    context.fillStyle = "#ffffff";
     context.fillRect(0, 0, width, height);
     context.restore();
 
@@ -54,7 +55,30 @@ export default function MoireDesigner() {
   const makePng = useCallback(
     () =>
       new Promise<Blob | null>((resolve) => {
-        inkCanvasRef.current?.toBlob(resolve, "image/png");
+        const source = inkCanvasRef.current;
+        if (!source) {
+          resolve(null);
+          return;
+        }
+
+        if (document.documentElement.dataset.theme !== "light") {
+          const exported = document.createElement("canvas");
+          exported.width = source.width;
+          exported.height = source.height;
+          const context = exported.getContext("2d");
+          if (!context) {
+            resolve(null);
+            return;
+          }
+
+          context.filter = "invert(1)";
+          context.drawImage(source, 0, 0);
+          context.filter = "none";
+          exported.toBlob(resolve, "image/png");
+          return;
+        }
+
+        source.toBlob(resolve, "image/png");
       }),
     [],
   );
@@ -150,7 +174,7 @@ export default function MoireDesigner() {
       sizeRef.current = { width, height, dpr };
       const ink = inkCanvas.getContext("2d");
       if (ink) {
-        ink.fillStyle = "#f7f5ef";
+        ink.fillStyle = "#ffffff";
         ink.fillRect(0, 0, width, height);
         if (backup.width && backup.height) {
           ink.drawImage(backup, 0, 0, backup.width, backup.height, 0, 0, width, height);
@@ -170,6 +194,16 @@ export default function MoireDesigner() {
     const observer = new ResizeObserver(resizeCanvas);
     observer.observe(stage);
     resizeCanvas();
+
+    const syncTheme = () => {
+      darkThemeRef.current = document.documentElement.dataset.theme !== "light";
+    };
+    const themeObserver = new MutationObserver(syncTheme);
+    syncTheme();
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
 
     let previousTime = performance.now();
     const animate = (time: number) => {
@@ -236,7 +270,7 @@ export default function MoireDesigner() {
         ship.lineTo(position[0] + nose[0], position[1] + nose[1]);
         ship.lineTo(position[0] + rearBottom[0], position[1] + rearBottom[1]);
         ship.closePath();
-        ship.fillStyle = "#111111";
+        ship.fillStyle = darkThemeRef.current ? "#f2f2ec" : "#111111";
         ship.fill();
 
         if (controls.thrust && !pausedRef.current) {
@@ -257,6 +291,7 @@ export default function MoireDesigner() {
     frameRef.current = requestAnimationFrame(animate);
     return () => {
       observer.disconnect();
+      themeObserver.disconnect();
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
   }, []);
@@ -315,7 +350,7 @@ export default function MoireDesigner() {
           controlsRef.current = { left: false, thrust: false, right: false };
         }}
       >
-        <canvas ref={inkCanvasRef} className="moire-stage__canvas" aria-hidden="true" />
+        <canvas ref={inkCanvasRef} className="moire-stage__canvas moire-stage__ink" aria-hidden="true" />
         <canvas ref={shipCanvasRef} className="moire-stage__canvas" aria-hidden="true" />
         <p className="moire-stage__hint">Hold to steer · leave a trail</p>
         <div className="moire-steering" aria-label="Spaceship controls">

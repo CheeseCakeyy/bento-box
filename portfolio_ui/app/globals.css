@@ -800,12 +800,27 @@ a:focus-visible {
 }
 
 .moire-maker {
+  --moire-paper: #ffffff;
+  --moire-ink: #111111;
+  --moire-hairline: rgba(17, 17, 17, 0.2);
+  --moire-control: rgba(255, 255, 255, 0.92);
+  --moire-overlay: rgba(255, 255, 255, 0.82);
+  --moire-shadow: rgba(17, 17, 17, 0.12);
   display: grid;
   height: 100%;
   min-height: 500px;
   grid-template-rows: auto minmax(330px, 1fr) auto;
-  background: #f7f5ef;
-  color: #111111;
+  background: var(--moire-paper);
+  color: var(--moire-ink);
+}
+
+[data-theme="dark"] .moire-maker {
+  --moire-paper: #101010;
+  --moire-ink: #f2f2ec;
+  --moire-hairline: rgba(242, 242, 236, 0.2);
+  --moire-control: rgba(16, 16, 16, 0.9);
+  --moire-overlay: rgba(16, 16, 16, 0.82);
+  --moire-shadow: rgba(0, 0, 0, 0.38);
 }
 
 .moire-maker__header,
@@ -813,7 +828,7 @@ a:focus-visible {
   position: relative;
   z-index: 3;
   padding: 12px;
-  background: #f7f5ef;
+  background: var(--moire-paper);
 }
 
 .moire-maker__header {
@@ -821,7 +836,7 @@ a:focus-visible {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  border-bottom: 1px solid rgba(17, 17, 17, 0.2);
+  border-bottom: 1px solid var(--moire-hairline);
 }
 
 .moire-maker__eyebrow,
@@ -868,7 +883,7 @@ a:focus-visible {
 }
 
 .moire-maker__state.is-paused::before {
-  background: #111111;
+  background: var(--moire-ink);
   box-shadow: none;
 }
 
@@ -877,7 +892,7 @@ a:focus-visible {
   min-height: 330px;
   overflow: hidden;
   outline: none;
-  background: #f7f5ef;
+  background: var(--moire-paper);
   touch-action: manipulation;
 }
 
@@ -891,6 +906,14 @@ a:focus-visible {
   display: block;
 }
 
+.moire-stage__ink {
+  transition: filter 220ms ease;
+}
+
+[data-theme="dark"] .moire-stage__ink {
+  filter: invert(1);
+}
+
 .moire-stage__hint {
   position: absolute;
   top: 10px;
@@ -898,8 +921,8 @@ a:focus-visible {
   z-index: 2;
   margin: 0;
   padding: 4px 7px;
-  border: 1px solid rgba(17, 17, 17, 0.18);
-  background: rgba(247, 245, 239, 0.78);
+  border: 1px solid var(--moire-hairline);
+  background: var(--moire-overlay);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 8px;
   font-weight: 700;
@@ -925,17 +948,17 @@ a:focus-visible {
   cursor: pointer;
   user-select: none;
   place-items: center;
-  border: 1px solid #111111;
+  border: 1px solid var(--moire-ink);
   border-radius: 50%;
-  background: rgba(247, 245, 239, 0.9);
-  color: #111111;
-  box-shadow: 0 4px 0 rgba(17, 17, 17, 0.12);
+  background: var(--moire-control);
+  color: var(--moire-ink);
+  box-shadow: 0 4px 0 var(--moire-shadow);
   touch-action: none;
 }
 
 .moire-steering button:active {
-  background: #111111;
-  color: #f7f5ef;
+  background: var(--moire-ink);
+  color: var(--moire-paper);
   transform: translateY(2px);
   box-shadow: none;
 }
@@ -958,7 +981,7 @@ a:focus-visible {
 .moire-maker__footer {
   display: grid;
   gap: 10px;
-  border-top: 1px solid rgba(17, 17, 17, 0.2);
+  border-top: 1px solid var(--moire-hairline);
 }
 
 .moire-maker__footer p {
@@ -979,10 +1002,10 @@ a:focus-visible {
 .moire-maker__actions button {
   min-height: 32px;
   cursor: pointer;
-  border: 1px solid rgba(17, 17, 17, 0.32);
+  border: 1px solid color-mix(in srgb, var(--moire-ink) 32%, transparent);
   border-radius: 3px;
   background: transparent;
-  color: #111111;
+  color: var(--moire-ink);
   font-family: inherit;
   font-size: 9px;
   font-weight: 700;
@@ -992,14 +1015,14 @@ a:focus-visible {
 }
 
 .moire-maker__actions button:hover {
-  background: rgba(17, 17, 17, 0.08);
+  background: color-mix(in srgb, var(--moire-ink) 8%, transparent);
   transform: translateY(-1px);
 }
 
 .moire-maker__actions .moire-maker__send {
-  border-color: #111111;
-  background: #111111;
-  color: #f7f5ef;
+  border-color: var(--moire-ink);
+  background: var(--moire-ink);
+  color: var(--moire-paper);
 }
 
 .moire-maker__actions .moire-maker__send:hover {
@@ -1046,6 +1069,10 @@ a:focus-visible {
   border: 1px solid var(--panel-border);
   border-radius: 6px;
   background: #eaeaec;
+}
+
+[data-theme="dark"] .songs-embed {
+  background: #101010;
 }
 
 .songs-embed iframe {

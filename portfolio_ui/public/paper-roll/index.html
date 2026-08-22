@@ -13,12 +13,25 @@
         padding: 0;
         box-sizing: border-box;
       }
+      :root {
+        --roll-stage: #eaeaec;
+        --roll-ink: #141414;
+        --roll-muted: #6a6a6e;
+        --roll-meter: rgba(20, 20, 20, 0.12);
+      }
+      :root[data-theme="dark"] {
+        --roll-stage: #101010;
+        --roll-ink: #f2f2ec;
+        --roll-muted: #999994;
+        --roll-meter: rgba(242, 242, 236, 0.18);
+        color-scheme: dark;
+      }
       html,
       body {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background: #eaeaec;
+        background: var(--roll-stage);
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
           sans-serif;
@@ -39,7 +52,7 @@
 
       .hud {
         position: fixed;
-        color: #141414;
+        color: var(--roll-ink);
         z-index: 10;
         pointer-events: none;
         opacity: 0;
@@ -70,7 +83,7 @@
         font-weight: 600;
         letter-spacing: 0.32em;
         text-transform: uppercase;
-        color: #6a6a6e;
+        color: var(--roll-muted);
       }
 
       #edition {
@@ -81,11 +94,11 @@
         font-weight: 600;
         letter-spacing: 0.28em;
         text-transform: uppercase;
-        color: #6a6a6e;
+        color: var(--roll-muted);
         line-height: 1.9;
       }
       #edition b {
-        color: #141414;
+        color: var(--roll-ink);
       }
 
       #counter {
@@ -106,7 +119,7 @@
         font-weight: 600;
         letter-spacing: 0.32em;
         text-transform: uppercase;
-        color: #6a6a6e;
+        color: var(--roll-muted);
       }
 
       #hint {
@@ -116,7 +129,7 @@
         font-weight: 600;
         letter-spacing: 0.28em;
         text-transform: uppercase;
-        color: #6a6a6e;
+        color: var(--roll-muted);
         display: flex;
         align-items: center;
         gap: 12px;
@@ -145,13 +158,13 @@
         right: 40px;
         width: 120px;
         height: 2px;
-        background: rgba(20, 20, 20, 0.12);
+        background: var(--roll-meter);
         overflow: hidden;
       }
       #meter .fill {
         height: 100%;
         width: 0%;
-        background: #141414;
+        background: var(--roll-ink);
         transition: width 0.15s linear;
       }
 
@@ -214,6 +227,19 @@
     <script src="/paper-roll/vendor/three.min.js"></script>
     <script src="/paper-roll/vendor/gsap.min.js"></script>
     <script>
+      function getPortfolioTheme() {
+        try {
+          return window.parent.document.documentElement.dataset.theme === "dark"
+            ? "dark"
+            : "light";
+        } catch (_error) {
+          return "light";
+        }
+      }
+
+      var activeTheme = getPortfolioTheme();
+      document.documentElement.dataset.theme = activeTheme;
+
       (async function () {
         "use strict";
 
@@ -278,8 +304,8 @@
         renderer.outputEncoding = THREE.sRGBEncoding;
 
         var scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xeaeaec);
-        scene.fog = new THREE.Fog(0xeaeaec, 24, 58);
+        scene.background = new THREE.Color(activeTheme === "dark" ? 0x101010 : 0xeaeaec);
+        scene.fog = new THREE.Fog(activeTheme === "dark" ? 0x101010 : 0xeaeaec, 24, 58);
 
         var camera = new THREE.PerspectiveCamera(
           32,
@@ -322,6 +348,40 @@
         floor.rotation.x = -Math.PI / 2;
         floor.receiveShadow = true;
         scene.add(floor);
+
+        function applyTheme(nextTheme) {
+          activeTheme = nextTheme === "dark" ? "dark" : "light";
+          document.documentElement.dataset.theme = activeTheme;
+
+          var isDark = activeTheme === "dark";
+          var stageColor = isDark ? 0x101010 : 0xeaeaec;
+          scene.background.setHex(stageColor);
+          scene.fog.color.setHex(stageColor);
+          floor.material.color.setHex(isDark ? 0x131313 : 0xe7e7ea);
+          hemi.groundColor.setHex(isDark ? 0x1a1a1a : 0xd6d6da);
+          hemi.intensity = isDark ? 0.72 : 0.95;
+          fill.intensity = isDark ? 0.13 : 0.22;
+        }
+
+        applyTheme(activeTheme);
+
+        window.addEventListener("message", function (event) {
+          if (event.origin !== window.location.origin) return;
+          if (event.data && event.data.type === "portfolio-theme") {
+            applyTheme(event.data.theme);
+          }
+        });
+
+        try {
+          new MutationObserver(function () {
+            applyTheme(getPortfolioTheme());
+          }).observe(window.parent.document.documentElement, {
+            attributes: true,
+            attributeFilter: ["data-theme"],
+          });
+        } catch (_error) {
+          // The parent message listener remains available when direct access is restricted.
+        }
 
         // ============================================================
         // Procedural texture atlas — 8 portfolio pages, one canvas
