@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CopyEmailButton from "../CopyEmailButton";
 import ThemeSwitcher from "../ThemeSwitcher";
 
 export const metadata: Metadata = {
@@ -28,8 +29,11 @@ export default function ContactPage() {
       <main className="contact-page">
         <section className="contact-center" aria-labelledby="contact-title">
           <p>Say hi or talk future projects</p>
-          <h1 id="contact-title">Let&apos;s talk.</h1>
+          <h1 id="contact-title">
+            <a href="mailto:tagalpallewaradwait@gmail.com">tagalpallewaradwait@gmail.com</a>
+          </h1>
           <div className="contact-pills" aria-label="Ways to contact Adwait">
+            <CopyEmailButton email="tagalpallewaradwait@gmail.com" />
             {socialLinks.map((link) => (
               <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
                 {link.label}
