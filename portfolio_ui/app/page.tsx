@@ -6,6 +6,7 @@ import MoireDesigner from "./MoireDesigner";
 
 type Theme = "dark" | "light" | "system";
 type ColorTheme = "red" | "green" | "blue";
+type WorkspacePhase = "average" | "good";
 
 const themeOptions: Array<{
   value: Theme;
@@ -111,6 +112,7 @@ function EmptyLines({ count = 3 }: { count?: number }) {
 export default function AboutPage() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
+  const [workspacePhase, setWorkspacePhase] = useState<WorkspacePhase>("average");
   const [selectedSong, setSelectedSong] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -275,12 +277,68 @@ export default function AboutPage() {
           </article>
 
           <article className="panel panel--side-project" aria-label="Latest side project section">
-            <div className="side-project-mark" aria-hidden="true" />
-            <EmptyLines count={2} />
+            <div className="side-project-heading">
+              <span>Latest side-project</span>
+            </div>
+            <div className="side-project-content">
+              <div className="side-project-mark" aria-hidden="true" />
+              <div className="side-project-title">
+                <h2>EmbeddingVC</h2>
+                <span aria-hidden="true">↗</span>
+              </div>
+            </div>
+            <p className="side-project-description">
+              A lifecycle manager for vector embeddings. Can&apos;t share more than that.
+            </p>
           </article>
 
           <article className="panel panel--workspace" aria-label="Workspace section">
-            <div className="workspace-window placeholder-surface" aria-hidden="true" />
+            <div
+              className="workspace-window"
+              role="tabpanel"
+              aria-label={workspacePhase === "average" ? "Workspace on an average day" : "Workspace on a good day"}
+            >
+              <img
+                className={workspacePhase === "average" ? "is-active" : ""}
+                src="/workspace-average-day.png"
+                alt="A laptop and a black cat at the workspace on an average day"
+                aria-hidden={workspacePhase !== "average"}
+              />
+              <img
+                className={workspacePhase === "good" ? "is-active" : ""}
+                src="/workspace-good-day.png"
+                alt="A waffle held in front of the workspace on a good day"
+                aria-hidden={workspacePhase !== "good"}
+              />
+
+              <div className="workspace-caption" aria-live="polite">
+                <span>Workspace / {workspacePhase === "average" ? "01" : "02"}</span>
+                <strong>{workspacePhase === "average" ? "On an average day" : "On a good day"}</strong>
+              </div>
+
+              <div className="workspace-phases" role="tablist" aria-label="Choose a workspace phase">
+                <button
+                  className={workspacePhase === "average" ? "is-active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={workspacePhase === "average"}
+                  onClick={() => setWorkspacePhase("average")}
+                >
+                  <span>01</span>
+                  Average day
+                </button>
+                <button
+                  className={workspacePhase === "good" ? "is-active" : ""}
+                  type="button"
+                  role="tab"
+                  aria-selected={workspacePhase === "good"}
+                  onClick={() => setWorkspacePhase("good")}
+                >
+                  <span>02</span>
+                  Good day
+                </button>
+              </div>
+            </div>
           </article>
 
           <article className="panel panel--system" aria-label="System monitor section">
