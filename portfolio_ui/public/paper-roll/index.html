@@ -184,7 +184,7 @@
 
     <div class="hud" id="hint">
       <div class="dot"></div>
-      <span id="hintText">Move to steer &mdash; click to pause</span>
+      <span id="hintText">Move to steer &mdash; hold to boost &mdash; click to pause</span>
     </div>
 
     <script src="/paper-roll/vendor/three.min.js"></script>
@@ -963,9 +963,12 @@
 
         var SPRING = 16.0;
         var DAMP = 5.4;
-        // Keep each poster in view long enough to be recognized while the roll
-        // still feels continuously animated and responsive to steering.
-        var MAX_SPEED = 4.1;
+        // Cruise slowly enough to read the posters, then smoothly raise the
+        // limit while the pointer is held down.
+        var CRUISE_SPEED = 4.1;
+        var BOOST_SPEED = 7.2;
+        var speedLimit = CRUISE_SPEED;
+        var boostActive = false;
 
         // path history — preallocated ring of plain records
         var hx = new Float32Array(MAX_PTS);
@@ -1002,11 +1005,15 @@
         var _dp = new THREE.Vector2();
 
         function stepMotion(dt) {
+          var targetSpeedLimit = boostActive ? BOOST_SPEED : CRUISE_SPEED;
+          speedLimit +=
+            (targetSpeedLimit - speedLimit) *
+            (1 - Math.exp(-(boostActive ? 7.5 : 5.0) * dt));
           _acc.copy(target).sub(pos).multiplyScalar(SPRING);
           _acc.addScaledVector(vel, -DAMP);
           vel.addScaledVector(_acc, dt);
           var sp = vel.length();
-          if (sp > MAX_SPEED) vel.multiplyScalar(MAX_SPEED / sp);
+          if (sp > speedLimit) vel.multiplyScalar(speedLimit / sp);
           _dp.copy(vel).multiplyScalar(dt);
           var ds = _dp.length();
           if (ds > 1e-6) {
@@ -1253,11 +1260,14 @@
         window.addEventListener("touchmove", onPointer, { passive: true });
         window.addEventListener("touchstart", onPointer, { passive: true });
 
-        // ---- click toggles the roll; drags don't ----
+        // ---- click toggles the roll; holding boosts it; drags don't pause ----
         var paused = false;
         var downX = 0,
           downY = 0,
           downT = 0;
+        var heldPointerId = null;
+        var pointerHeld = false;
+        var boostTimer = 0;
         var hintEl = document.getElementById("hint");
         var hintTextEl = document.getElementById("hintText");
 
@@ -1284,30 +1294,68 @@
           if (paused) {
             showHint("Paused &mdash; click anywhere to resume", 0);
           } else {
-            showHint("Rolling &mdash; click to pause", 2.6);
+            showHint("Cruising &mdash; hold to boost &mdash; click to pause", 2.6);
+          }
+        }
+
+        function clearBoostTimer() {
+          if (boostTimer) {
+            window.clearTimeout(boostTimer);
+            boostTimer = 0;
+          }
+        }
+
+        function releaseBoost(showCruiseHint) {
+          clearBoostTimer();
+          pointerHeld = false;
+          heldPointerId = null;
+          if (boostActive) {
+            boostActive = false;
+            if (showCruiseHint && !paused) {
+              showHint("Cruising &mdash; hold to boost", 1.8);
+            }
           }
         }
 
         window.addEventListener(
           "pointerdown",
           function (e) {
+            if (e.pointerType === "mouse" && e.button !== 0) return;
             downX = e.clientX;
             downY = e.clientY;
             downT = performance.now();
+            heldPointerId = e.pointerId;
+            pointerHeld = true;
+            clearBoostTimer();
+            boostTimer = window.setTimeout(function () {
+              if (!pointerHeld) return;
+              boostActive = true;
+              if (paused) setPaused(false);
+              showHint("Boosting &mdash; release to cruise", 0);
+            }, 180);
           },
           { passive: true },
         );
         window.addEventListener(
           "pointerup",
           function (e) {
+            if (heldPointerId !== e.pointerId) return;
             var dx = e.clientX - downX,
               dy = e.clientY - downY;
-            if (dx * dx + dy * dy < 64 && performance.now() - downT < 450) {
+            var wasBoosting = boostActive;
+            releaseBoost(wasBoosting);
+            if (!wasBoosting && dx * dx + dy * dy < 64 && performance.now() - downT < 450) {
               setPaused(!paused);
             }
           },
           { passive: true },
         );
+        window.addEventListener("pointercancel", function () {
+          releaseBoost(false);
+        });
+        window.addEventListener("blur", function () {
+          releaseBoost(false);
+        });
 
         function updateTarget(t, dt) {
           var idle = performance.now() - lastPointerT > 3200;
