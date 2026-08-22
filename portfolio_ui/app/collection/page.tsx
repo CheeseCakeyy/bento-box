@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BookStack from "../BookStack";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 export const metadata: Metadata = {
   title: "Collection — Adwait Tagalpallewar",
@@ -15,7 +16,7 @@ export default function CollectionPage() {
           <span className="identity-mark" aria-hidden="true" />
           <span>Adwait Tagalpallewar</span>
         </Link>
-        <span className="collection-header-label">A growing personal archive</span>
+        <ThemeSwitcher />
       </header>
 
       <main className="collection-page">
