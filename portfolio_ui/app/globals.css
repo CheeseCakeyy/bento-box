@@ -4551,6 +4551,128 @@ a:focus-visible {
   padding: 30px 18px 14px;
 }
 
+.work-visual--f1-score {
+  display: grid;
+  min-height: 188px;
+  align-items: stretch;
+  padding: 12px 12px 9px;
+}
+
+.f1-line-graph {
+  --f1-oof: #7c72c9;
+  --f1-public: #6e7c8d;
+  --f1-private: #ef5a54;
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+}
+
+.f1-line-graph__heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.f1-line-graph__heading > strong {
+  font-family: Archivo, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: -0.025em;
+}
+
+.f1-line-graph__legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font: 700 5px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.f1-line-graph__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.f1-line-graph__legend i {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.f1-line-graph__legend i.is-oof {
+  background: var(--f1-oof);
+}
+
+.f1-line-graph__legend i.is-public {
+  background: var(--f1-public);
+}
+
+.f1-line-graph__legend i.is-private {
+  background: var(--f1-private);
+}
+
+.f1-line-graph__body {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 5px;
+}
+
+.f1-line-graph__y-axis {
+  display: flex;
+  height: 104px;
+  align-items: end;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 0 0 1px;
+  color: var(--text-muted);
+  font: 700 5px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.f1-line-graph__plot-wrap {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 104px auto;
+  gap: 5px;
+}
+
+.f1-line-graph__plot {
+  position: relative;
+  min-width: 0;
+  border-color: var(--panel-border);
+  background-color: color-mix(in srgb, var(--panel-raised) 54%, var(--panel));
+}
+
+.f1-line-graph__plot canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.f1-line-graph__x-axis {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  color: var(--text-muted);
+  font: 700 4.5px/1.15 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.f1-line-graph__x-axis span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .work-matrix {
   display: grid;
   width: min(178px, 75%);
