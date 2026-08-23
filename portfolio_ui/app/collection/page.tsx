@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BookStack from "../BookStack";
+import PoemReader from "../PoemReader";
 import ThemeSwitcher from "../ThemeSwitcher";
 
 export const metadata: Metadata = {
@@ -45,23 +46,7 @@ export default function CollectionPage() {
           <div className="collection-bento__grid">
             <BookStack />
 
-            <article className="collection-card collection-card--poems">
-              <header className="collection-card__header">
-                <span>Poems / Reading room</span>
-                <span>02</span>
-              </header>
-              <div className="collection-poem-sheet" aria-label="Placeholder for a poem">
-                <span />
-                <span />
-                <span />
-                <span />
-                <p>A quieter column for poems, drafts, and the occasional line that arrived first.</p>
-              </div>
-              <footer className="collection-card__footer">
-                <span>Read slowly</span>
-                <span aria-hidden="true">↓</span>
-              </footer>
-            </article>
+            <PoemReader />
 
             <article className="collection-card collection-card--fragments">
               <header className="collection-card__header">
@@ -85,7 +70,7 @@ export default function CollectionPage() {
               </header>
               <div className="collection-counts">
                 <span><strong>Books</strong><i>03</i></span>
-                <span><strong>Poems</strong><i>—</i></span>
+                <span><strong>Poems</strong><i>01</i></span>
                 <span><strong>Fragments</strong><i>—</i></span>
               </div>
               <p>Counts appear as the shelves fill.</p>

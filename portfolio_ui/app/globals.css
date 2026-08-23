@@ -3370,14 +3370,15 @@ a:focus-visible {
   gap: 18px;
 }
 
-.collection-poem-sheet {
-  display: flex;
+.poem-reader {
+  position: relative;
+  display: grid;
   min-height: 0;
-  flex-direction: column;
-  justify-content: center;
-  gap: 14px;
+  align-content: center;
+  gap: 22px;
   margin-top: 2px;
-  padding: clamp(22px, 4vw, 44px);
+  overflow: hidden;
+  padding: clamp(24px, 3.1vw, 40px);
   border: 1px solid var(--panel-border);
   border-radius: 6px;
   background:
@@ -3387,26 +3388,102 @@ a:focus-visible {
   background-size: 20px 20px;
 }
 
-.collection-poem-sheet > span {
-  display: block;
-  width: 82%;
-  height: 5px;
-  border-radius: 999px;
-  background: var(--ghost-strong);
+.poem-reader::after {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 14px;
+  width: 1px;
+  content: "";
+  background: color-mix(in srgb, var(--text) 18%, transparent);
 }
 
-.collection-poem-sheet > span:nth-child(2) { width: 62%; }
-.collection-poem-sheet > span:nth-child(3) { width: 74%; }
-.collection-poem-sheet > span:nth-child(4) { width: 48%; }
+.poem-reader blockquote {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(7px, 0.8vw, 11px);
+  margin: 0;
+}
 
-.collection-poem-sheet p {
-  max-width: 320px;
-  margin: 18px 0 0;
+.poem-reader blockquote::before {
+  position: absolute;
+  top: -0.42em;
+  left: -0.28em;
+  z-index: -1;
+  content: "“";
+  color: var(--ghost-strong);
+  font-family: Georgia, serif;
+  font-size: clamp(72px, 8vw, 112px);
+  line-height: 1;
+}
+
+.poem-reader__line {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: poem-line-enter 520ms cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+  animation-delay: calc(var(--poem-line) * 90ms + 80ms);
   font-family: "Archivo", sans-serif;
-  font-size: clamp(19px, 2vw, 27px);
+  font-size: clamp(13px, 1.05vw, 17px);
   font-weight: 300;
-  letter-spacing: -0.03em;
-  line-height: 1.18;
+  letter-spacing: -0.018em;
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+.poem-reader__line.is-refrain {
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--text);
+  font-size: clamp(15px, 1.3vw, 20px);
+  font-weight: 400;
+}
+
+.poem-reader figcaption {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.poem-reader__context {
+  max-width: 390px;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  line-height: 1.45;
+  text-transform: none;
+}
+
+.poem-reader__footer button {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font: inherit;
+  transition: color 160ms ease;
+}
+
+.poem-reader__footer button:hover {
+  color: var(--text);
+}
+
+@keyframes poem-line-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .collection-card__footer {
@@ -3996,5 +4073,11 @@ a:focus-visible {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .poem-reader__line {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }
