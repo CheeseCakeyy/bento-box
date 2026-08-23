@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BookStack from "../BookStack";
+import FragmentReader from "../FragmentReader";
 import PoemReader from "../PoemReader";
 import ThemeSwitcher from "../ThemeSwitcher";
 
@@ -48,20 +49,7 @@ export default function CollectionPage() {
 
             <PoemReader />
 
-            <article className="collection-card collection-card--fragments">
-              <header className="collection-card__header">
-                <span>Fragments / Loose ends</span>
-                <span>03</span>
-              </header>
-              <div className="collection-fragments__body">
-                <h3>Small things that stayed.</h3>
-                <div className="collection-fragment-types" aria-label="Fragment categories">
-                  <span>Quotes</span>
-                  <span>One-liners</span>
-                  <span>Questions…</span>
-                </div>
-              </div>
-            </article>
+            <FragmentReader />
 
             <article className="collection-card collection-card--index">
               <header className="collection-card__header">
@@ -71,7 +59,7 @@ export default function CollectionPage() {
               <div className="collection-counts">
                 <span><strong>Books</strong><i>03</i></span>
                 <span><strong>Poems</strong><i>04</i></span>
-                <span><strong>Fragments</strong><i>—</i></span>
+                <span><strong>Fragments</strong><i>17</i></span>
               </div>
               <p>Counts appear as the shelves fill.</p>
             </article>

@@ -3556,43 +3556,159 @@ a:focus-visible {
 
 .collection-card--fragments {
   display: grid;
-  min-height: 260px;
+  height: 340px;
+  min-height: 340px;
   grid-column: span 8;
   grid-template-rows: auto minmax(0, 1fr);
+  gap: 16px;
 }
 
 .collection-fragments__body {
   display: grid;
-  grid-template-columns: minmax(220px, 0.9fr) minmax(260px, 1.1fr);
-  align-items: end;
-  gap: 28px;
+  min-height: 0;
+  grid-template-columns: minmax(220px, 0.82fr) minmax(300px, 1.18fr);
+  gap: 16px;
 }
 
-.collection-fragments__body h3 {
+.fragment-reader__index {
+  display: grid;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 18px;
+}
+
+.fragment-reader__index h3 {
   max-width: 420px;
-  padding-bottom: 10px;
+  align-self: end;
 }
 
 .collection-fragment-types {
-  display: grid;
-  gap: 7px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.collection-fragment-types span {
+.collection-fragment-types button {
   display: flex;
-  min-height: 44px;
+  min-height: 30px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 9px;
+  cursor: pointer;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel-raised) 60%, var(--panel));
+  color: var(--text-muted);
+  font: 700 8px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.collection-fragment-types button:hover,
+.collection-fragment-types button.is-active {
+  border-color: color-mix(in srgb, var(--text) 28%, var(--panel-border));
+  background: var(--ghost-strong);
+  color: var(--text);
+}
+
+.collection-fragment-types i {
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+.fragment-reader__stage {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-content: stretch;
+  gap: 14px;
+  margin: 0;
+  padding: clamp(18px, 2vw, 26px);
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 7px;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    color-mix(in srgb, var(--panel-raised) 54%, var(--panel));
+  background-size: 20px 20px;
+  animation: fragment-enter 320ms ease both;
+}
+
+.fragment-reader__stage::before {
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  content: "“";
+  color: var(--ghost-strong);
+  font: 92px/1 Georgia, serif;
+}
+
+.fragment-reader__stage blockquote {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  align-self: center;
+  margin: 0;
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 350;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.fragment-reader__stage figcaption {
+  position: relative;
+  z-index: 2;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 12px;
-  border: 1px solid var(--panel-border);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--panel-raised) 60%, var(--panel));
-  font-size: 13px;
+  gap: 10px;
+  padding-right: 80px;
+  color: var(--text-muted);
+  font: 700 7px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.collection-fragment-types span::after {
-  content: "↗";
+.fragment-reader__controls {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  gap: 4px;
+}
+
+.fragment-reader__controls button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  place-items: center;
+  border: 1px solid var(--panel-border);
+  border-radius: 50%;
+  background: var(--panel-raised);
   color: var(--text-muted);
+  font: 600 13px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.fragment-reader__controls button:hover {
+  border-color: color-mix(in srgb, var(--text) 28%, var(--panel-border));
+  background: var(--ghost-strong);
+  color: var(--text);
+}
+
+@keyframes fragment-enter {
+  from {
+    opacity: 0.45;
+    transform: translateY(4px);
+  }
 }
 
 .collection-card--index {
@@ -3935,12 +4051,29 @@ a:focus-visible {
 
   .collection-fragments__body {
     grid-template-columns: 1fr;
-    align-content: end;
-    gap: 26px;
-    padding-top: 38px;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 16px;
   }
 
-  .collection-card--fragments,
+  .fragment-reader__index {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 14px;
+  }
+
+  .fragment-reader__index h3 {
+    font-size: clamp(30px, 10vw, 42px);
+  }
+
+  .fragment-reader__stage blockquote {
+    font-size: clamp(19px, 6vw, 27px);
+  }
+
+  .collection-card--fragments {
+    height: 480px;
+    min-height: 480px;
+  }
+
   .collection-card--index {
     min-height: 280px;
   }
