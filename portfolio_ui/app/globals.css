@@ -2970,7 +2970,7 @@ a:focus-visible {
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
   align-items: end;
   gap: clamp(36px, 8vw, 120px);
-  padding: clamp(72px, 10vw, 150px) 0 clamp(82px, 11vw, 160px);
+  padding: clamp(44px, 6vw, 80px) 0 clamp(56px, 7vw, 96px);
 }
 
 .collection-hero h1 {
@@ -3753,7 +3753,7 @@ a:focus-visible {
     grid-template-columns: 1fr;
     align-items: start;
     gap: 38px;
-    padding: 72px 0 96px;
+    padding: 44px 0 64px;
   }
 
   .collection-hero h1 {
