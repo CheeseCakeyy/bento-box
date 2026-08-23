@@ -193,6 +193,18 @@ a:focus-visible {
   color: var(--background);
 }
 
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+}
+
 .site-shell {
   position: relative;
   min-height: 100vh;
@@ -3103,7 +3115,97 @@ a:focus-visible {
 .collection-bento__grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-flow: dense;
   gap: 20px;
+}
+
+.collection-bento-block {
+  --drag-x: 0px;
+  --drag-y: 0px;
+  position: relative;
+  min-width: 0;
+  transform: translate3d(var(--drag-x), var(--drag-y), 0);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.collection-bento-block--books {
+  min-height: 440px;
+  grid-column: span 7;
+}
+
+.collection-bento-block--poems {
+  min-height: 440px;
+  grid-column: span 5;
+}
+
+.collection-bento-block--fragments {
+  min-height: 260px;
+  grid-column: span 8;
+}
+
+.collection-bento-block--index {
+  min-height: 260px;
+  grid-column: span 4;
+}
+
+.collection-bento-block > .collection-card {
+  height: 100%;
+  grid-column: auto;
+}
+
+.collection-bento-block.is-dragging {
+  z-index: 20;
+  opacity: 0.86;
+  transition: opacity 120ms ease;
+}
+
+.collection-bento-block.is-dragging > .collection-card {
+  border-color: color-mix(in srgb, var(--text) 34%, var(--panel-border));
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.3);
+  transform: none;
+}
+
+.collection-bento-block.is-drop-target > .collection-card {
+  border-color: color-mix(in srgb, var(--text) 60%, var(--panel-border));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--text) 12%, transparent), 0 16px 42px var(--panel-shadow);
+  transform: translateY(-2px);
+}
+
+.collection-drag-handle {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  width: 34px;
+  height: 28px;
+  cursor: grab;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel-raised) 82%, transparent);
+  color: var(--text-muted);
+  opacity: 0.62;
+  touch-action: none;
+  transform: translateX(-50%);
+  transition: color 160ms ease, opacity 160ms ease, background-color 160ms ease;
+}
+
+.collection-drag-handle:hover,
+.collection-drag-handle:focus-visible {
+  background: var(--ghost-strong);
+  color: var(--text);
+  opacity: 1;
+}
+
+.collection-drag-handle:active {
+  cursor: grabbing;
+}
+
+.collection-drag-handle span {
+  display: block;
+  width: 16px;
+  height: 10px;
+  background: radial-gradient(circle, currentColor 1.2px, transparent 1.5px) 0 0 / 6px 5px;
 }
 
 .collection-card {
@@ -3773,11 +3875,16 @@ a:focus-visible {
   .collection-card--books,
   .collection-card--poems,
   .collection-card--fragments,
-  .collection-card--index {
+  .collection-card--index,
+  .collection-bento-block {
     grid-column: 1;
   }
 
   .collection-card--books {
+    min-height: 520px;
+  }
+
+  .collection-bento-block--books {
     min-height: 520px;
   }
 
@@ -3794,6 +3901,10 @@ a:focus-visible {
     min-height: 430px;
   }
 
+  .collection-bento-block--poems {
+    min-height: 430px;
+  }
+
   .collection-fragments__body {
     grid-template-columns: 1fr;
     align-content: end;
@@ -3803,6 +3914,11 @@ a:focus-visible {
 
   .collection-card--fragments,
   .collection-card--index {
+    min-height: 280px;
+  }
+
+  .collection-bento-block--fragments,
+  .collection-bento-block--index {
     min-height: 280px;
   }
 

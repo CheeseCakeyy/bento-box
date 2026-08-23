@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import BookStack from "../BookStack";
+import CollectionBentoGrid from "../CollectionBentoGrid";
 import ThemeSwitcher from "../ThemeSwitcher";
 
 export const metadata: Metadata = {
@@ -39,58 +39,10 @@ export default function CollectionPage() {
         <section className="collection-bento" aria-labelledby="collection-bento-title">
           <header className="collection-bento__heading">
             <h2 id="collection-bento-title">The shelves</h2>
-            <span>Editorial bento / mockup 01</span>
+            <span>Drag to rearrange / 04 blocks</span>
           </header>
 
-          <div className="collection-bento__grid">
-            <BookStack />
-
-            <article className="collection-card collection-card--poems">
-              <header className="collection-card__header">
-                <span>Poems / Reading room</span>
-                <span>02</span>
-              </header>
-              <div className="collection-poem-sheet" aria-label="Placeholder for a poem">
-                <span />
-                <span />
-                <span />
-                <span />
-                <p>A quieter column for poems, drafts, and the occasional line that arrived first.</p>
-              </div>
-              <footer className="collection-card__footer">
-                <span>Read slowly</span>
-                <span aria-hidden="true">↓</span>
-              </footer>
-            </article>
-
-            <article className="collection-card collection-card--fragments">
-              <header className="collection-card__header">
-                <span>Fragments / Loose ends</span>
-                <span>03</span>
-              </header>
-              <div className="collection-fragments__body">
-                <h3>Small things that stayed.</h3>
-                <div className="collection-fragment-types" aria-label="Fragment categories">
-                  <span>Quotes</span>
-                  <span>One-liners</span>
-                  <span>Questions…</span>
-                </div>
-              </div>
-            </article>
-
-            <article className="collection-card collection-card--index">
-              <header className="collection-card__header">
-                <span>Archive index</span>
-                <span>03</span>
-              </header>
-              <div className="collection-counts">
-                <span><strong>Books</strong><i>03</i></span>
-                <span><strong>Poems</strong><i>—</i></span>
-                <span><strong>Fragments</strong><i>—</i></span>
-              </div>
-              <p>Counts appear as the shelves fill.</p>
-            </article>
-          </div>
+          <CollectionBentoGrid />
         </section>
 
         <aside className="collection-footnote" aria-label="A note about the collection">
