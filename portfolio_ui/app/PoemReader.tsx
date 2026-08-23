@@ -7,7 +7,14 @@ type PoemLineStyle = CSSProperties & {
   "--poem-line": number;
 };
 
-const poems = [
+type Poem = {
+  label: string;
+  context?: string;
+  closing?: boolean;
+  stanzas: string[][];
+};
+
+const poems: Poem[] = [
   {
     label: "Untitled / 01",
     context:
@@ -74,6 +81,11 @@ const poems = [
       ],
     ],
   },
+  {
+    label: "More / Soon",
+    closing: true,
+    stanzas: [["More will be added when the poet in me finds inspiration again."]],
+  },
 ];
 
 export default function PoemReader() {
@@ -81,7 +93,7 @@ export default function PoemReader() {
   const [reading, setReading] = useState(0);
   const poem = poems[activeIndex];
   const allLines = poem.stanzas.flat();
-  const isDense = allLines.length > 8;
+  const isClosing = poem.closing === true;
 
   const selectRelative = (direction: number) => {
     setActiveIndex((current) => (current + direction + poems.length) % poems.length);
@@ -95,7 +107,10 @@ export default function PoemReader() {
         <span>{String(activeIndex + 1).padStart(2, "0")} / {String(poems.length).padStart(2, "0")}</span>
       </header>
 
-      <figure className={`poem-reader${isDense ? " is-dense" : ""}`} key={`${activeIndex}-${reading}`}>
+      <figure
+        className={`poem-reader${isClosing ? " is-closing" : ""}`}
+        key={`${activeIndex}-${reading}`}
+      >
         <blockquote aria-label={allLines.join(" ")}>
           {poem.stanzas.map((stanza, stanzaIndex) => (
             <span className="poem-reader__stanza" key={stanza.join("-")}>
@@ -103,7 +118,7 @@ export default function PoemReader() {
                 const animationIndex = poem.stanzas
                   .slice(0, stanzaIndex)
                   .reduce((total, current) => total + current.length, 0) + lineIndex;
-                const isRefrain =
+                const isRefrain = !isClosing &&
                   stanzaIndex === poem.stanzas.length - 1 && lineIndex === stanza.length - 1;
 
                 return (
@@ -120,7 +135,7 @@ export default function PoemReader() {
           ))}
         </blockquote>
         <figcaption>
-          <span>{poem.label} · Original</span>
+          <span>{poem.label} · {isClosing ? "To be continued" : "Original"}</span>
           {poem.context ? (
             <span className="poem-reader__context">Context / {poem.context}</span>
           ) : null}

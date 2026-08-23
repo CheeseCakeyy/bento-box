@@ -3464,31 +3464,31 @@ a:focus-visible {
   margin-top: 5px;
   padding-bottom: 3px;
   border-bottom: 1px solid var(--text);
-  font-size: clamp(15px, 1.3vw, 20px);
   font-weight: 400;
 }
 
-.poem-reader.is-dense {
-  gap: 12px;
-  padding: clamp(16px, 2.2vw, 28px);
+.poem-reader.is-closing {
+  align-content: center;
 }
 
-.poem-reader.is-dense blockquote {
-  gap: 8px;
+.poem-reader.is-closing::before {
+  display: none;
 }
 
-.poem-reader.is-dense .poem-reader__stanza {
-  gap: 4px;
+.poem-reader.is-closing blockquote {
+  padding-top: 0;
 }
 
-.poem-reader.is-dense .poem-reader__line {
-  font-size: clamp(11px, 0.88vw, 14px);
-  line-height: 1.1;
+.poem-reader.is-closing .poem-reader__line {
+  max-width: 390px;
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
 }
 
-.poem-reader.is-dense .poem-reader__line.is-refrain {
-  margin-top: 2px;
-  font-size: clamp(13px, 1vw, 16px);
+.poem-reader.is-closing figcaption {
+  margin-top: 14px;
 }
 
 .poem-reader figcaption {
