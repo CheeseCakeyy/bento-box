@@ -3402,7 +3402,7 @@ a:focus-visible {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: clamp(7px, 0.8vw, 11px);
+  gap: clamp(12px, 1.15vw, 17px);
   margin: 0;
 }
 
@@ -3416,6 +3416,11 @@ a:focus-visible {
   font-family: Georgia, serif;
   font-size: clamp(72px, 8vw, 112px);
   line-height: 1;
+}
+
+.poem-reader__stanza {
+  display: grid;
+  gap: clamp(6px, 0.7vw, 10px);
 }
 
 .poem-reader__line {
@@ -3442,6 +3447,29 @@ a:focus-visible {
   font-weight: 400;
 }
 
+.poem-reader.is-dense {
+  gap: 12px;
+  padding: clamp(16px, 2.2vw, 28px);
+}
+
+.poem-reader.is-dense blockquote {
+  gap: 8px;
+}
+
+.poem-reader.is-dense .poem-reader__stanza {
+  gap: 4px;
+}
+
+.poem-reader.is-dense .poem-reader__line {
+  font-size: clamp(11px, 0.88vw, 14px);
+  line-height: 1.1;
+}
+
+.poem-reader.is-dense .poem-reader__line.is-refrain {
+  margin-top: 2px;
+  font-size: clamp(13px, 1vw, 16px);
+}
+
 .poem-reader figcaption {
   position: relative;
   z-index: 1;
@@ -3466,16 +3494,27 @@ a:focus-visible {
 }
 
 .poem-reader__footer button {
-  display: inline-flex;
+  display: grid;
+  width: 27px;
+  height: 27px;
   cursor: pointer;
-  align-items: center;
-  gap: 6px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 50%;
   color: var(--text-muted);
   font: inherit;
-  transition: color 160ms ease;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.poem-reader__controls {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .poem-reader__footer button:hover {
+  border-color: var(--panel-border);
+  background: var(--ghost);
   color: var(--text);
 }
 

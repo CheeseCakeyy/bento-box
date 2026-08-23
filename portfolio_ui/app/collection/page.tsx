@@ -70,7 +70,7 @@ export default function CollectionPage() {
               </header>
               <div className="collection-counts">
                 <span><strong>Books</strong><i>03</i></span>
-                <span><strong>Poems</strong><i>01</i></span>
+                <span><strong>Poems</strong><i>04</i></span>
                 <span><strong>Fragments</strong><i>—</i></span>
               </div>
               <p>Counts appear as the shelves fill.</p>
