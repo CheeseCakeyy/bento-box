@@ -4543,6 +4543,206 @@ a:focus-visible {
   opacity: calc(0.22 + mod(var(--signal), 5) * 0.12);
 }
 
+.work-visual--geohab {
+  display: grid;
+  min-height: 372px;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  align-items: stretch;
+  gap: 14px;
+  padding: 39px 14px 14px;
+}
+
+.geohab-map-stage {
+  position: relative;
+  min-width: 0;
+  min-height: 318px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  background: #050505;
+}
+
+.geohab-map-stage img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 320ms ease;
+}
+
+.geohab-map-stage__color {
+  opacity: 0;
+}
+
+.work-visual--geohab:hover .geohab-map-stage__neutral,
+.work-case--lead:focus-within .geohab-map-stage__neutral {
+  opacity: 0;
+}
+
+.work-visual--geohab:hover .geohab-map-stage__color,
+.work-case--lead:focus-within .geohab-map-stage__color {
+  opacity: 1;
+}
+
+.geohab-map-stage__north {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  z-index: 2;
+  color: rgba(233, 233, 226, 0.68);
+  font: 700 6px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.1em;
+}
+
+.geohab-map-readout {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 4px 2px 2px;
+}
+
+.geohab-map-readout header {
+  display: grid;
+  gap: 7px;
+}
+
+.geohab-map-readout header span,
+.geohab-map-readout dt,
+.geohab-map-legend span,
+.geohab-map-readout > p {
+  color: var(--text-muted);
+  font: 700 6px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.geohab-map-readout header strong {
+  font-family: Archivo, sans-serif;
+  font-size: 25px;
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.geohab-map-readout dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.geohab-map-readout dl div {
+  display: grid;
+  gap: 4px;
+}
+
+.geohab-map-readout dt,
+.geohab-map-readout dd {
+  margin: 0;
+}
+
+.geohab-map-readout dd {
+  color: var(--text);
+  font: 700 8px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.geohab-map-legend {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+}
+
+.geohab-map-legend span {
+  display: grid;
+  grid-template-columns: 7px 33px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.035em;
+  text-transform: none;
+}
+
+.geohab-map-legend i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background-color 260ms ease, box-shadow 260ms ease;
+}
+
+.geohab-map-legend b {
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.geohab-map-readout > p {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.work-visual--geohab:hover .geohab-map-legend i,
+.work-case--lead:focus-within .geohab-map-legend i {
+  box-shadow: 0 0 9px color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.work-visual--geohab:hover .geohab-map-legend .class-alg,
+.work-case--lead:focus-within .geohab-map-legend .class-alg {
+  background: #e46d55;
+}
+
+.work-visual--geohab:hover .geohab-map-legend .class-fmat,
+.work-case--lead:focus-within .geohab-map-legend .class-fmat {
+  background: #d2ab61;
+}
+
+.work-visual--geohab:hover .geohab-map-legend .class-nvb,
+.work-case--lead:focus-within .geohab-map-legend .class-nvb {
+  background: #8793a1;
+}
+
+.work-visual--geohab:hover .geohab-map-legend .class-sgam,
+.work-case--lead:focus-within .geohab-map-legend .class-sgam {
+  background: #55a58f;
+}
+
+.work-visual--geohab:hover .geohab-map-legend .class-sgz,
+.work-case--lead:focus-within .geohab-map-legend .class-sgz {
+  background: #78a95f;
+}
+
+@media (max-width: 768px) {
+  .work-visual--geohab {
+    grid-template-columns: 1fr;
+  }
+
+  .geohab-map-stage {
+    min-height: 280px;
+  }
+
+  .geohab-map-readout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    gap: 14px;
+  }
+
+  .geohab-map-legend {
+    grid-row: span 2;
+  }
+
+  .geohab-map-readout > p {
+    display: none;
+  }
+}
+
 .work-visual--matrix,
 .work-visual--bars {
   display: grid;
