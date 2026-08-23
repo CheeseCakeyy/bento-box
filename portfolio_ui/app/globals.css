@@ -4673,6 +4673,194 @@ a:focus-visible {
   white-space: nowrap;
 }
 
+.work-visual--matching {
+  display: grid;
+  min-height: 174px;
+  align-items: stretch;
+  padding: 31px 13px 10px;
+}
+
+.folio-match {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 58px minmax(62px, 1fr) 58px;
+  grid-template-rows: minmax(92px, 1fr) auto;
+  gap: 8px 9px;
+}
+
+.folio-match__column {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto repeat(4, minmax(0, 1fr));
+  gap: 3px;
+}
+
+.folio-match__column > span,
+.folio-match__ranking > span {
+  color: var(--text-muted);
+  font: 700 5px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.folio-match__column > i {
+  display: flex;
+  min-height: 15px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 5px;
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--panel-raised) 70%, transparent);
+  color: var(--text-muted);
+  font: 700 5.5px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-style: normal;
+}
+
+.folio-match__column > i::after {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  content: "";
+  background: var(--text-muted);
+}
+
+.folio-match__column > i.is-selected {
+  border-color: color-mix(in srgb, var(--text) 42%, var(--panel-border));
+  background: var(--ghost-strong);
+  color: var(--text);
+}
+
+.folio-match__column > i.is-selected::after {
+  background: var(--text);
+  box-shadow: 0 0 9px var(--text-muted);
+}
+
+.folio-match__field {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 50% 50%, var(--ghost) 0 2px, transparent 3px),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: auto, 12px 12px, 12px 12px;
+}
+
+.folio-match__field > i {
+  position: absolute;
+  z-index: 2;
+  top: var(--match-y);
+  left: var(--match-x);
+  display: block;
+  width: 4px;
+  height: 4px;
+  border: 1px solid var(--text-muted);
+  border-radius: 50%;
+  background: var(--panel-raised);
+  transform: translate(-50%, -50%);
+}
+
+.folio-match__field > i.is-active {
+  width: 7px;
+  height: 7px;
+  border-color: var(--text);
+  background: var(--text);
+  box-shadow: 0 0 0 3px var(--ghost), 0 0 12px var(--text-muted);
+}
+
+.folio-match__connection {
+  position: absolute;
+  left: -8%;
+  z-index: 1;
+  display: block;
+  width: 116%;
+  height: 1px;
+  background: var(--panel-border);
+  opacity: 0.72;
+  transform-origin: center;
+}
+
+.folio-match__connection.connection--01 {
+  top: 20%;
+  transform: rotate(11deg);
+}
+
+.folio-match__connection.connection--02 {
+  top: 38%;
+  transform: rotate(-8deg);
+}
+
+.folio-match__connection.connection--03 {
+  top: 61%;
+  transform: rotate(9deg);
+}
+
+.folio-match__connection.connection--04 {
+  top: 78%;
+  transform: rotate(-12deg);
+}
+
+.folio-match__connection.connection--active {
+  top: 47%;
+  z-index: 3;
+  height: 1px;
+  background: var(--text);
+  box-shadow: 0 0 8px var(--text-muted);
+  opacity: 0.86;
+  transform: rotate(-4deg);
+}
+
+.folio-match__ranking {
+  display: grid;
+  min-width: 0;
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(46px, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding-top: 7px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.folio-match__ranking > div {
+  display: flex;
+  min-width: 0;
+  align-items: end;
+  gap: 3px;
+}
+
+.folio-match__ranking > div i {
+  display: block;
+  height: 2px;
+  background: var(--text-muted);
+}
+
+.folio-match__ranking > div i:nth-child(1) {
+  width: auto;
+  flex: 1;
+  background: var(--text);
+}
+
+.folio-match__ranking > div i:nth-child(2) {
+  width: auto;
+  flex: 0.72;
+}
+
+.folio-match__ranking > div i:nth-child(3) {
+  width: auto;
+  flex: 0.46;
+}
+
+.folio-match__ranking strong {
+  color: var(--text);
+  font: 700 6px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
 .work-matrix {
   display: grid;
   width: min(178px, 75%);
