@@ -4566,6 +4566,13 @@ a:focus-visible {
   min-width: 0;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 10px;
+  filter: grayscale(1);
+  transition: filter 260ms ease;
+}
+
+.work-visual--f1-score:hover .f1-line-graph,
+.work-case--support:focus-within .work-visual--f1-score .f1-line-graph {
+  filter: grayscale(0);
 }
 
 .f1-line-graph__heading {
@@ -4674,6 +4681,9 @@ a:focus-visible {
 }
 
 .work-visual--matching {
+  --folio-profile: #8177d5;
+  --folio-role: #5a9eab;
+  --folio-link: #ef5a54;
   display: grid;
   min-height: 174px;
   align-items: stretch;
@@ -4715,6 +4725,7 @@ a:focus-visible {
   color: var(--text-muted);
   font: 700 5.5px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-style: normal;
+  transition: border-color 240ms ease, background-color 240ms ease, color 240ms ease;
 }
 
 .folio-match__column > i::after {
@@ -4724,6 +4735,7 @@ a:focus-visible {
   border-radius: 50%;
   content: "";
   background: var(--text-muted);
+  transition: background-color 240ms ease, box-shadow 240ms ease;
 }
 
 .folio-match__column > i.is-selected {
@@ -4762,6 +4774,7 @@ a:focus-visible {
   border-radius: 50%;
   background: var(--panel-raised);
   transform: translate(-50%, -50%);
+  transition: border-color 240ms ease, background-color 240ms ease, box-shadow 240ms ease;
 }
 
 .folio-match__field > i.is-active {
@@ -4782,6 +4795,7 @@ a:focus-visible {
   background: var(--panel-border);
   opacity: 0.72;
   transform-origin: center;
+  transition: background-color 240ms ease, box-shadow 240ms ease, opacity 240ms ease;
 }
 
 .folio-match__connection.connection--01 {
@@ -4836,6 +4850,7 @@ a:focus-visible {
   display: block;
   height: 2px;
   background: var(--text-muted);
+  transition: background-color 240ms ease;
 }
 
 .folio-match__ranking > div i:nth-child(1) {
@@ -4859,6 +4874,53 @@ a:focus-visible {
   font: 700 6px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   letter-spacing: 0.06em;
   white-space: nowrap;
+  transition: color 240ms ease;
+}
+
+.work-visual--matching:hover .folio-match__column:not(.folio-match__column--roles) > i.is-selected,
+.work-case--support:focus-within .work-visual--matching .folio-match__column:not(.folio-match__column--roles) > i.is-selected {
+  border-color: color-mix(in srgb, var(--folio-profile) 58%, var(--panel-border));
+  background: color-mix(in srgb, var(--folio-profile) 15%, var(--panel));
+  color: var(--folio-profile);
+}
+
+.work-visual--matching:hover .folio-match__column:not(.folio-match__column--roles) > i.is-selected::after,
+.work-case--support:focus-within .work-visual--matching .folio-match__column:not(.folio-match__column--roles) > i.is-selected::after {
+  background: var(--folio-profile);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--folio-profile) 60%, transparent);
+}
+
+.work-visual--matching:hover .folio-match__column--roles > i.is-selected,
+.work-case--support:focus-within .work-visual--matching .folio-match__column--roles > i.is-selected {
+  border-color: color-mix(in srgb, var(--folio-role) 58%, var(--panel-border));
+  background: color-mix(in srgb, var(--folio-role) 15%, var(--panel));
+  color: var(--folio-role);
+}
+
+.work-visual--matching:hover .folio-match__column--roles > i.is-selected::after,
+.work-case--support:focus-within .work-visual--matching .folio-match__column--roles > i.is-selected::after {
+  background: var(--folio-role);
+  box-shadow: 0 0 9px color-mix(in srgb, var(--folio-role) 60%, transparent);
+}
+
+.work-visual--matching:hover .folio-match__field > i.is-active,
+.work-case--support:focus-within .work-visual--matching .folio-match__field > i.is-active {
+  border-color: var(--folio-link);
+  background: var(--folio-link);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--folio-link) 13%, transparent), 0 0 13px color-mix(in srgb, var(--folio-link) 64%, transparent);
+}
+
+.work-visual--matching:hover .folio-match__connection.connection--active,
+.work-case--support:focus-within .work-visual--matching .folio-match__connection.connection--active,
+.work-visual--matching:hover .folio-match__ranking > div i:first-child,
+.work-case--support:focus-within .work-visual--matching .folio-match__ranking > div i:first-child {
+  background: var(--folio-link);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--folio-link) 52%, transparent);
+}
+
+.work-visual--matching:hover .folio-match__ranking strong,
+.work-case--support:focus-within .work-visual--matching .folio-match__ranking strong {
+  color: var(--folio-link);
 }
 
 .work-matrix {
