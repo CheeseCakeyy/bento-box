@@ -251,11 +251,8 @@ export default function AboutPage() {
             <div className="bio-media" aria-label="Profile image">
               <img
                 className="bio-media__image"
-                src="/about/profile.gif"
+                src="/about/profile.jpg"
                 alt="Portrait of Adwait Tagalpallewar"
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
-                }}
               />
               <span className="bio-media__index">About / 01</span>
               <div className="bio-monogram" aria-hidden="true">
