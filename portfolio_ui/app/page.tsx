@@ -248,9 +248,17 @@ export default function AboutPage() {
 
         <section id="portfolio-grid" className="portfolio-grid" aria-label="About page sections">
           <article className="panel panel--bio" aria-label="Profile and biography section">
-            <div className="bio-media" aria-hidden="true">
+            <div className="bio-media" aria-label="Profile image">
+              <img
+                className="bio-media__image"
+                src="/about/profile.gif"
+                alt="Portrait of Adwait Tagalpallewar"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
               <span className="bio-media__index">About / 01</span>
-              <div className="bio-monogram">
+              <div className="bio-monogram" aria-hidden="true">
                 <span>A</span>
                 <span>T</span>
               </div>
