@@ -30,7 +30,7 @@ playwright-report/
 .wrangler/
 .vercel/
 outputs/
-work/
+/work/
 
 # Local environment files and secrets
 .env
