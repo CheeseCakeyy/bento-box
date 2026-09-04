@@ -8,6 +8,7 @@ export type Tool = {
   mark: string;
   category: "Languages" | "ML / AI" | "LLMs" | "Data";
   accent: string;
+  description: string;
 };
 
 type DomeGalleryProps = {
@@ -34,7 +35,7 @@ const clamp = (value: number, min: number, max: number) =>
 
 function buildItems(tools: Tool[], segments: number): DomeItem[] {
   const columns = Array.from({ length: segments }, (_, index) => -segments / 2 + index);
-  const rows = [-4, -2, 0, 2, 4];
+  const rows = [-2, -1, 0, 1, 2];
 
   return columns.flatMap((x, column) =>
     rows.map((baseY, row) => {
@@ -43,8 +44,8 @@ function buildItems(tools: Tool[], segments: number): DomeItem[] {
 
       return {
         ...tool,
-        x: x * 2,
-        y: baseY + (column % 2 ? 1 : 0),
+        x,
+        y: baseY + (column % 2 ? 0.5 : 0),
         index,
       };
     }),
@@ -65,7 +66,7 @@ export default function DomeGallery({
   const rotationRef = useRef({ x: -1.5, y: 0 });
   const dragRef = useRef<DragState | null>(null);
   const didDragRef = useRef(false);
-  const [selected, setSelected] = useState<Tool | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const items = useMemo(() => buildItems(tools, segments), [segments, tools]);
 
   const applyRotation = useCallback((x: number, y: number) => {
@@ -93,20 +94,19 @@ export default function DomeGallery({
   }, [applyRotation, fit, minRadius]);
 
   useEffect(() => {
-    if (!selected) return;
+    if (selectedIndex === null) return;
 
     const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelected(null);
+      if (event.key === "Escape") setSelectedIndex(null);
     };
 
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
-  }, [selected]);
+  }, [selectedIndex]);
 
   const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
-    event.currentTarget.setPointerCapture(event.pointerId);
     dragRef.current = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -139,18 +139,15 @@ export default function DomeGallery({
 
   const handlePointerEnd = (event: React.PointerEvent<HTMLElement>) => {
     if (dragRef.current?.pointerId !== event.pointerId) return;
-    if (didDragRef.current) event.preventDefault();
     dragRef.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
   };
 
   const handleToolClick = (
     _event: React.MouseEvent<HTMLButtonElement>,
-    tool: Tool,
+    item: DomeItem,
   ) => {
-    setSelected(tool);
+    didDragRef.current = false;
+    setSelectedIndex(item.index);
   };
 
   return (
@@ -182,9 +179,11 @@ export default function DomeGallery({
                 }
               >
                 <button
-                  className="tool-tile"
+                  className={`tool-tile${selectedIndex === item.index ? " is-selected" : ""}`}
                   type="button"
-                  aria-label={`Open ${item.name} card`}
+                  aria-label={`${item.name}: ${item.description}`}
+                  aria-pressed={selectedIndex === item.index}
+                  style={{ "--tool-accent": item.accent } as React.CSSProperties}
                   onClick={(event) => handleToolClick(event, item)}
                 >
                   <span className="tool-tile__top">
@@ -192,35 +191,18 @@ export default function DomeGallery({
                     <span>{item.category}</span>
                   </span>
                   <strong style={{ color: item.accent }}>{item.mark}</strong>
-                  <span className="tool-tile__name">{item.name}</span>
+                  <span className="tool-tile__footer">
+                    <span className="tool-tile__name">{item.name}</span>
+                    {selectedIndex === item.index && (
+                      <span className="tool-tile__description">{item.description}</span>
+                    )}
+                  </span>
                 </button>
               </div>
             ))}
           </div>
         </div>
-        <div className="dome-shade" aria-hidden="true" />
-        <div className="dome-scanlines" aria-hidden="true" />
       </div>
-
-      {selected && (
-        <div className="tool-detail" role="dialog" aria-modal="true" aria-label={`${selected.name} details`}>
-          <button
-            className="tool-detail__scrim"
-            type="button"
-            aria-label="Close tool card"
-            onClick={() => setSelected(null)}
-          />
-          <article className="tool-detail__card">
-            <span className="tool-detail__category">{selected.category}</span>
-            <strong style={{ color: selected.accent }}>{selected.mark}</strong>
-            <h2>{selected.name}</h2>
-            <p>Part of the toolkit I use to turn messy signals into working systems.</p>
-            <button type="button" onClick={() => setSelected(null)}>
-              Close / Esc
-            </button>
-          </article>
-        </div>
-      )}
     </div>
   );
 }

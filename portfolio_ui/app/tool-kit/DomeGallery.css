@@ -4,14 +4,11 @@
   --dome-rotation: calc(360deg / var(--dome-segments));
   --dome-item-width: calc(var(--dome-circumference) / var(--dome-segments) * 2);
   --dome-item-height: calc(var(--dome-circumference) / var(--dome-segments) * 2);
-  --dome-tile: color-mix(in srgb, var(--text) 92%, var(--background));
-  --dome-tile-hover: var(--text);
-  --dome-tile-ink: var(--background);
-  --dome-tile-rule: color-mix(in srgb, var(--background) 62%, transparent);
-  --dome-tile-rule-hover: var(--background);
-  --dome-shade-mid: color-mix(in srgb, var(--background) 36%, transparent);
-  --dome-scanline: color-mix(in srgb, var(--text) 3%, transparent);
-  --dome-scrim: color-mix(in srgb, var(--background) 84%, transparent);
+  --dome-tile: var(--panel);
+  --dome-tile-hover: var(--panel-raised);
+  --dome-tile-ink: var(--text);
+  --dome-tile-rule: var(--panel-border);
+  --dome-tile-rule-hover: var(--text);
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -73,9 +70,13 @@
     translateZ(var(--dome-radius));
 }
 
+.dome-item:has(.tool-tile.is-selected) {
+  z-index: 30;
+}
+
 .tool-tile {
   position: absolute;
-  inset: 7px;
+  inset: 2px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -85,15 +86,11 @@
   overflow: hidden;
   border: 1px solid var(--dome-tile-rule);
   border-radius: 10px;
-  background:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    var(--dome-tile);
-  background-size: 18px 18px;
+  background: var(--dome-tile);
   color: var(--dome-tile-ink);
   cursor: pointer;
   backface-visibility: hidden;
-  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 220ms ease;
 }
 
 .tool-tile:hover,
@@ -102,6 +99,16 @@
   background-color: var(--dome-tile-hover);
   outline: none;
   transform: translateZ(7px);
+}
+
+.tool-tile.is-selected {
+  z-index: 2;
+  border-color: color-mix(in srgb, var(--tool-accent) 72%, var(--panel-border));
+  background: var(--panel-raised);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--tool-accent) 26%, transparent),
+    0 22px 34px var(--panel-shadow);
+  transform: translateZ(72px) scale(1.08);
 }
 
 .dome-root--entering .tool-tile {
@@ -125,9 +132,15 @@
   letter-spacing: -0.08em;
 }
 
+.tool-tile__footer {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
 .tool-tile__name {
   overflow: hidden;
-  padding-top: 8px;
+  padding-top: 7px;
   border-top: 1px solid var(--dome-tile-rule);
   color: var(--dome-tile-ink);
   font: 700 clamp(0.62rem, 1vw, 0.92rem)/1 Inter, ui-sans-serif, system-ui, sans-serif;
@@ -136,143 +149,15 @@
   white-space: nowrap;
 }
 
-.dome-shade,
-.dome-scanlines {
-  position: absolute;
-  z-index: 4;
-  inset: 0;
-  pointer-events: none;
-}
-
-.dome-shade {
-  background:
-    radial-gradient(circle at 50% 48%, transparent 44%, var(--dome-shade-mid) 74%, var(--background) 100%),
-    linear-gradient(180deg, var(--background) 0, transparent 16%, transparent 82%, var(--background) 100%);
-}
-
-.dome-scanlines {
-  background: repeating-linear-gradient(0deg, var(--dome-scanline) 0 1px, transparent 1px 4px);
-  mix-blend-mode: screen;
-}
-
-[data-theme="light"] .dome-scanlines {
-  mix-blend-mode: multiply;
-}
-
-[data-theme="light"] .dome-root {
-  --dome-tile: var(--panel);
-  --dome-tile-hover: var(--panel-raised);
-  --dome-tile-ink: var(--text);
-  --dome-tile-rule: var(--panel-border);
-  --dome-tile-rule-hover: var(--text);
-}
-
-.tool-detail {
-  position: absolute;
-  z-index: 20;
-  inset: 0;
-  display: grid;
-  padding: 24px;
-  place-items: center;
-}
-
-.tool-detail__scrim {
-  position: absolute;
-  inset: 0;
-  border: 0;
-  background: var(--dome-scrim);
-  backdrop-filter: blur(8px);
-  cursor: default;
-}
-
-.tool-detail__card {
-  position: relative;
-  width: min(380px, 100%);
-  aspect-ratio: 4 / 5;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 28px;
-  border: 1px solid var(--panel-border);
-  border-radius: 10px;
-  background: var(--panel);
-  color: var(--text);
-  box-shadow: 0 30px 90px var(--panel-shadow);
-  animation: tool-card-in 280ms cubic-bezier(.2, .8, .2, 1) both;
-}
-
-.tool-detail__card::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 5px;
-  content: "";
-  background: var(--text);
-}
-
-.tool-detail__card > strong {
-  position: absolute;
-  top: 24px;
-  right: 28px;
-  max-width: 78%;
+.tool-tile__description {
+  display: block;
+  display: -webkit-box;
   overflow: hidden;
-  font: 800 5.5rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: -0.1em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tool-detail__category {
-  position: absolute;
-  top: 32px;
-  left: 28px;
   color: var(--text-muted);
-  font: 700 0.58rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.tool-detail__card h2 {
-  max-width: 100%;
-  margin: 0;
-  font-family: Archivo, Inter, sans-serif;
-  font-size: clamp(2.15rem, 12vw, 3rem);
-  letter-spacing: -0.07em;
-  line-height: 0.9;
-  overflow-wrap: anywhere;
-}
-
-.tool-detail__card p {
-  max-width: 27ch;
-  margin: 20px 0 30px;
-  color: var(--text-muted);
-  font: italic 1rem/1.3 Georgia, serif;
-}
-
-.tool-detail__card button {
-  width: 100%;
-  padding: 11px 14px;
-  border: 1px solid var(--panel-border);
-  background: transparent;
-  color: inherit;
-  font: 700 0.6rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.tool-detail__card button:hover,
-.tool-detail__card button:focus-visible {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--background);
-  outline: none;
-}
-
-@keyframes tool-card-in {
-  from { opacity: 0; transform: translateY(28px) scale(.94); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  font: 500 clamp(0.48rem, 0.7vw, 0.68rem)/1.25 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 @keyframes dome-tool-card-in {
@@ -288,7 +173,7 @@
   }
 
   .tool-tile {
-    inset: 5px;
+    inset: 1px;
     padding: 9px;
     border-radius: 8px;
   }
@@ -297,18 +182,10 @@
     display: none;
   }
 
-  .tool-detail {
-    padding: 16px;
-  }
-
-  .tool-detail__card {
-    padding: 22px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tool-tile,
-  .tool-detail__card {
+  .tool-tile {
     transition: none;
     animation: none;
   }
