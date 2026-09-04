@@ -230,6 +230,7 @@ export default function WorkPage() {
       <div className="floating-nav-wrap">
         <nav className="floating-nav" aria-label="Primary navigation">
           <Link className="is-current" href="/work" aria-current="page">Work</Link>
+          <Link href="/tool-kit">Tool kit</Link>
           <Link href="/#about">About</Link>
           <Link href="/collection">Collection</Link>
           <Link href="/contact">Contact</Link>

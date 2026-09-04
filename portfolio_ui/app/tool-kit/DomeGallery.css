@@ -1,0 +1,321 @@
+.dome-root {
+  --dome-radius: 620px;
+  --dome-circumference: calc(var(--dome-radius) * 3.14159);
+  --dome-rotation: calc(360deg / var(--dome-segments));
+  --dome-item-width: calc(var(--dome-circumference) / var(--dome-segments) * 2);
+  --dome-item-height: calc(var(--dome-circumference) / var(--dome-segments) * 2);
+  --dome-tile: color-mix(in srgb, var(--text) 92%, var(--background));
+  --dome-tile-hover: var(--text);
+  --dome-tile-ink: var(--background);
+  --dome-tile-rule: color-mix(in srgb, var(--background) 62%, transparent);
+  --dome-tile-rule-hover: var(--background);
+  --dome-shade-mid: color-mix(in srgb, var(--background) 36%, transparent);
+  --dome-scanline: color-mix(in srgb, var(--text) 3%, transparent);
+  --dome-scrim: color-mix(in srgb, var(--background) 84%, transparent);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.dome-root * {
+  box-sizing: border-box;
+}
+
+.dome-main {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  overflow: hidden;
+  cursor: grab;
+  place-items: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.dome-main:active {
+  cursor: grabbing;
+}
+
+.dome-stage {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  contain: layout paint size;
+  perspective: calc(var(--dome-radius) * 2.05);
+  perspective-origin: 50% 51%;
+  place-items: center;
+}
+
+.dome-sphere,
+.dome-item,
+.tool-tile {
+  transform-style: preserve-3d;
+}
+
+.dome-sphere {
+  position: relative;
+  width: 1px;
+  height: 1px;
+  transform: translateZ(calc(var(--dome-radius) * -1)) rotateX(-1.5deg);
+  will-change: transform;
+}
+
+.dome-item {
+  position: absolute;
+  inset: -999px;
+  width: var(--dome-item-width);
+  height: var(--dome-item-height);
+  margin: auto;
+  backface-visibility: hidden;
+  transform:
+    rotateY(calc(var(--dome-rotation) * var(--dome-x)))
+    rotateX(calc(var(--dome-rotation) * var(--dome-y)))
+    translateZ(var(--dome-radius));
+}
+
+.tool-tile {
+  position: absolute;
+  inset: 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: auto;
+  height: auto;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid var(--dome-tile-rule);
+  border-radius: 10px;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    var(--dome-tile);
+  background-size: 18px 18px;
+  color: var(--dome-tile-ink);
+  cursor: pointer;
+  backface-visibility: hidden;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.tool-tile:hover,
+.tool-tile:focus-visible {
+  border-color: var(--dome-tile-rule-hover);
+  background-color: var(--dome-tile-hover);
+  outline: none;
+  transform: translateZ(7px);
+}
+
+.dome-root--entering .tool-tile {
+  opacity: 0;
+  animation: dome-tool-card-in 420ms cubic-bezier(.16, .84, .28, 1.14) var(--dome-enter-delay) both;
+}
+
+.tool-tile__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-muted);
+  font: 700 0.42rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tool-tile > strong {
+  display: block;
+  font: 800 clamp(2rem, 3.5vw, 3.8rem)/0.8 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.08em;
+}
+
+.tool-tile__name {
+  overflow: hidden;
+  padding-top: 8px;
+  border-top: 1px solid var(--dome-tile-rule);
+  color: var(--dome-tile-ink);
+  font: 700 clamp(0.62rem, 1vw, 0.92rem)/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dome-shade,
+.dome-scanlines {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dome-shade {
+  background:
+    radial-gradient(circle at 50% 48%, transparent 44%, var(--dome-shade-mid) 74%, var(--background) 100%),
+    linear-gradient(180deg, var(--background) 0, transparent 16%, transparent 82%, var(--background) 100%);
+}
+
+.dome-scanlines {
+  background: repeating-linear-gradient(0deg, var(--dome-scanline) 0 1px, transparent 1px 4px);
+  mix-blend-mode: screen;
+}
+
+[data-theme="light"] .dome-scanlines {
+  mix-blend-mode: multiply;
+}
+
+[data-theme="light"] .dome-root {
+  --dome-tile: var(--panel);
+  --dome-tile-hover: var(--panel-raised);
+  --dome-tile-ink: var(--text);
+  --dome-tile-rule: var(--panel-border);
+  --dome-tile-rule-hover: var(--text);
+}
+
+.tool-detail {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  padding: 24px;
+  place-items: center;
+}
+
+.tool-detail__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: var(--dome-scrim);
+  backdrop-filter: blur(8px);
+  cursor: default;
+}
+
+.tool-detail__card {
+  position: relative;
+  width: min(380px, 100%);
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 30px 90px var(--panel-shadow);
+  animation: tool-card-in 280ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.tool-detail__card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 5px;
+  content: "";
+  background: var(--text);
+}
+
+.tool-detail__card > strong {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  max-width: 78%;
+  overflow: hidden;
+  font: 800 5.5rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-detail__category {
+  position: absolute;
+  top: 32px;
+  left: 28px;
+  color: var(--text-muted);
+  font: 700 0.58rem/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tool-detail__card h2 {
+  max-width: 100%;
+  margin: 0;
+  font-family: Archivo, Inter, sans-serif;
+  font-size: clamp(2.15rem, 12vw, 3rem);
+  letter-spacing: -0.07em;
+  line-height: 0.9;
+  overflow-wrap: anywhere;
+}
+
+.tool-detail__card p {
+  max-width: 27ch;
+  margin: 20px 0 30px;
+  color: var(--text-muted);
+  font: italic 1rem/1.3 Georgia, serif;
+}
+
+.tool-detail__card button {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--panel-border);
+  background: transparent;
+  color: inherit;
+  font: 700 0.6rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tool-detail__card button:hover,
+.tool-detail__card button:focus-visible {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--background);
+  outline: none;
+}
+
+@keyframes tool-card-in {
+  from { opacity: 0; transform: translateY(28px) scale(.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dome-tool-card-in {
+  0% { opacity: 0; transform: translateY(18px) scale(.42); }
+  74% { opacity: 1; transform: translateY(-2px) scale(1.035); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 700px) {
+  .dome-root {
+    --dome-item-width: calc(var(--dome-circumference) / var(--dome-segments) * 2.25);
+    --dome-item-height: calc(var(--dome-circumference) / var(--dome-segments) * 2.25);
+  }
+
+  .tool-tile {
+    inset: 5px;
+    padding: 9px;
+    border-radius: 8px;
+  }
+
+  .tool-tile__top span:last-child {
+    display: none;
+  }
+
+  .tool-detail {
+    padding: 16px;
+  }
+
+  .tool-detail__card {
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-tile,
+  .tool-detail__card {
+    transition: none;
+    animation: none;
+  }
+
+  .dome-root--entering .tool-tile {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
