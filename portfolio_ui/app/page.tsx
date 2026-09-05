@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import ScrollToTop from "./ScrollToTop";
 import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
@@ -111,7 +112,6 @@ export default function AboutPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [scrolled, setScrolled] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const activeSong = songs[selectedSong];
 
@@ -166,12 +166,6 @@ export default function AboutPage() {
     return () => media.removeEventListener("change", applyTheme);
   }, [theme]);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     if (colorTheme) {
@@ -543,15 +537,9 @@ export default function AboutPage() {
           <Link href="/collection">Collection</Link>
           <Link href="/contact">Contact</Link>
         </nav>
-        <button
-          className={`scroll-top ${scrolled ? "is-visible" : ""}`}
-          type="button"
-          aria-label="Scroll to top"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
-          ↑
-        </button>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+

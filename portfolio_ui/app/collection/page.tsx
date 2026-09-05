@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import BookStack from "../BookStack";
 import FragmentReader from "../FragmentReader";
 import PoemReader from "../PoemReader";
@@ -80,7 +81,9 @@ export default function CollectionPage() {
           <Link className="is-current" href="/collection" aria-current="page">Collection</Link>
           <Link href="/contact">Contact</Link>
         </nav>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+

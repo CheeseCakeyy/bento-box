@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import F1ScoreGraph from "../F1ScoreGraph";
 import ThemeSwitcher from "../ThemeSwitcher";
 import HallOfFame from "./HallOfFame";
@@ -259,7 +260,9 @@ export default function WorkPage() {
           <Link href="/collection">Collection</Link>
           <Link href="/contact">Contact</Link>
         </nav>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+

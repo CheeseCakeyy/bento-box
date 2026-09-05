@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import CopyEmailButton from "../CopyEmailButton";
 import ThemeSwitcher from "../ThemeSwitcher";
 
@@ -51,7 +52,9 @@ export default function ContactPage() {
           <Link href="/collection">Collection</Link>
           <Link className="is-current" href="/contact" aria-current="page">Contact</Link>
         </nav>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+
