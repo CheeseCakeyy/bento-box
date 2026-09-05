@@ -116,9 +116,9 @@ export default function F1ScoreGraph() {
   }, []);
 
   return (
-    <div className="f1-line-graph" aria-label="Score progression from the earliest saved F1 pit-stop prediction run to the winning blend">
+    <div className="f1-line-graph" aria-label="Score progression from the earliest saved F1 pit-stop prediction run to the best saved blend">
       <div className="f1-line-graph__heading">
-        <strong>Score progression</strong>
+        <strong>ROC AUC / experiment progression</strong>
         <div className="f1-line-graph__legend" aria-hidden="true">
           <span><i className="is-oof" />OOF</span>
           <span><i className="is-public" />Public</span>
