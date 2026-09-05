@@ -1,0 +1,55 @@
+/* Backwards fill releases transforms when the entrance finishes. */
+@keyframes entrance-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes entrance-sheet {
+  from { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(12px); }
+  to { opacity: 1; clip-path: inset(0); transform: translateY(0); }
+}
+@keyframes entrance-wipe {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+@keyframes entrance-fade { from { opacity: 0; } to { opacity: 1; } }
+.entrance-home .hero-heading {
+  animation: entrance-sheet 580ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.entrance-home .discipline-row {
+  animation: entrance-rise 460ms cubic-bezier(.22, 1, .36, 1) 90ms backwards;
+}
+.entrance-home .portfolio-grid > .panel {
+  animation: entrance-rise 520ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
+}
+.entrance-home .portfolio-grid > .panel:nth-child(2) { animation-delay: 210ms; }
+.entrance-home .portfolio-grid > .panel:nth-child(n+3) { animation-delay: 270ms; }
+.entrance-home .portfolio-grid > .panel:nth-child(n+5) { animation-delay: 310ms; }
+.entrance-home .floating-nav, .entrance-work .floating-nav {
+  animation: entrance-rise 420ms cubic-bezier(.22, 1, .36, 1) 300ms backwards;
+}
+.entrance-work .work-section__heading {
+  animation: entrance-wipe 440ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.entrance-work .work-case--lead {
+  animation: entrance-sheet 600ms cubic-bezier(.22, 1, .36, 1) 70ms backwards;
+}
+.entrance-work .work-case-stack > .work-case {
+  animation: entrance-sheet 500ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
+}
+.entrance-work .work-case-stack > .work-case:nth-child(2) { animation-delay: 230ms; }
+.entrance-home .portfolio-grid > .panel:focus-within,
+.entrance-work .work-case:focus-within,
+.entrance-home .floating-nav:focus-within,
+.entrance-work .floating-nav:focus-within { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .entrance-home .hero-heading,
+  .entrance-home .discipline-row,
+  .entrance-home .portfolio-grid > .panel,
+  .entrance-home .floating-nav,
+  .entrance-work .floating-nav,
+  .entrance-work .work-section__heading,
+  .entrance-work .work-case--lead,
+  .entrance-work .work-case-stack > .work-case {
+    animation: entrance-fade 120ms ease-out backwards;
+  }
+}

@@ -201,7 +201,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className="site-shell">
+    <div className="site-shell entrance-home">
       <header className="site-header">
         <a className="identity" href="#about" aria-label="Go to the About page">
           <span className="identity-mark" aria-hidden="true" />
