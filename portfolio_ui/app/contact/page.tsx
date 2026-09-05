@@ -17,7 +17,7 @@ const socialLinks = [
 
 export default function ContactPage() {
   return (
-    <div className="site-shell contact-shell">
+    <div className="site-shell contact-shell entrance-contact">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />

@@ -13,35 +13,71 @@
 }
 @keyframes entrance-fade { from { opacity: 0; } to { opacity: 1; } }
 .entrance-home .hero-heading {
-  animation: entrance-sheet 580ms cubic-bezier(.22, 1, .36, 1) backwards;
+  animation: entrance-sheet 900ms cubic-bezier(.22, 1, .36, 1) backwards;
 }
 .entrance-home .discipline-row {
-  animation: entrance-rise 460ms cubic-bezier(.22, 1, .36, 1) 90ms backwards;
+  animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 90ms backwards;
 }
 .entrance-home .portfolio-grid > .panel {
-  animation: entrance-rise 520ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
+  animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
 }
 .entrance-home .portfolio-grid > .panel:nth-child(2) { animation-delay: 210ms; }
 .entrance-home .portfolio-grid > .panel:nth-child(n+3) { animation-delay: 270ms; }
 .entrance-home .portfolio-grid > .panel:nth-child(n+5) { animation-delay: 310ms; }
-.entrance-home .floating-nav, .entrance-work .floating-nav {
-  animation: entrance-rise 420ms cubic-bezier(.22, 1, .36, 1) 300ms backwards;
+.entrance-home .floating-nav, .entrance-work .floating-nav,
+.entrance-collection .floating-nav, .entrance-contact .floating-nav {
+  animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 300ms backwards;
 }
 .entrance-work .work-section__heading {
-  animation: entrance-wipe 440ms cubic-bezier(.22, 1, .36, 1) backwards;
+  animation: entrance-wipe 900ms cubic-bezier(.22, 1, .36, 1) backwards;
 }
 .entrance-work .work-case--lead {
-  animation: entrance-sheet 600ms cubic-bezier(.22, 1, .36, 1) 70ms backwards;
+  animation: entrance-sheet 900ms cubic-bezier(.22, 1, .36, 1) 70ms backwards;
 }
 .entrance-work .work-case-stack > .work-case {
-  animation: entrance-sheet 500ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
+  animation: entrance-sheet 900ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
 }
 .entrance-work .work-case-stack > .work-case:nth-child(2) { animation-delay: 230ms; }
+.entrance-collection .collection-kicker,
+.entrance-collection .collection-hero,
+.entrance-contact .contact-center > p,
+.entrance-contact .contact-center > h1 {
+  animation: entrance-wipe 900ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.entrance-collection .collection-hero,
+.entrance-contact .contact-center > h1 { animation-delay: 70ms; }
+.entrance-collection .collection-bento__heading,
+.entrance-collection .collection-footnote,
+.entrance-contact .contact-pills > * {
+  animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
+}
+.entrance-collection .collection-bento__grid > * {
+  animation: entrance-sheet 900ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
+}
+.entrance-collection .collection-bento__grid > :nth-child(2),
+.entrance-contact .contact-pills > :nth-child(2) { animation-delay: 230ms; }
+.entrance-collection .collection-bento__grid > :nth-child(n+3),
+.entrance-contact .contact-pills > :nth-child(n+3) { animation-delay: 310ms; }
+.entrance-collection .collection-bento__grid > :focus-within,
+.entrance-collection .floating-nav:focus-within,
+.entrance-contact .contact-center > h1:focus-within,
+.entrance-contact .contact-pills > :focus-within,
+.entrance-contact .floating-nav:focus-within,
 .entrance-home .portfolio-grid > .panel:focus-within,
 .entrance-work .work-case:focus-within,
 .entrance-home .floating-nav:focus-within,
 .entrance-work .floating-nav:focus-within { animation: none; }
 @media (prefers-reduced-motion: reduce) {
+  .entrance-collection .collection-kicker,
+  .entrance-collection .collection-hero,
+  .entrance-collection .collection-bento__heading,
+  .entrance-collection .collection-footnote,
+  .entrance-collection .collection-bento__grid > *,
+  .entrance-collection .floating-nav,
+  .entrance-contact .contact-center > p,
+  .entrance-contact .contact-center > h1,
+  .entrance-contact .contact-pills > *,
+  .entrance-contact .floating-nav,
   .entrance-home .hero-heading,
   .entrance-home .discipline-row,
   .entrance-home .portfolio-grid > .panel,
@@ -53,3 +89,4 @@
     animation: entrance-fade 120ms ease-out backwards;
   }
 }
+

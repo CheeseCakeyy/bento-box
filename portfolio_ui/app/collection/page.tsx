@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function CollectionPage() {
   return (
-    <div className="site-shell collection-shell">
+    <div className="site-shell collection-shell entrance-collection">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />
