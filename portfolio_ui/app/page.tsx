@@ -536,6 +536,7 @@ export default function AboutPage() {
       <div className="floating-nav-wrap">
         <nav className="floating-nav" aria-label="Primary navigation">
           <Link href="/work">Work</Link>
+          <Link href="/tool-kit">Tool kit</Link>
           <a className="is-current" href="#about" aria-current="page">
             About
           </a>

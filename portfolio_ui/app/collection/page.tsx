@@ -75,6 +75,7 @@ export default function CollectionPage() {
       <div className="floating-nav-wrap">
         <nav className="floating-nav" aria-label="Primary navigation">
           <Link href="/work">Work</Link>
+          <Link href="/tool-kit">Tool kit</Link>
           <Link href="/#about">About</Link>
           <Link className="is-current" href="/collection" aria-current="page">Collection</Link>
           <Link href="/contact">Contact</Link>
