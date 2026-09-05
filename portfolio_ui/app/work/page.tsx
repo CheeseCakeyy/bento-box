@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import F1ScoreGraph from "../F1ScoreGraph";
 import ThemeSwitcher from "../ThemeSwitcher";
+import HallOfFame from "./HallOfFame";
 
 export const metadata: Metadata = {
   title: "Work — Adwait Tagalpallewar",
@@ -246,6 +247,7 @@ export default function WorkPage() {
           </div>
         </section>
 
+        <HallOfFame />
         <aside className="work-next"><span>Currently building</span><div><h2>EmbeddingVC</h2><p>A lifecycle manager for vector embeddings. In progress.</p></div><Link href="/contact">Talk about a project ↗</Link></aside>
       </main>
 
