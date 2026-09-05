@@ -196,3 +196,7 @@
     animation: none;
   }
 }
+
+.tool-tile.is-category-dimmed { opacity: .16 !important; filter: grayscale(1); }
+.tool-tile.is-category-match { border-color: var(--tool-accent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tool-accent) 45%, transparent); }
+.tool-tile.is-category-dimmed:focus-visible { opacity: 1 !important; }

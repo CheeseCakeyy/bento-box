@@ -6,7 +6,7 @@ import "./DomeGallery.css";
 export type Tool = {
   name: string;
   mark: string;
-  category: "Languages" | "ML / AI" | "LLMs" | "Data";
+  category: "Languages" | "ML / AI" | "LLMs" | "Data" | "Engineering";
   accent: string;
   description: string;
 };
@@ -14,6 +14,7 @@ export type Tool = {
 type DomeGalleryProps = {
   tools: Tool[];
   animateIn?: boolean;
+  activeCategory?: Tool["category"] | null;
   fit?: number;
   minRadius?: number;
   maxVerticalRotationDeg?: number;
@@ -55,6 +56,7 @@ function buildItems(tools: Tool[], segments: number): DomeItem[] {
 export default function DomeGallery({
   tools,
   animateIn = false,
+  activeCategory = null,
   fit = 0.64,
   minRadius = 520,
   maxVerticalRotationDeg = 9,
@@ -146,7 +148,10 @@ export default function DomeGallery({
     _event: React.MouseEvent<HTMLButtonElement>,
     item: DomeItem,
   ) => {
-    didDragRef.current = false;
+    if (didDragRef.current) {
+      didDragRef.current = false;
+      return;
+    }
     setSelectedIndex(item.index);
   };
 
@@ -179,7 +184,7 @@ export default function DomeGallery({
                 }
               >
                 <button
-                  className={`tool-tile${selectedIndex === item.index ? " is-selected" : ""}`}
+                  className={`tool-tile${selectedIndex === item.index ? " is-selected" : ""}${activeCategory ? item.category === activeCategory ? " is-category-match" : " is-category-dimmed" : ""}`}
                   type="button"
                   aria-label={`${item.name}: ${item.description}`}
                   aria-pressed={selectedIndex === item.index}
