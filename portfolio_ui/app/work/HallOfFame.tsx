@@ -35,9 +35,9 @@ export default function HallOfFame() {
         <p>Experiments put to the test.<br />Notebooks shared along the way.</p>
       </header>
       <div className="hall-stats" aria-label="Kaggle highlights">
-        <div><strong>07</strong><span>Competitions entered</span></div>
-        <div><strong>06</strong><span>Bronze medal notebooks</span></div>
-        <div><strong>Top 11%</strong><span>AI Agent Security · 457 / 4,186</span></div>
+        <div><strong>31</strong><span>Competitions entered</span></div>
+        <div><strong>07</strong><span>Bronze medal notebooks</span></div>
+        <div><strong>#1,117</strong><span>Kaggle Notebooks rank · of 61,079</span></div>
       </div>
       <div className="hall-subheading"><h3>Competition results</h3><span>Best results captured on Kaggle</span></div>
       <ol className="hall-results">
@@ -50,7 +50,7 @@ export default function HallOfFame() {
           </li>
         ))}
       </ol>
-      <div className="hall-subheading"><h3>Notebook shelf</h3><span>Community recognition</span></div>
+      <div className="hall-subheading hall-subheading--notebooks"><h3>Notebook shelf</h3><span>Community recognition</span></div>
       <div className="hall-notebooks">
         <div className="hall-shelf" role="group" aria-label="Choose a notebook">
           {notebooks.map((item, index) => (
@@ -62,7 +62,12 @@ export default function HallOfFame() {
         </div>
         <div className="hall-reader" id="notebook-preview" role="region" aria-label="Notebook preview">
           <header><span className="hall-eyebrow">Notebook / {String(selected + 1).padStart(2, "0")}</span><h4>{notebook.title}</h4><div className="hall-reader-links">{notebook.source && <a href={notebook.source} download>Download .ipynb ↓</a>}<a href="https://www.kaggle.com/adwaittagalpallewar/code" target="_blank" rel="noreferrer">Kaggle notebook profile ↗</a></div></header>
-          {notebook.preview ? <iframe key={notebook.slug} title={notebook.title} src={notebook.preview} sandbox="" loading="lazy" /> : <div className="hall-reader-empty" aria-live="polite"><span aria-hidden="true">[ ]</span><h5>Preview coming soon</h5><p>This notebook’s inline edition hasn’t been added yet. Explore the notebook collection on Kaggle in the meantime.</p></div>}
+          <div className="hall-preview-stage">
+            <div className="hall-preview-window">
+              <div className="hall-preview-toolbar"><span>Notebook preview</span><span className="hall-preview-filename">{notebook.slug}.ipynb</span></div>
+              {notebook.preview ? <iframe key={notebook.slug} title={notebook.title} src={notebook.preview} sandbox="" loading="lazy" /> : <div className="hall-reader-empty" aria-live="polite"><span aria-hidden="true">[ ]</span><h5>Preview coming soon</h5><p>This notebook’s inline edition hasn’t been added yet. Explore the notebook collection on Kaggle in the meantime.</p></div>}
+            </div>
+          </div>
         </div>
       </div>
       <p className="hall-footnote">Ranks, medals and votes reflect the supplied Kaggle snapshots; leaderboard notes are provided by the author. Results are ordered by rank / teams, with top percentages rounded up.</p>
