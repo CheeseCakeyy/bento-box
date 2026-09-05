@@ -3,25 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ScrollToTop from "./ScrollToTop";
+import ThemeSwitcher from "./ThemeSwitcher";
 import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
 import PipelineBuilder from "./PipelineBuilder";
 
-type Theme = "dark" | "light" | "system";
 type ColorTheme = "red" | "green" | "blue";
 type WorkspacePhase = "average" | "good";
 
-const themeOptions: Array<{
-  value: Theme;
-  label: string;
-  icon?: string;
-  symbol?: string;
-}> = [
-  { value: "dark", icon: "/icons/theme-dark.png", label: "Use dark theme" },
-  { value: "light", icon: "/icons/theme-light.png", label: "Use light theme" },
-  { value: "system", symbol: "▣", label: "Use system theme" },
-];
 
 const colorThemes: Array<{ value: ColorTheme; label: string }> = [
   { value: "red", label: "R" },
@@ -104,7 +94,6 @@ function formatTime(value: number) {
 }
 
 export default function AboutPage() {
-  const [theme, setTheme] = useState<Theme>("dark");
   const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
   const [workspacePhase, setWorkspacePhase] = useState<WorkspacePhase>("average");
   const [localTime, setLocalTime] = useState("--:-- IST");
@@ -144,27 +133,7 @@ export default function AboutPage() {
     }
   };
 
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem("portfolio-theme") as Theme | null;
-    if (savedTheme && themeOptions.some((option) => option.value === savedTheme)) {
-      setTheme(savedTheme);
-    }
-  }, []);
 
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const applyTheme = () => {
-      const resolvedTheme = theme === "system" ? (media.matches ? "dark" : "light") : theme;
-      document.documentElement.dataset.theme = resolvedTheme;
-    };
-
-    applyTheme();
-    window.localStorage.setItem("portfolio-theme", theme);
-    media.addEventListener("change", applyTheme);
-
-    return () => media.removeEventListener("change", applyTheme);
-  }, [theme]);
 
 
   useEffect(() => {
@@ -202,30 +171,7 @@ export default function AboutPage() {
           <span>Adwait Tagalpallewar</span>
         </a>
 
-        <div className="theme-switcher" aria-label="Theme controls">
-          <span className={`theme-indicator theme-indicator--${theme}`} aria-hidden="true" />
-          {themeOptions.map((option) => (
-            <button
-              key={option.value}
-              className={theme === option.value ? "is-active" : ""}
-              type="button"
-              aria-label={option.label}
-              aria-pressed={theme === option.value}
-              onClick={() => setTheme(option.value)}
-            >
-              {option.icon ? (
-                <span
-                  className={`theme-option-icon theme-option-icon--${option.value}`}
-                  aria-hidden="true"
-                />
-              ) : (
-                <span className="theme-option-symbol" aria-hidden="true">
-                  {option.symbol}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
+        <ThemeSwitcher />
       </header>
 
       <main id="about" className="about-page">
@@ -542,4 +488,5 @@ export default function AboutPage() {
     </div>
   );
 }
+
 
