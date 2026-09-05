@@ -198,5 +198,15 @@
 }
 
 .tool-tile.is-category-dimmed { opacity: .16 !important; filter: grayscale(1); }
-.tool-tile.is-category-match { border-color: var(--tool-accent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tool-accent) 45%, transparent); }
 .tool-tile.is-category-dimmed:focus-visible { opacity: 1 !important; }
+
+/* Individual accents at rest; one shared color for the highlighted category. */
+.tool-tile.is-category-match {
+  border-color: var(--text);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 24%, transparent);
+}
+.tool-tile.is-category-match > strong { color: var(--text) !important; }
+.tool-tile.is-category-match.is-selected {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--text) 20%, transparent), 0 22px 34px var(--panel-shadow);
+}
