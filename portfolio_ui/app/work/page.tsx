@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import F1ScoreGraph from "../F1ScoreGraph";
 import ThemeSwitcher from "../ThemeSwitcher";
 import HallOfFame from "./HallOfFame";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function WorkPage() {
   return (
-    <div className="site-shell work-shell">
+    <div className="site-shell work-shell entrance-work">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />
@@ -259,7 +260,9 @@ export default function WorkPage() {
           <Link href="/collection">Collection</Link>
           <Link href="/contact">Contact</Link>
         </nav>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+

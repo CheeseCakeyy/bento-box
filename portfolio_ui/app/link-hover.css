@@ -1,0 +1,34 @@
+/* Text links share a left-to-right underline without moving surrounding content.
+   Icon-only social links and pill buttons retain their existing hover treatment. */
+a[href]:not(.bio-socials a, .contact-pills a, .bio-talk, [role="button"]):not(:has(img, svg)) {
+  position: relative;
+  text-decoration: none;
+}
+a[href]:not(.bio-socials a, .contact-pills a, .bio-talk, [role="button"]):not(:has(img, svg))::after {
+  content: "";
+  position: absolute;
+  left: var(--link-underline-inset, 0px);
+  right: var(--link-underline-inset, 0px);
+  bottom: var(--link-underline-bottom, -3px);
+  height: 1px;
+  background: currentColor;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms cubic-bezier(.22, 1, .36, 1);
+}
+@media (hover: hover) {
+  a[href]:not(.bio-socials a, .contact-pills a, .bio-talk, [role="button"]):not(:has(img, svg)):hover::after {
+    transform: scaleX(1);
+  }
+}
+a[href]:not(.bio-socials a, .contact-pills a, .bio-talk, [role="button"]):not(:has(img, svg)):focus-visible::after {
+  transform: scaleX(1);
+}
+.floating-nav a {
+  --link-underline-inset: 12px;
+  --link-underline-bottom: 5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  a[href]::after { transition: none !important; }
+}

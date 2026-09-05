@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import CopyEmailButton from "../CopyEmailButton";
 import ThemeSwitcher from "../ThemeSwitcher";
 
@@ -17,7 +18,7 @@ const socialLinks = [
 
 export default function ContactPage() {
   return (
-    <div className="site-shell contact-shell">
+    <div className="site-shell contact-shell entrance-contact">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />
@@ -51,7 +52,9 @@ export default function ContactPage() {
           <Link href="/collection">Collection</Link>
           <Link className="is-current" href="/contact" aria-current="page">Contact</Link>
         </nav>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+

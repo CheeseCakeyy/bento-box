@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import BookStack from "../BookStack";
 import FragmentReader from "../FragmentReader";
 import PoemReader from "../PoemReader";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function CollectionPage() {
   return (
-    <div className="site-shell collection-shell">
+    <div className="site-shell collection-shell entrance-collection">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />
@@ -80,7 +81,9 @@ export default function CollectionPage() {
           <Link className="is-current" href="/collection" aria-current="page">Collection</Link>
           <Link href="/contact">Contact</Link>
         </nav>
+        <ScrollToTop />
       </div>
     </div>
   );
 }
+

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Tool } from "./DomeGallery";
 import Link from "next/link";
+import ScrollToTop from "../ScrollToTop";
 import ThemeSwitcher from "../ThemeSwitcher";
 import DomeGallery from "./DomeGallery";
 import { TOOLS } from "./tools";
@@ -60,8 +61,10 @@ export default function ToolkitExperience() {
             <Link href="/collection">Collection</Link>
             <Link href="/contact">Contact</Link>
           </nav>
+        <ScrollToTop />
         </div>
       </main>
     </div>
   );
 }
+

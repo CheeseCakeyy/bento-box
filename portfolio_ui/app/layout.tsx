@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
+import "./entrances.css";
+import "./link-hover.css";
 
 export const metadata: Metadata = {
   title: "Adwait Tagalpallewar — Engineer",
