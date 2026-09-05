@@ -37,7 +37,7 @@ export default function HallOfFame() {
       <div className="hall-stats" aria-label="Kaggle highlights">
         <div><strong>31</strong><span>Competitions entered</span></div>
         <div><strong>07</strong><span>Bronze medal notebooks</span></div>
-        <div><strong>#1,117</strong><span>Kaggle Notebooks rank · of 61,079</span></div>
+        <div className="hall-rank-card"><div><strong>1084/61079</strong><span>Kaggle Notebooks Expert rank</span></div><a className="hall-rank-profile" href="https://www.kaggle.com/adwaittagalpallewar" target="_blank" rel="noreferrer" aria-label="View Kaggle profile in a new tab">Kaggle ↗</a></div>
       </div>
       <div className="hall-subheading"><h3>Competition results</h3><span>Best results captured on Kaggle</span></div>
       <ol className="hall-results">
