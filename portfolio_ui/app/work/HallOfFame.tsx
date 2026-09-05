@@ -9,12 +9,11 @@ const competitions = [
   { title: "Predicting Heart Disease", category: "Playground Series · S6E2", rank: 604, teams: 4370 },
   { title: "Predicting F1 Pit Stops", category: "Playground Series · S6E5", rank: 615, teams: 3022 },
   { title: "Predict Customer Churn", category: "Playground Series · S6E3", rank: 742, teams: 4142 },
-  { title: "Cyber-Physical Anomaly Detection for DER Systems", category: "Community · DER security", rank: 11, teams: 61 },
-  { title: "GeoHab 2026 MLWG Competition", category: "Community · Benthic habitat classification", rank: 13, teams: 52 },
-];
+  { title: "Cyber-Physical Anomaly Detection for DER Systems", category: "Community · DER security", rank: 11, teams: 61, note: "Same score as 3rd place; ranked 11th because the submission came later." },
+  { title: "GeoHab 2026 MLWG Competition", category: "Community · Benthic habitat classification", rank: 13, teams: 52, note: "1st on the public leaderboard · 13th on the private leaderboard." },
+].sort((a, b) => a.rank / a.teams - b.rank / b.teams);
 
-// Set preview/source only after placing the corresponding files in public/notebooks.
-const notebooks: { slug: string; title: string; votes: number; bronze: boolean; preview?: string; source?: string }[] = [
+const notebooks = [
   { slug: "irrigation-needs", title: "Irrigation Needs | Detailed EDA", votes: 18, bronze: true },
   { slug: "seed-averaging", title: "Seed Averaging Explained | XGBoosts", votes: 16, bronze: true },
   { slug: "exploring-cosmos", title: "ExploringCosmos: Classifying Stars, Galaxies, QSO", votes: 15, bronze: true },
@@ -24,7 +23,7 @@ const notebooks: { slug: string; title: string; votes: number; bronze: boolean; 
   { slug: "cyber-physical-anomaly", title: "Cyber-Physical anomaly detection | Baseline | XGB", votes: 9, bronze: false },
   { slug: "heart-disease", title: "predicting_heart_disease_with_xgboost", votes: 8, bronze: false },
   { slug: "housing-prices", title: "Housing Prices Competition–Deep Learning approach", votes: 8, bronze: false },
-];
+].map((notebook) => ({ ...notebook, preview: `/notebooks/${notebook.slug}.html`, source: `/notebooks/${notebook.slug}.ipynb` }));
 
 export default function HallOfFame() {
   const [selected, setSelected] = useState(0);
@@ -45,7 +44,7 @@ export default function HallOfFame() {
         {competitions.map((competition, index) => (
           <li key={competition.title}>
             <span className="hall-index">{String(index + 1).padStart(2, "0")}</span>
-            <div className="hall-competition"><h4>{competition.title}</h4><p>{competition.category}</p></div>
+            <div className="hall-competition"><h4>{competition.title}</h4><p>{competition.category}</p>{competition.note && <p className="hall-result-note">{competition.note}</p>}</div>
             <div className="hall-rank"><strong>{competition.rank}</strong><span> / {competition.teams.toLocaleString("en-US")}</span><small>Rank / teams</small></div>
             <span className="hall-percent">Top {Math.ceil(competition.rank / competition.teams * 100)}%</span>
           </li>
@@ -66,7 +65,7 @@ export default function HallOfFame() {
           {notebook.preview ? <iframe key={notebook.slug} title={notebook.title} src={notebook.preview} sandbox="" loading="lazy" /> : <div className="hall-reader-empty" aria-live="polite"><span aria-hidden="true">[ ]</span><h5>Preview coming soon</h5><p>This notebook’s inline edition hasn’t been added yet. Explore the notebook collection on Kaggle in the meantime.</p></div>}
         </div>
       </div>
-      <p className="hall-footnote">Ranks, medals and votes reflect the supplied Kaggle snapshots; they are not live statistics. Top percentages are rounded up.</p>
+      <p className="hall-footnote">Ranks, medals and votes reflect the supplied Kaggle snapshots; leaderboard notes are provided by the author. Results are ordered by rank / teams, with top percentages rounded up.</p>
     </section>
   );
 }
