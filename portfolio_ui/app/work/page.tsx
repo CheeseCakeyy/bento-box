@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ScrollToTop from "../ScrollToTop";
 import F1ScoreGraph from "../F1ScoreGraph";
 import ThemeSwitcher from "../ThemeSwitcher";
 import HallOfFame from "./HallOfFame";
@@ -251,17 +250,6 @@ export default function WorkPage() {
         <HallOfFame />
         <aside className="work-next"><span>Currently building</span><div><h2>EmbeddingVC</h2><p>A lifecycle manager for vector embeddings. In progress.</p></div><Link href="/contact">Talk about a project ↗</Link></aside>
       </main>
-
-      <div className="floating-nav-wrap">
-        <nav className="floating-nav" aria-label="Primary navigation">
-          <Link className="is-current" href="/work" aria-current="page">Work</Link>
-          <Link href="/tool-kit">Tool kit</Link>
-          <Link href="/#about">About</Link>
-          <Link href="/collection">Collection</Link>
-          <Link href="/contact">Contact</Link>
-        </nav>
-        <ScrollToTop />
-      </div>
     </div>
   );
 }

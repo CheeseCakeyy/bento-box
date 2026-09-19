@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import ScrollToTop from "./ScrollToTop";
 import ThemeSwitcher from "./ThemeSwitcher";
 import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
 import PipelineBuilder from "./PipelineBuilder";
+import { RestingTraveler } from "./Traveler";
 
 type ColorTheme = "red" | "green" | "blue";
 type WorkspacePhase = "average" | "good";
@@ -187,7 +187,8 @@ export default function AboutPage() {
         </section>
 
         <section id="portfolio-grid" className="portfolio-grid" aria-label="About page sections">
-          <article className="panel panel--bio" aria-label="Profile and biography section">
+          <article className="panel panel--bio traveler-perch" aria-label="Profile and biography section">
+            <RestingTraveler pose="sit" />
             <div className="bio-media" aria-label="Profile image">
               <img
                 className="bio-media__image"
@@ -253,7 +254,8 @@ export default function AboutPage() {
             </p>
           </article>
 
-          <article className="panel panel--workspace" aria-label="Workspace section">
+          <article className="panel panel--workspace traveler-perch" aria-label="Workspace section">
+            <RestingTraveler pose="sunbathe" />
             <div
               className="workspace-window"
               role="tabpanel"
@@ -457,7 +459,8 @@ export default function AboutPage() {
             />
           </article>
 
-          <article className="panel panel--notes collection-invite" aria-labelledby="collection-invite-title">
+          <article className="panel panel--notes collection-invite traveler-perch" aria-labelledby="collection-invite-title">
+            <RestingTraveler pose="sleep" />
             <div className="collection-invite__copy">
               <span id="collection-invite-title">Collected along the way</span>
               <p>
@@ -472,19 +475,6 @@ export default function AboutPage() {
           </article>
         </section>
       </main>
-
-      <div className="floating-nav-wrap">
-        <nav className="floating-nav" aria-label="Primary navigation">
-          <Link href="/work">Work</Link>
-          <Link href="/tool-kit">Tool kit</Link>
-          <a className="is-current" href="#about" aria-current="page">
-            About
-          </a>
-          <Link href="/collection">Collection</Link>
-          <Link href="/contact">Contact</Link>
-        </nav>
-        <ScrollToTop />
-      </div>
     </div>
   );
 }

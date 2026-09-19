@@ -1,0 +1,61 @@
+.traveler {
+  --traveler-paper: #f4f0e5;
+  --traveler-ink: #58554f;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--traveler-ink);
+}
+[data-theme="dark"] .traveler { --traveler-ink: #d4cec0; --traveler-paper: #242420; }
+.traveler-paper, .traveler-coat { fill: var(--traveler-paper); }
+.traveler-cap { fill: #c2b8a0; }
+.traveler-scarf, .traveler-scarf-tail { fill: #bb715e; stroke: #976052; }
+.traveler-body { transform-origin: 50px 91px; animation: traveler-breathe 4.5s ease-in-out infinite; }
+.traveler-head { transform-origin: 48px 40px; animation: traveler-look 9s ease-in-out infinite; }
+.traveler-scarf-tail { transform-origin: 44px 42px; animation: traveler-breeze 3s ease-in-out infinite; }
+.traveler-eye { animation: traveler-blink 6s infinite; transform-origin: 53px 29px; }
+.traveler-nav-wrap { isolation: isolate; }
+.nav-traveler {
+  position: absolute;
+  width: 59px;
+  height: 59px;
+  left: -29.5px;
+  bottom: calc(100% - 5px);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 50% 91%;
+  will-change: transform;
+}
+.nav-traveler-shadow { position: absolute; left: -12px; top: -2px; width: 24px; height: 4px; background: var(--text); border-radius: 50%; opacity: .2; pointer-events: none; }
+.nav-traveler[data-moving="true"] .traveler-body { animation: none; }
+.nav-traveler[data-moving="true"] .traveler-arm--front { transform: rotate(-45deg); transform-origin: 54px 46px; }
+.nav-traveler[data-moving="true"] .traveler-arm--back { transform: rotate(35deg); transform-origin: 42px 46px; }
+.nav-traveler[data-moving="true"] .traveler-leg--back { transform: rotate(25deg); transform-origin: 45px 68px; }
+.nav-traveler[data-moving="true"] .traveler-scarf-tail { transform: rotate(25deg); animation: none; }
+.card-traveler { position: absolute; width: 88px; height: 88px; right: 24px; top: -62px; z-index: 4; pointer-events: none; }
+.panel.traveler-perch { overflow: visible; }
+.panel--workspace.traveler-perch, .panel--notes.traveler-perch { margin-top: 64px; }
+.card-traveler--sit { top: -60px; }
+.card-traveler--sleep, .card-traveler--sunbathe { top: -90px; width: 105px; height: 105px; }
+.traveler--sit .traveler-leg--front { transform-origin: 58px 78px; animation: traveler-dangle 3.5s ease-in-out infinite; }
+.traveler--sit .traveler-leg--back { transform-origin: 39px 79px; animation: traveler-dangle 3.5s -.8s ease-in-out infinite; }
+.traveler--sleep .traveler-head, .traveler--sunbathe .traveler-head { animation: none; }
+.traveler-dream { animation: traveler-dream 5s ease-in-out infinite; }
+.traveler-sun { opacity: .5; transform-origin: 78px 20px; animation: traveler-sun 24s linear infinite; }
+@keyframes traveler-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(.978); } }
+@keyframes traveler-look { 0%,35%,75%,100% { transform: rotate(0); } 43%,60% { transform: rotate(-8deg); } }
+@keyframes traveler-breeze { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(9deg); } }
+@keyframes traveler-blink { 0%,43%,47%,100% { transform: scaleY(1); } 45% { transform: scaleY(.05); } }
+@keyframes traveler-dangle { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(9deg); } }
+@keyframes traveler-dream { 0%,100% { opacity: .15; transform: translateY(2px); } 60% { opacity: .6; transform: translateY(-4px); } }
+@keyframes traveler-sun { to { transform: rotate(360deg); } }
+@media (max-width: 600px) {
+  .nav-traveler { width: 49px; height: 49px; left: -24.5px; bottom: calc(100% - 4px); }
+  .traveler-nav-wrap { max-width: calc(100vw - 24px); bottom: max(18px, env(safe-area-inset-bottom)); }
+  .traveler-nav-wrap .floating-nav a { padding-inline: clamp(7px, 2.5vw, 12px); }
+  .card-traveler { right: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .traveler *, .nav-traveler { animation: none !important; will-change: auto; }
+}
