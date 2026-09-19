@@ -7,7 +7,7 @@ import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
 import PipelineBuilder from "./PipelineBuilder";
-import { RestingTraveler } from "./Traveler";
+
 
 type ColorTheme = "red" | "green" | "blue";
 type WorkspacePhase = "average" | "good";
@@ -187,8 +187,7 @@ export default function AboutPage() {
         </section>
 
         <section id="portfolio-grid" className="portfolio-grid" aria-label="About page sections">
-          <article className="panel panel--bio traveler-perch" aria-label="Profile and biography section">
-            <RestingTraveler pose="sit" />
+          <article className="panel panel--bio" aria-label="Profile and biography section">
             <div className="bio-media" aria-label="Profile image">
               <img
                 className="bio-media__image"
@@ -254,8 +253,7 @@ export default function AboutPage() {
             </p>
           </article>
 
-          <article className="panel panel--workspace traveler-perch" aria-label="Workspace section">
-            <RestingTraveler pose="sunbathe" />
+          <article className="panel panel--workspace" aria-label="Workspace section">
             <div
               className="workspace-window"
               role="tabpanel"
@@ -459,8 +457,7 @@ export default function AboutPage() {
             />
           </article>
 
-          <article className="panel panel--notes collection-invite traveler-perch" aria-labelledby="collection-invite-title">
-            <RestingTraveler pose="sleep" />
+          <article className="panel panel--notes collection-invite" aria-labelledby="collection-invite-title">
             <div className="collection-invite__copy">
               <span id="collection-invite-title">Collected along the way</span>
               <p>

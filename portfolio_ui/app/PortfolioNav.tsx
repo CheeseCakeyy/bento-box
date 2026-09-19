@@ -44,16 +44,20 @@ export default function PortfolioNav() {
       sprite.style.opacity = "1";
       const previous = position.current;
       position.current = x;
+      const direction = x > start ? 1 : -1;
+      if (animate && previous !== null && Math.abs(start - x) >= 1) {
+        sprite.dataset.facing = direction === 1 ? "right" : "left";
+      }
       if (!animate || reduced.matches || previous === null || Math.abs(start - x) < 1) {
         sprite.dataset.moving = "false";
         return;
       }
-      const direction = x > start ? 1 : -1;
       const height = Math.min(78, 36 + Math.abs(x - start) * .15);
       sprite.dataset.moving = "true";
       const duration = Math.min(850, 540 + Math.abs(x - start) * .65);
       flight = sprite.animate([
-        { transform: `translate(${start}px, 0) scale(1.08,.88)`, offset: 0 },
+        { transform: `translate(${start}px, 0)`, offset: 0 },
+        { transform: `translate(${start}px, 0) scale(1.08,.88)`, offset: .1 },
         { transform: `translate(${start + (x - start) * .25}px, ${-height * .78}px) rotate(${direction * -9}deg)`, offset: .25 },
         { transform: `translate(${(start + x) / 2}px, ${-height}px) rotate(${direction * 3}deg)`, offset: .48 },
         { transform: `translate(${x}px, 0) scale(1.12,.84)`, offset: .84 },
