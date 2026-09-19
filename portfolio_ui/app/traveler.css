@@ -1,49 +1,56 @@
-.traveler {
-  --traveler-paper: #f4f0e5;
-  --traveler-ink: #58554f;
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  color: var(--traveler-ink);
-}
-[data-theme="dark"] .traveler { --traveler-ink: #d4cec0; --traveler-paper: #242420; }
-.traveler-paper, .traveler-coat { fill: var(--traveler-paper); }
-.traveler-cap { fill: #c2b8a0; }
-.traveler-scarf, .traveler-scarf-tail { fill: #bb715e; stroke: #976052; }
-.traveler-body { transform-origin: 50px 91px; animation: traveler-breathe 4.5s ease-in-out infinite; }
-.traveler-head { transform-origin: 48px 40px; animation: traveler-look 9s ease-in-out infinite; }
-.traveler-scarf-tail { transform-origin: 44px 42px; animation: traveler-breeze 3s ease-in-out infinite; }
-.traveler-eye { animation: traveler-blink 6s infinite; transform-origin: 53px 29px; }
 .traveler-nav-wrap { isolation: isolate; }
-.nav-traveler {
+.nav-cat {
   position: absolute;
-  width: 59px;
-  height: 59px;
-  left: -29.5px;
-  bottom: calc(100% - 5px);
+  width: 94px;
+  height: 70.5px;
+  left: -47px;
+  bottom: 100%;
   opacity: 0;
   pointer-events: none;
-  transform-origin: 50% 91%;
   will-change: transform;
 }
-.nav-traveler-shadow { position: absolute; left: -12px; top: -2px; width: 24px; height: 4px; background: var(--text); border-radius: 50%; opacity: .2; pointer-events: none; }
-.nav-traveler > .traveler { transform-origin: center; }
-.nav-traveler[data-facing="left"] > .traveler { transform: scaleX(-1); }
-.nav-traveler[data-moving="true"] .traveler-body { animation: none; }
-.nav-traveler[data-moving="true"] .traveler-arm--front { transform: rotate(-45deg); transform-origin: 54px 46px; }
-.nav-traveler[data-moving="true"] .traveler-arm--back { transform: rotate(35deg); transform-origin: 42px 46px; }
-.nav-traveler[data-moving="true"] .traveler-leg--back { transform: rotate(25deg); transform-origin: 45px 68px; }
-.nav-traveler[data-moving="true"] .traveler-scarf-tail { transform: rotate(25deg); animation: none; }
-@keyframes traveler-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(.978); } }
-@keyframes traveler-look { 0%,35%,75%,100% { transform: rotate(0); } 43%,60% { transform: rotate(-8deg); } }
-@keyframes traveler-breeze { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(9deg); } }
-@keyframes traveler-blink { 0%,43%,47%,100% { transform: scaleY(1); } 45% { transform: scaleY(.05); } }
+.nav-cat-facing, .nav-cat-art { display: block; width: 100%; height: 100%; }
+.nav-cat-facing { transform-origin: center; }
+.nav-cat[data-facing="left"] .nav-cat-facing { transform: scaleX(-1); }
+.nav-cat-art {
+  background: url("/cat/menu-cat.png") no-repeat;
+  background-size: 800% 800%;
+  background-position: 14.285714% 100%;
+  transform-origin: 50% 100%;
+}
+[data-theme="dark"] .nav-cat-art { filter: invert(1) sepia(.15) brightness(.94); }
+.nav-cat[data-phase="sleeping"] .nav-cat-art { animation: cat-breathe 3.8s ease-in-out infinite; }
+.nav-traveler-shadow {
+  position: absolute;
+  left: -24px;
+  top: -2px;
+  width: 48px;
+  height: 4px;
+  background: var(--text);
+  border-radius: 50%;
+  opacity: .1;
+  pointer-events: none;
+}
+.nav-cat-dream {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  color: var(--text-muted);
+  font: italic 11px Georgia, serif;
+  opacity: 0;
+}
+.nav-cat-dream span { display: inline-block; transform: translate(2px,-7px); font-size: 14px; }
+.nav-cat[data-phase="sleeping"] .nav-cat-dream { animation: cat-dream 4.2s ease-in-out infinite; }
+.nav-cat[data-facing="left"] .nav-cat-dream { right: auto; left: 0; }
+@keyframes cat-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.025); } }
+@keyframes cat-dream { 0%,100% { opacity: 0; transform: translateY(2px); } 50% { opacity: .7; transform: translateY(-4px); } }
 @media (max-width: 600px) {
-  .nav-traveler { width: 49px; height: 49px; left: -24.5px; bottom: calc(100% - 4px); }
+  .nav-cat { width: 76px; height: 57px; left: -38px; }
+  .nav-cat-dream { top: 7px; font-size: 9px; }
   .traveler-nav-wrap { max-width: calc(100vw - 24px); bottom: max(18px, env(safe-area-inset-bottom)); }
   .traveler-nav-wrap .floating-nav a { padding-inline: clamp(7px, 2.5vw, 12px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .traveler *, .nav-traveler { animation: none !important; will-change: auto; }
+  .nav-cat *, .nav-cat { animation: none !important; will-change: auto; }
+  .nav-cat-dream { display: none; }
 }

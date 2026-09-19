@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import Traveler from "./Traveler";
 import ScrollToTop from "./ScrollToTop";
 
 const sections = [
@@ -13,67 +12,84 @@ const sections = [
   { href: "/collection", label: "Collection" },
   { href: "/contact", label: "Contact" },
 ];
+const wakeFrames = [57, 54, 51, 48, 45, 42, 39, 12, 9, 6, 3];
 
 export default function PortfolioNav() {
   const pathname = usePathname().replace(/\/$/, "") || "/";
   const nav = useRef<HTMLElement>(null);
   const actor = useRef<HTMLSpanElement>(null);
+  const drawing = useRef<HTMLSpanElement>(null);
   const shadow = useRef<HTMLSpanElement>(null);
   const position = useRef<number | null>(null);
+  const phase = useRef("sleeping");
+  const frame = useRef(57);
 
   useEffect(() => {
     const root = nav.current;
-    const sprite = actor.current;
+    const cat = actor.current;
+    const art = drawing.current;
     const ground = shadow.current;
-    if (!root || !sprite || !ground) return;
+    if (!root || !cat || !art || !ground) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let flight: Animation | undefined;
-    let shade: Animation | undefined;
-
+    let raf = 0;
+    const setFrame = (index: number) => {
+      frame.current = index;
+      art.style.backgroundPosition = `${(index % 8) * 100 / 7}% ${Math.floor(index / 8) * 100 / 7}%`;
+    };
+    const setPhase = (value: string) => {
+      phase.current = value;
+      cat.dataset.phase = value;
+    };
+    const place = (x: number) => {
+      position.current = x;
+      cat.style.transform = `translateX(${x}px)`;
+      ground.style.transform = `translateX(${x}px)`;
+      cat.style.opacity = "1";
+    };
     const move = (animate: boolean) => {
+      cancelAnimationFrame(raf);
       const target = root.querySelector<HTMLElement>('[aria-current="page"]');
       if (!target) return;
-      const x = target.offsetLeft + target.offsetWidth / 2;
-      // Read the actual in-flight position before cancelling, so fast clicks stay continuous.
-      const bounds = sprite.getBoundingClientRect();
-      const start = position.current === null ? x : bounds.left + bounds.width / 2 - root.getBoundingClientRect().left - root.clientLeft;
-      flight?.cancel();
-      shade?.cancel();
-      sprite.style.transform = `translateX(${x}px)`;
-      ground.style.transform = `translateX(${x}px)`;
-      sprite.style.opacity = "1";
-      const previous = position.current;
-      position.current = x;
-      const direction = x > start ? 1 : -1;
-      if (animate && previous !== null && Math.abs(start - x) >= 1) {
-        sprite.dataset.facing = direction === 1 ? "right" : "left";
-      }
-      if (!animate || reduced.matches || previous === null || Math.abs(start - x) < 1) {
-        sprite.dataset.moving = "false";
+      const destination = target.offsetLeft + target.offsetWidth / 2;
+      const start = position.current ?? destination;
+      if (position.current === null || !animate || reduced.matches || Math.abs(destination - start) < 1) {
+        place(destination);
+        setFrame(57);
+        setPhase("sleeping");
         return;
       }
-      const height = Math.min(78, 36 + Math.abs(x - start) * .15);
-      sprite.dataset.moving = "true";
-      const duration = Math.min(850, 540 + Math.abs(x - start) * .65);
-      flight = sprite.animate([
-        { transform: `translate(${start}px, 0)`, offset: 0 },
-        { transform: `translate(${start}px, 0) scale(1.08,.88)`, offset: .1 },
-        { transform: `translate(${start + (x - start) * .25}px, ${-height * .78}px) rotate(${direction * -9}deg)`, offset: .25 },
-        { transform: `translate(${(start + x) / 2}px, ${-height}px) rotate(${direction * 3}deg)`, offset: .48 },
-        { transform: `translate(${x}px, 0) scale(1.12,.84)`, offset: .84 },
-        { transform: `translate(${x}px, -5px) scale(.97,1.03)`, offset: .93 },
-        { transform: `translateX(${x}px)`, offset: 1 },
-      ], { duration, easing: "linear" });
-      shade = ground.animate([
-        { transform: `translateX(${start}px) scale(1)`, opacity: .2 },
-        { transform: `translateX(${(start + x) / 2}px) scale(.45)`, opacity: .07, offset: .48 },
-        { transform: `translateX(${x}px) scale(1.2)`, opacity: .25, offset: .84 },
-        { transform: `translateX(${x}px) scale(1)`, opacity: .2 },
-      ], { duration });
-      flight.onfinish = () => { sprite.dataset.moving = "false"; };
+      cat.dataset.facing = destination > start ? "right" : "left";
+      // Reverse the supplied tumble to wake her, then use the original walking drawings.
+      const needsWake = phase.current === "sleeping" || (phase.current === "settling" && frame.current >= 39);
+      const wakingDuration = needsWake ? wakeFrames.length * 45 : 0;
+      const walkingDuration = Math.min(1900, Math.max(600, Math.abs(destination - start) * 6));
+      const began = performance.now();
+      const tick = (now: number) => {
+        const elapsed = now - began;
+        if (elapsed < wakingDuration) {
+          setPhase("waking");
+          setFrame(wakeFrames[Math.min(wakeFrames.length - 1, Math.floor(elapsed / 45))]);
+        } else if (elapsed < wakingDuration + walkingDuration) {
+          const walking = elapsed - wakingDuration;
+          setPhase("walking");
+          setFrame(Math.floor(walking / 100) % 5);
+          place(start + (destination - start) * walking / walkingDuration);
+        } else {
+          place(destination);
+          const settlingFrame = 5 + Math.floor((elapsed - wakingDuration - walkingDuration) / 80);
+          if (settlingFrame >= 57) {
+            setFrame(57);
+            setPhase("sleeping");
+            return;
+          }
+          setPhase("settling");
+          setFrame(settlingFrame);
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      tick(began);
     };
     move(true);
-    // Skip the observer's initial delivery; it must not cancel a route-change jump.
     let firstResize = true;
     const observer = new ResizeObserver(() => {
       if (firstResize) { firstResize = false; return; }
@@ -83,12 +99,9 @@ export default function PortfolioNav() {
     const stopMotion = () => move(false);
     reduced.addEventListener("change", stopMotion);
     return () => {
+      cancelAnimationFrame(raf);
       observer.disconnect();
       reduced.removeEventListener("change", stopMotion);
-      // Leave the current transform available to the next route's effect.
-      if (flight?.playState === "running") flight.commitStyles();
-      flight?.cancel();
-      shade?.cancel();
     };
   }, [pathname]);
 
@@ -96,7 +109,10 @@ export default function PortfolioNav() {
     <div className={`floating-nav-wrap traveler-nav-wrap${pathname === "/tool-kit" ? " toolkit-nav-wrap" : ""}`}>
       <nav ref={nav} className="floating-nav" aria-label="Primary navigation">
         <span ref={shadow} className="nav-traveler-shadow" aria-hidden="true" />
-        <span ref={actor} className="nav-traveler" aria-hidden="true"><Traveler /></span>
+        <span ref={actor} className="nav-cat" data-phase="sleeping" aria-hidden="true">
+          <span className="nav-cat-facing"><span ref={drawing} className="nav-cat-art" /></span>
+          <span className="nav-cat-dream">z<span>z</span></span>
+        </span>
         {sections.map(({ href, label }) => <Link key={href} href={href} className={pathname === href ? "is-current" : undefined} aria-current={pathname === href ? "page" : undefined}>{label}</Link>)}
       </nav>
       <ScrollToTop />
