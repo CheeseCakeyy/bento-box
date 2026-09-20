@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import ScrollToTop from "./ScrollToTop";
 import ThemeSwitcher from "./ThemeSwitcher";
 import CameraRoll from "./CameraRoll";
 import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
 import PipelineBuilder from "./PipelineBuilder";
+
 
 type ColorTheme = "red" | "green" | "blue";
 type WorkspacePhase = "average" | "good";
@@ -472,19 +472,6 @@ export default function AboutPage() {
           </article>
         </section>
       </main>
-
-      <div className="floating-nav-wrap">
-        <nav className="floating-nav" aria-label="Primary navigation">
-          <Link href="/work">Work</Link>
-          <Link href="/tool-kit">Tool kit</Link>
-          <a className="is-current" href="#about" aria-current="page">
-            About
-          </a>
-          <Link href="/collection">Collection</Link>
-          <Link href="/contact">Contact</Link>
-        </nav>
-        <ScrollToTop />
-      </div>
     </div>
   );
 }

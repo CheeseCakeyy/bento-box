@@ -1,0 +1,56 @@
+.traveler-nav-wrap { isolation: isolate; }
+.nav-cat {
+  position: absolute;
+  width: 94px;
+  height: 70.5px;
+  left: -47px;
+  bottom: 100%;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.nav-cat-facing, .nav-cat-art { display: block; width: 100%; height: 100%; }
+.nav-cat-facing { transform-origin: center; }
+.nav-cat[data-facing="left"] .nav-cat-facing { transform: scaleX(-1); }
+.nav-cat-art {
+  background: url("/cat/menu-cat.png") no-repeat;
+  background-size: 800% 800%;
+  background-position: 14.285714% 100%;
+  transform-origin: 50% 100%;
+}
+[data-theme="dark"] .nav-cat-art { filter: invert(1) sepia(.15) brightness(.94); }
+.nav-cat[data-phase="sleeping"] .nav-cat-art { animation: cat-breathe 3.8s ease-in-out infinite; }
+.nav-traveler-shadow {
+  position: absolute;
+  left: -24px;
+  top: -2px;
+  width: 48px;
+  height: 4px;
+  background: var(--text);
+  border-radius: 50%;
+  opacity: .1;
+  pointer-events: none;
+}
+.nav-cat-dream {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  color: var(--text-muted);
+  font: italic 11px Georgia, serif;
+  opacity: 0;
+}
+.nav-cat-dream span { display: inline-block; transform: translate(2px,-7px); font-size: 14px; }
+.nav-cat[data-phase="sleeping"] .nav-cat-dream { animation: cat-dream 4.2s ease-in-out infinite; }
+.nav-cat[data-facing="left"] .nav-cat-dream { right: auto; left: 0; }
+@keyframes cat-breathe { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.025); } }
+@keyframes cat-dream { 0%,100% { opacity: 0; transform: translateY(2px); } 50% { opacity: .7; transform: translateY(-4px); } }
+@media (max-width: 600px) {
+  .nav-cat { width: 76px; height: 57px; left: -38px; }
+  .nav-cat-dream { top: 7px; font-size: 9px; }
+  .traveler-nav-wrap { max-width: calc(100vw - 24px); bottom: max(18px, env(safe-area-inset-bottom)); }
+  .traveler-nav-wrap .floating-nav a { padding-inline: clamp(7px, 2.5vw, 12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-cat *, .nav-cat { animation: none !important; will-change: auto; }
+  .nav-cat-dream { display: none; }
+}

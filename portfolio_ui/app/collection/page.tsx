@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ScrollToTop from "../ScrollToTop";
 import BookStack from "../BookStack";
 import FragmentReader from "../FragmentReader";
 import PoemReader from "../PoemReader";
@@ -72,17 +71,6 @@ export default function CollectionPage() {
           <p>Nothing here is ranked. Some things just refused to be forgotten.</p>
         </aside>
       </main>
-
-      <div className="floating-nav-wrap">
-        <nav className="floating-nav" aria-label="Primary navigation">
-          <Link href="/work">Work</Link>
-          <Link href="/tool-kit">Tool kit</Link>
-          <Link href="/#about">About</Link>
-          <Link className="is-current" href="/collection" aria-current="page">Collection</Link>
-          <Link href="/contact">Contact</Link>
-        </nav>
-        <ScrollToTop />
-      </div>
     </div>
   );
 }

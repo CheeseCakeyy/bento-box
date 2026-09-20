@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { Tool } from "./DomeGallery";
 import Link from "next/link";
-import ScrollToTop from "../ScrollToTop";
 import ThemeSwitcher from "../ThemeSwitcher";
 import DomeGallery from "./DomeGallery";
 import { TOOLS } from "./tools";
@@ -50,19 +49,6 @@ export default function ToolkitExperience() {
           <span role="status" aria-live="polite">{activeCategory ? `${matchCount} highlighted / ${activeCategory}` : `${TOOLS.length} tools & skills / explore a category`}</span>
           <Link href="/work">Back to work →</Link>
         </footer>
-
-        <div className="floating-nav-wrap toolkit-nav-wrap">
-          <nav className="floating-nav" aria-label="Primary navigation">
-            <Link href="/work">Work</Link>
-            <Link className="is-current" href="/tool-kit" aria-current="page">
-              Tool kit
-            </Link>
-            <Link href="/#about">About</Link>
-            <Link href="/collection">Collection</Link>
-            <Link href="/contact">Contact</Link>
-          </nav>
-        <ScrollToTop />
-        </div>
       </main>
     </div>
   );

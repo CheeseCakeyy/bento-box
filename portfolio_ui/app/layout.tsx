@@ -4,6 +4,8 @@ import "./globals.css";
 import "./entrances.css";
 import "./link-hover.css";
 import "./color-cycle.css";
+import "./traveler.css";
+import PortfolioNav from "./PortfolioNav";
 
 export const metadata: Metadata = {
   title: "Adwait Tagalpallewar — Engineer",
@@ -21,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>{children}<PortfolioNav /></body>
     </html>
   );
 }
