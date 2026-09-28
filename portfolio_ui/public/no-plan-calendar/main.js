@@ -54,7 +54,7 @@ if (window.parent !== window) {
     const palette = window.parent.getComputedStyle(parentRoot);
     const root = document.documentElement;
     for (const [local, source] of Object.entries({
-      '--paper': '--background', '--ink': '--text', '--muted': '--text-muted',
+      '--paper': '--panel', '--ink': '--text', '--muted': '--text-muted',
       '--line': '--panel-border', '--hover': '--chip',
     })) root.style.setProperty(local, palette.getPropertyValue(source));
     const dark = parentRoot.dataset.theme !== 'light';
