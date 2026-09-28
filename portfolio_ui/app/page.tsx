@@ -428,6 +428,19 @@ export default function AboutPage() {
               <span aria-hidden="true">↗</span>
             </Link>
           </article>
+          <article className="panel panel--work-invite collection-invite" aria-labelledby="work-invite-title">
+            <div className="collection-invite__copy">
+              <span id="work-invite-title">From ideas to working systems</span>
+              <p>
+                A few projects, experiments, and competition entries from my work in AI,
+                data, and software. Here&apos;s what I&apos;ve been building.
+              </p>
+            </div>
+            <Link className="collection-invite__link" href="/work">
+              <span>Explore my work</span>
+              <span aria-hidden="true">↗</span>
+            </Link>
+          </article>
         </section>
       </main>
     </div>
