@@ -63,9 +63,7 @@
 .entrance-contact .contact-center > h1:focus-within,
 .entrance-contact .contact-pills > :focus-within,
 .entrance-contact .floating-nav:focus-within,
-.entrance-home .portfolio-grid > .panel:focus-within,
 .entrance-work .work-case:focus-within,
-.entrance-home .floating-nav:focus-within,
 .entrance-work .floating-nav:focus-within { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .entrance-collection .collection-kicker,

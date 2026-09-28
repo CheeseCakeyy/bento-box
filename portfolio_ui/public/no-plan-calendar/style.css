@@ -23,7 +23,7 @@ h1 > span { display: block; }
 h1 > span + span { padding-left: 14px; margin-top: 5px; }
 .period { font-size: .63em; margin-left: 3px; }
 .title-rule { height: 2px; background: var(--ink); width: 155px; margin: 9px auto 10px; }
-.drawing-wrap { position: relative; width: min(100%, 340px, calc((100svh - 205px) * 1.534)); margin: auto; }
+.drawing-wrap { position: relative; width: min(100%, clamp(230px, calc((100svh - 205px) * 1.534), 340px)); margin: auto; }
 svg { display: block; width: 100%; height: auto; }
 .day-buttons { position: absolute; inset: 0; pointer-events: none; }
 .day-button { position: absolute; left: 5.36%; width: 89.28%; border: 0; background: transparent; padding: 0; pointer-events: auto; }
