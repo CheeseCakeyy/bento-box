@@ -415,19 +415,6 @@ export default function AboutPage() {
             />
           </article>
 
-          <article className="panel panel--notes collection-invite" aria-labelledby="collection-invite-title">
-            <div className="collection-invite__copy">
-              <span id="collection-invite-title">Collected along the way</span>
-              <p>
-                I read books and write poems sometimes. I also collect stray quotes, one-liners,
-                and questions that leave you hanging. A few of them live here.
-              </p>
-            </div>
-            <Link className="collection-invite__link" href="/collection">
-              <span>Browse the collection</span>
-              <span aria-hidden="true">↗</span>
-            </Link>
-          </article>
           <article className="panel panel--work-invite collection-invite" aria-labelledby="work-invite-title">
             <div className="collection-invite__copy">
               <span id="work-invite-title">From ideas to working systems</span>

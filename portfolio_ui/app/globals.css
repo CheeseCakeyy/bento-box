@@ -393,7 +393,6 @@ a:focus-visible {
     "code code photos photos"
     "sketch sketch stamps stamps"
     "sketch sketch stamps stamps"
-    "notes notes notes notes"
     "work-invite work-invite work-invite work-invite";
   gap: 20px;
 }
@@ -2754,12 +2753,6 @@ a:focus-visible {
   display: none;
 }
 
-.panel--notes {
-  grid-area: notes;
-  min-height: 125px;
-  display: grid;
-}
-
 .panel--work-invite {
   grid-area: work-invite;
   display: grid;
@@ -3817,7 +3810,6 @@ a:focus-visible {
       "color photos stamps"
       "code code stamps"
       "code code stamps"
-      "notes notes notes"
       "work-invite work-invite work-invite";
   }
 
@@ -4044,7 +4036,6 @@ a:focus-visible {
       "pantone"
       "code"
       "stamps"
-      "notes"
       "work-invite";
     gap: 14px;
   }
