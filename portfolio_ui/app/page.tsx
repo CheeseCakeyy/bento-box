@@ -10,7 +10,7 @@ import PipelineBuilder from "./PipelineBuilder";
 
 
 type ColorTheme = "red" | "green" | "blue";
-type WorkspacePhase = "average" | "good";
+
 
 
 const colorThemes: Array<{ value: ColorTheme; label: string }> = [
@@ -95,7 +95,7 @@ function formatTime(value: number) {
 
 export default function AboutPage() {
   const [colorTheme, setColorTheme] = useState<ColorTheme | null>(null);
-  const [workspacePhase, setWorkspacePhase] = useState<WorkspacePhase>("average");
+
   const [localTime, setLocalTime] = useState("--:-- IST");
   const [selectedSong, setSelectedSong] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -253,55 +253,13 @@ export default function AboutPage() {
             </p>
           </article>
 
-          <article className="panel panel--workspace" aria-label="Workspace section">
-            <div
-              className="workspace-window"
-              role="tabpanel"
-              aria-label={workspacePhase === "average" ? "Workspace on an average day" : "Workspace on a good day"}
-            >
-              <img
-                className={workspacePhase === "average" ? "is-active" : ""}
-                src="/workspace-average-day.png"
-                alt="A laptop and a black cat at the workspace on an average day"
-                aria-hidden={workspacePhase !== "average"}
-              />
-              <img
-                className={workspacePhase === "good" ? "is-active" : ""}
-                src="/workspace-good-day.png"
-                alt="A waffle held in front of the workspace on a good day"
-                aria-hidden={workspacePhase !== "good"}
-              />
-
-              <div className="workspace-caption" aria-live="polite">
-                <span>Workspace / {workspacePhase === "average" ? "01" : "02"}</span>
-                <strong>{workspacePhase === "average" ? "On an average day" : "On a good day"}</strong>
-              </div>
-
-              <div className="workspace-phases" role="tablist" aria-label="Choose a workspace phase">
-                <button
-                  className={workspacePhase === "average" ? "is-active" : ""}
-                  type="button"
-                  role="tab"
-                  aria-selected={workspacePhase === "average"}
-                  onClick={() => setWorkspacePhase("average")}
-                >
-                  <span>01</span>
-                  Average day
-                </button>
-                <button
-                  className={workspacePhase === "good" ? "is-active" : ""}
-                  type="button"
-                  role="tab"
-                  aria-selected={workspacePhase === "good"}
-                  onClick={() => setWorkspacePhase("good")}
-                >
-                  <span>02</span>
-                  Good day
-                </button>
-              </div>
-            </div>
+          <article className="panel panel--calendar" aria-label="No plan Society calendar">
+            <iframe
+              className="no-plan-calendar"
+              src="/no-plan-calendar/index.html"
+              title="No plan Society — interactive daily calendar"
+            />
           </article>
-
           <article className="panel panel--system" aria-label="System monitor section">
             <div className="system-heading">
               <span>System monitor</span>
