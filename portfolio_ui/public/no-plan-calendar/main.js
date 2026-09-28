@@ -1,6 +1,6 @@
 import {days,dateKey,addDays,parseDate,hidingSpot} from './dates.js';
 const $=id=>document.getElementById(id);
-const paper='#f8f7f3', ink='#151513';
+const paper='var(--paper)', ink='var(--ink)';
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 let selected=new Date(), liveDay=dateKey(selected), opening=1, phase='idle', last=0, frame=0, lookX=0, lookY=0;
 const sayings=['No plans. Just peeking.','Monday? Never heard of it.','A little curious. A little unbusy.','Halfway to absolutely nowhere.','Just checking if it’s the weekend.','Out of office. Still at home.','Today’s agenda: nothing, together.'];
@@ -25,7 +25,7 @@ function draw(){
     if(i!==day){svg+=`<path d="M30 ${edge(i).base} ${curve(i)} L530 ${edge(i+1).base} ${curve(i+1,true)} Z" fill="${paper}" ${stroke}/>`;}
     else {svg+=`<path d="M30 ${edge(i).base} ${curve(i)} M30 ${edge(i+1).base} ${curve(i+1)}" fill="none" ${stroke}/>`;}
     // Keep the printed label on its own opaque paper tab, like the reference.
-    svg+=`<path d="M30 ${top+i*row} H126 V${top+(i+1)*row} H30Z" fill="${paper}" ${stroke}/><text x="77" y="${top+i*row+23}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="25" fill="${i===0?'#b66b34':i===6?'#464c74':ink}">${days[i].slice(0,3).toUpperCase()}</text>`;
+    svg+=`<path d="M30 ${top+i*row} H126 V${top+(i+1)*row} H30Z" fill="${paper}" ${stroke}/><text x="77" y="${top+i*row+23}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="25" fill="${i===0?'var(--sunday, #b66b34)':i===6?'var(--saturday, #464c74)':ink}">${days[i].slice(0,3).toUpperCase()}</text>`;
     buttons[i].style.top=`${(top+i*row)/365*100}%`;buttons[i].style.height=`${row/365*100}%`;
   }
   // Fingers overlap the paper edge so the friend visibly holds it down.
@@ -46,3 +46,24 @@ setInterval(()=>{checkDay();if(!document.hidden&&phase==='idle'&&!reduced.matche
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkDay();});
 updateLabels();draw();
 
+
+// The embedded calendar shares the portfolio's palette, including live theme changes.
+if (window.parent !== window) {
+  const parentRoot = window.parent.document.documentElement;
+  const syncTheme = () => {
+    const palette = window.parent.getComputedStyle(parentRoot);
+    const root = document.documentElement;
+    for (const [local, source] of Object.entries({
+      '--paper': '--background', '--ink': '--text', '--muted': '--text-muted',
+      '--line': '--panel-border', '--hover': '--chip',
+    })) root.style.setProperty(local, palette.getPropertyValue(source));
+    const dark = parentRoot.dataset.theme !== 'light';
+    root.style.colorScheme = dark ? 'dark' : 'light';
+    root.style.setProperty('--sunday', dark ? '#dca375' : '#a35c2c');
+    root.style.setProperty('--saturday', dark ? '#a5aedb' : '#464c74');
+  };
+  syncTheme();
+  const observer = new MutationObserver(syncTheme);
+  observer.observe(parentRoot, { attributes: true, attributeFilter: ['data-theme', 'data-color-theme', 'data-color-cycle'] });
+  window.addEventListener('pagehide', () => observer.disconnect(), { once: true });
+}
