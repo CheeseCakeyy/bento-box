@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
+import ClickSpark from "../ClickSpark";
 
 
 
@@ -76,7 +77,7 @@ export function ExperimentDialog({ experiment, onClose }: { experiment: Experime
     };
   }, [onClose]);
 
-  return <dialog ref={dialog} className={`experiment-dialog ${experiment.video ? "experiment-dialog--film" : ""} experiment-dialog--${experiment.slug}`} aria-labelledby="experiment-title" aria-describedby="experiment-hint" onCancel={(event) => { event.preventDefault(); onClose(); }}>
+  return <dialog ref={dialog} className={`experiment-dialog ${experiment.video ? "experiment-dialog--film" : ""} experiment-dialog--${experiment.slug}`} aria-labelledby="experiment-title" aria-describedby="experiment-hint" onCancel={(event) => { event.preventDefault(); onClose(); }}><ClickSpark modal>
     <div className="experiment-dialog__card">
       <header className="experiment-dialog__header">
         <div><span className="showcase-eyebrow">{experiment.medium}</span><h2 id="experiment-title">{experiment.name}</h2></div>
@@ -87,5 +88,5 @@ export function ExperimentDialog({ experiment, onClose }: { experiment: Experime
       </div>
       <footer className="experiment-dialog__footer"><p id="experiment-hint">{experiment.hint}</p><span>ESC to close</span></footer>
     </div>
-  </dialog>;
+  </ClickSpark></dialog>;
 }

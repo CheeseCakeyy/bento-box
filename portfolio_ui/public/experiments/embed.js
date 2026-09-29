@@ -13,6 +13,24 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+// Same-origin previews share the portfolio cursor and click sparks.
+if ((mode === 'card' || mode === 'expanded') && window.parent !== window) {
+  document.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary) return;
+    window.parent.postMessage({ type: 'experiment:click', x: event.clientX, y: event.clientY }, location.origin);
+  }, { passive: true });
+  let pointerFrame = 0;
+  document.addEventListener('pointermove', (event) => {
+    if (event.pointerType !== 'mouse' || pointerFrame) return;
+    const x = event.clientX;
+    const y = event.clientY;
+    pointerFrame = requestAnimationFrame(() => {
+      pointerFrame = 0;
+      window.parent.postMessage({ type: 'experiment:pointer', x, y }, location.origin);
+    });
+  }, { passive: true });
+}
+
 // Keep the gallery scrollable even when the pointer is over a live iframe.
 // Expanded demos retain their own original scroll behavior.
 if (mode === 'card' && window.parent !== window) {

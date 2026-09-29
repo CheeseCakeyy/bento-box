@@ -69,13 +69,17 @@ function ExperimentCard({ experiment, onOpen, expanded, index }: { experiment: E
 function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null; onSelect: (experiment: Experiment) => void }) {
   const rail = useRef<HTMLDivElement>(null);
   const progress = useRef<HTMLSpanElement>(null);
+  const scrollTo = useRef<(value: number, absolute?: boolean) => boolean>(() => false);
   const [position, setPosition] = useState({ current: 1, start: true, end: false });
 
   useEffect(() => {
     const view = rail.current;
     if (!view) return;
     let frame = 0;
-    let wheelTimer: ReturnType<typeof setTimeout>;
+    let settleTimer: ReturnType<typeof setTimeout>;
+    let moving = false;
+    let target = view.scrollLeft;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => {
       frame = 0;
       const max = view.scrollWidth - view.clientWidth;
@@ -85,16 +89,28 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
       setPosition((previous) => previous.current === next.current && previous.start === next.start && previous.end === next.end ? previous : next);
       if (progress.current) progress.current.style.transform = `scaleX(${max > 0 ? view.scrollLeft / max : 1})`;
     };
-    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
-    const slide = (delta: number) => {
-      const max = view.scrollWidth - view.clientWidth;
-      if (!delta || (delta < 0 && view.scrollLeft <= 0) || (delta > 0 && view.scrollLeft >= max - 1)) return false;
+    const schedule = () => {
+      if (!moving) target = view.scrollLeft;
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    const slide = (value: number, absolute = false) => {
+      const max = Math.max(0, view.scrollWidth - view.clientWidth);
+      const next = Math.max(0, Math.min(max, absolute ? value : (moving ? target : view.scrollLeft) + value));
+      if (!Number.isFinite(next) || Math.abs(next - target) < .5) return false;
+      target = next;
+      moving = true;
       view.classList.add("is-scrolling");
-      view.scrollLeft += delta;
-      clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => view.classList.remove("is-scrolling"), 180);
+      view.scrollTo({ left: next, behavior: reduced.matches ? "instant" : "smooth" });
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => {
+        moving = false;
+        target = view.scrollLeft;
+        view.classList.remove("is-scrolling");
+        schedule();
+      }, reduced.matches ? 0 : 450);
       return true;
     };
+    scrollTo.current = slide;
     const wheel = (event: WheelEvent) => {
       if (event.ctrlKey) return;
       const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
@@ -115,7 +131,8 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     update();
     return () => {
       cancelAnimationFrame(frame);
-      clearTimeout(wheelTimer);
+      clearTimeout(settleTimer);
+      scrollTo.current = () => false;
       observer.disconnect();
       view.removeEventListener("scroll", schedule);
       view.removeEventListener("wheel", wheel);
@@ -128,7 +145,7 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     const card = view?.firstElementChild as HTMLElement | null;
     if (!view || !card) return;
     const step = card.offsetWidth + parseFloat(getComputedStyle(view).gap || "0");
-    view.scrollBy({ left: direction * step, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    scrollTo.current(direction * step);
   }
 
   return <div className="component-gallery">
@@ -137,7 +154,7 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     <div ref={rail} className="experiment-rail" role="region" aria-label="Interactive web components. Scroll sideways, swipe, or use the arrow buttons." tabIndex={0} onKeyDown={(event) => {
       if (event.target !== event.currentTarget) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); move(event.key === "ArrowRight" ? 1 : -1); }
-      if (event.key === "Home" || event.key === "End") { event.preventDefault(); rail.current?.scrollTo({ left: event.key === "Home" ? 0 : rail.current.scrollWidth, behavior: "instant" }); }
+      if (event.key === "Home" || event.key === "End") { event.preventDefault(); scrollTo.current(event.key === "Home" ? 0 : rail.current?.scrollWidth ?? 0, true); }
     }}>
       {experiments.map((experiment, index) => <ExperimentCard key={experiment.slug} index={index} experiment={experiment} onOpen={() => onSelect(experiment)} expanded={selected?.slug === experiment.slug} />)}
     </div>
@@ -179,9 +196,9 @@ export default function WorkShowcase({ children }: { children: ReactNode }) {
   }
 
   return <div className="work-showcase">
-    <div className="showcase-tabs" role="tablist" aria-label="Work categories">
+    <div className="showcase-tabs" role="tablist" aria-label="Project categories">
       {([{ id: "ml", label: "ML & systems", count: "03" }, { id: "web", label: "Web & interaction", count: String(experiments.length).padStart(2, "0") }] as const).map((item, index) => <button key={item.id} ref={(element) => { tabButtons.current[index] = element; }} type="button" role="tab" id={`work-tab-${item.id}`} aria-selected={tab === item.id} aria-controls={`work-panel-${item.id}`} tabIndex={tab === item.id ? 0 : -1} onClick={() => choose(item.id)} onKeyDown={(event) => navigateTabs(event, index)}>{item.label}<span>{item.count}</span></button>)}
-      <span className="showcase-tab-note" aria-hidden="true">Selected work / 2026</span>
+      <span className="showcase-tab-note" aria-hidden="true">Selected projects / 2026</span>
     </div>
     <section role="tabpanel" id="work-panel-ml" aria-labelledby="work-tab-ml" tabIndex={0} hidden={tab !== "ml"} className="showcase-panel showcase-panel--ml">{children}</section>
     <section role="tabpanel" id="work-panel-web" aria-labelledby="work-tab-web" tabIndex={0} hidden={tab !== "web"} className="showcase-panel showcase-panel--web">

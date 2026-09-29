@@ -5288,3 +5288,12 @@ a:focus-visible {
   .project-results > div:last-child { border-bottom: 0; }
   .project-results strong { font-size: 34px; }
 }
+
+/* One pointer treatment across the portfolio, including fixed navigation. */
+.site-click-spark { min-height:100dvh; }
+.site-click-spark--modal { min-height:0; }
+.click-spark__canvas { position:fixed; inset:0; z-index:2147483646; display:block; width:100vw; height:100dvh; pointer-events:none; }
+.click-spark__cursor { position:fixed; top:0; left:0; z-index:2147483647; width:22px; height:22px; margin:-11px 0 0 -11px; border:1px solid currentColor; border-radius:50%; color:#a47855; pointer-events:none; opacity:0; transition:opacity .15s ease; box-shadow:0 0 0 2px #ffffff55; }
+.click-spark__cursor::after { content:""; position:absolute; top:50%; left:50%; width:3px; height:3px; border-radius:50%; background:currentColor; transform:translate(-50%,-50%); }
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) { .site-click-spark, .site-click-spark * { cursor:none!important; } }
+@media(hover:none), (pointer:coarse), (prefers-reduced-motion:reduce) { .click-spark__cursor { display:none; } }

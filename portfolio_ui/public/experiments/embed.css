@@ -1,4 +1,10 @@
 /* Compact, genuinely usable previews rather than scaled full webpages. */
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  :is([data-embed="card"], [data-embed="expanded"]) body,
+  :is([data-embed="card"], [data-embed="expanded"]) body * { cursor:none!important; }
+  :is([data-embed="card"], [data-embed="expanded"]) .pond-cursor,
+  :is([data-embed="card"], [data-embed="expanded"]) .cursor { display:none!important; }
+}
 [data-embed="poster"] .stage > :not(canvas) { visibility:hidden!important; }
 html:is([data-embed="card"], [data-embed="expanded"]), :is([data-embed="card"], [data-embed="expanded"]) body { min-height:100%; overflow:hidden; }
 :is([data-embed="card"], [data-embed="expanded"]) .site-header,
@@ -55,11 +61,11 @@ html:is([data-embed="card"], [data-embed="expanded"]), :is([data-embed="card"], 
 [data-embed="card"][data-experiment="keyspace"] .stage > :not(canvas) { display:none!important; }
 [data-embed="card"][data-experiment="keyspace"] canvas { touch-action:none; }
 
-[data-embed="card"][data-experiment="koi-pond"] .sketchbook { display:grid; place-items:center; height:100svh; max-width:none; min-height:0; padding:20px 14px; }
+[data-embed="card"][data-experiment="koi-pond"] .sketchbook { display:block; position:relative; overflow:hidden; height:100svh; max-width:none; min-height:0; padding:0; background:#7e9b85; }
 [data-embed="card"][data-experiment="koi-pond"] .medium-toolbar,
 [data-embed="card"][data-experiment="koi-pond"] .pond-tools,
 [data-embed="card"][data-experiment="koi-pond"] .pond-signature { display:none; }
-[data-embed="card"][data-experiment="koi-pond"] .pond-frame { height:auto; min-height:0; aspect-ratio:3/2; }
+[data-embed="card"][data-experiment="koi-pond"] .pond-frame { position:absolute; left:50%; top:50%; width:118%; height:auto; min-height:0; aspect-ratio:3/2; max-width:none; margin:0; transform:translate(-50%,-50%); }
 [data-embed="card"][data-experiment="koi-pond"] .pond-frame::before,
 [data-embed="card"][data-experiment="koi-pond"] .pond-frame::after { display:none; }
 

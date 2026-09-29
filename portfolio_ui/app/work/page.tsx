@@ -7,8 +7,8 @@ import WorkShowcase from "./WorkShowcase";
 import "./showcase.css";
 
 export const metadata: Metadata = {
-  title: "Work — Adwait Tagalpallewar",
-  description: "Machine learning systems, playful web experiments, and selected work by Adwait Tagalpallewar.",
+  title: "Projects — Adwait Tagalpallewar",
+  description: "Machine learning systems, playful web experiments, and projects by Adwait Tagalpallewar.",
 };
 
 export default function WorkPage() {
@@ -23,7 +23,7 @@ export default function WorkPage() {
       </header>
       <main className="work-page showcase-page">
         <header className="showcase-heading">
-          <div><span className="showcase-eyebrow">A collection of things I’ve made</span><h1>Work<span>.</span></h1><p>Intelligent systems. A little room for play.</p></div>
+          <div><span className="showcase-eyebrow">A collection of things I’ve made</span><h1>Projects<span>.</span></h1><p>Intelligent systems. A little room for play.</p></div>
           <span className="showcase-margin-note" aria-hidden="true">Build<br />Learn<br />Iterate ↗</span>
         </header>
         <WorkShowcase>

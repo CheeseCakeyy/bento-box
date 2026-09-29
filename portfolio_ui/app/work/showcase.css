@@ -222,13 +222,14 @@
 .component-gallery .showcase-section-note { margin:4px 0 24px; }
 .component-gallery .showcase-section-note p { font-size:12px; }
 .component-gallery .showcase-section-note > span { display:block; font:9px ui-monospace,monospace; }
-.experiment-rail { display:grid; grid-auto-flow:column; grid-auto-columns:min(440px,calc(100% - 28px)); gap:var(--component-gap); overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; padding:3px 2px 12px; margin:-3px -2px 0; outline:none; }
+.experiment-rail { display:grid; grid-auto-flow:column; grid-auto-columns:min(440px,calc(100% - 28px)); gap:var(--component-gap); overflow-x:auto; overflow-y:hidden; scroll-snap-type:none; scrollbar-width:none; overscroll-behavior-inline:contain; padding:3px 2px 12px; margin:-3px -2px 0; outline:none; }
 .experiment-rail::-webkit-scrollbar { display:none; }
 .experiment-rail.is-scrolling { scroll-snap-type:none; }
+@media(pointer:coarse) { .experiment-rail:not(.is-scrolling) { scroll-snap-type:x proximity; } }
 .experiment-rail:focus-visible { outline:1px solid var(--text-muted); outline-offset:8px; }
 .component-gallery .experiment-card { display:block; grid-column:auto; scroll-snap-align:start; min-width:0; border:0; border-radius:0; background:transparent; overflow:visible; }
-.component-gallery .experiment-card__stage { height:auto; aspect-ratio:1; border-radius:12px; overflow:hidden; background:#f3f2ee; }
-.component-gallery .experiment-card--koi-pond .experiment-card__stage { background:#f6f2e9; }
+.component-gallery .experiment-card__stage { height:auto; aspect-ratio:3/2; border-radius:12px; overflow:hidden; background:#f3f2ee; }
+.component-gallery .experiment-card--koi-pond .experiment-card__stage { background:#7e9b85; }
 .component-gallery .experiment-card--keyspace .experiment-card__stage { background:#e9e8e1; }
 .component-gallery .experiment-card__caption { display:flex; flex-direction:row; align-items:center; justify-content:space-between; gap:16px; width:100%; min-height:0; border:0; background:transparent; padding:18px 2px 4px; cursor:default; }
 .component-gallery .experiment-card__caption h2 { display:flex; align-items:center; gap:10px; margin:0; font:500 14px/1.4 Inter,sans-serif; letter-spacing:-.02em; }

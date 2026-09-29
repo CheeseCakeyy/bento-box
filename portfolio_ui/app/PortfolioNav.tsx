@@ -9,7 +9,7 @@ const sections = [
   { href: "/collection", label: "Collection" },
   { href: "/tool-kit", label: "Tool kit" },
   { href: "/", label: "About" },
-  { href: "/work", label: "Work" },
+  { href: "/work", label: "Projects" },
   { href: "/contact", label: "Contact" },
 ];
 const wakeFrames = [57, 54, 51, 48, 45, 42, 39, 12, 9, 6, 3];

@@ -424,7 +424,7 @@ export default function AboutPage() {
               </p>
             </div>
             <Link className="collection-invite__link" href="/work">
-              <span>Explore my work</span>
+              <span>Explore my projects</span>
               <span aria-hidden="true">↗</span>
             </Link>
           </article>

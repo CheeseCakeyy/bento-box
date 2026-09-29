@@ -6,6 +6,7 @@ import "./link-hover.css";
 import "./color-cycle.css";
 import "./traveler.css";
 import PortfolioNav from "./PortfolioNav";
+import ClickSpark from "./ClickSpark";
 
 export const metadata: Metadata = {
   title: "Adwait Tagalpallewar — Engineer",
@@ -23,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body>{children}<PortfolioNav /></body>
+      <body><ClickSpark>{children}<PortfolioNav /></ClickSpark></body>
     </html>
   );
 }
