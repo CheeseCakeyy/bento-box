@@ -13,22 +13,69 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-// Same-origin previews share the portfolio cursor and click sparks.
+// Same-origin previews share the portfolio click sparks.
 if ((mode === 'card' || mode === 'expanded') && window.parent !== window) {
   document.addEventListener('pointerdown', (event) => {
     if (!event.isPrimary) return;
     window.parent.postMessage({ type: 'experiment:click', x: event.clientX, y: event.clientY }, location.origin);
   }, { passive: true });
-  let pointerFrame = 0;
-  document.addEventListener('pointermove', (event) => {
-    if (event.pointerType !== 'mouse' || pointerFrame) return;
-    const x = event.clientX;
-    const y = event.clientY;
-    pointerFrame = requestAnimationFrame(() => {
-      pointerFrame = 0;
-      window.parent.postMessage({ type: 'experiment:pointer', x, y }, location.origin);
-    });
-  }, { passive: true });
+}
+
+// Demos opened on their own keep the same click sparks as the portfolio.
+if (!mode && window.parent === window) {
+  const setupStandaloneSparks = () => {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'experiment-standalone-sparks';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.append(canvas);
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let width = 0;
+    let height = 0;
+    let sparks = [];
+    let frame = 0;
+    const resize = () => {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.ceil(width * ratio);
+      canvas.height = Math.ceil(height * ratio);
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+    const draw = (now) => {
+      frame = 0;
+      context.clearRect(0, 0, width, height);
+      sparks = sparks.filter((spark) => {
+        const progress = Math.min(1, (now - spark.started) / 650);
+        if (progress >= 1) return false;
+        const eased = progress * (2 - progress);
+        const distance = eased * 22;
+        const length = 9 * (1 - eased);
+        const dx = Math.cos(spark.angle);
+        const dy = Math.sin(spark.angle);
+        context.beginPath();
+        context.moveTo(spark.x + distance * dx, spark.y + distance * dy);
+        context.lineTo(spark.x + (distance + length) * dx, spark.y + (distance + length) * dy);
+        context.strokeStyle = '#a47855';
+        context.lineWidth = 1.8;
+        context.lineCap = 'round';
+        context.stroke();
+        return true;
+      });
+      if (sparks.length) frame = requestAnimationFrame(draw);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    document.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary || reducedMotion.matches) return;
+      const started = performance.now();
+      sparks.push(...Array.from({ length: 8 }, (_, index) => ({ x: event.clientX, y: event.clientY, angle: index * Math.PI / 4, started })));
+      if (!frame) frame = requestAnimationFrame(draw);
+    }, { passive: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setupStandaloneSparks, { once: true });
+  else setupStandaloneSparks();
 }
 
 // Keep the gallery scrollable even when the pointer is over a live iframe.

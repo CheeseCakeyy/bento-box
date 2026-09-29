@@ -1,10 +1,7 @@
 /* Compact, genuinely usable previews rather than scaled full webpages. */
-@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
-  :is([data-embed="card"], [data-embed="expanded"]) body,
-  :is([data-embed="card"], [data-embed="expanded"]) body * { cursor:none!important; }
-  :is([data-embed="card"], [data-embed="expanded"]) .pond-cursor,
-  :is([data-embed="card"], [data-embed="expanded"]) .cursor { display:none!important; }
-}
+[data-experiment] .pond-cursor,
+[data-experiment] .cursor { display:none!important; }
+.experiment-standalone-sparks { position:fixed; inset:0; z-index:2147483646; width:100vw; height:100dvh; pointer-events:none; }
 [data-embed="poster"] .stage > :not(canvas) { visibility:hidden!important; }
 html:is([data-embed="card"], [data-embed="expanded"]), :is([data-embed="card"], [data-embed="expanded"]) body { min-height:100%; overflow:hidden; }
 :is([data-embed="card"], [data-embed="expanded"]) .site-header,

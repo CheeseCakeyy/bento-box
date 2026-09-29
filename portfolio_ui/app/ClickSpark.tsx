@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type MouseEvent, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 
 type Spark = { x: number; y: number; angle: number; started: number };
 
@@ -14,12 +14,11 @@ type Props = {
   modal?: boolean;
 };
 
-// Adapted from React Bits' ClickSpark for a viewport-wide cursor and bursts.
-// Same-origin embedded demos forward their pointer positions to this layer.
+// Adapted from React Bits' ClickSpark for viewport-wide bursts.
+// Same-origin embedded demos forward clicks to this layer.
 export default function ClickSpark({ children, sparkColor = "#a47855", sparkSize = 9, sparkRadius = 22, sparkCount = 8, duration = 650, modal = false }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const cursor = useRef<HTMLSpanElement>(null);
   const burst = useRef<(x: number, y: number) => void>(() => {});
 
   useEffect(() => {
@@ -73,18 +72,14 @@ export default function ClickSpark({ children, sparkColor = "#a47855", sparkSize
       if (!frame) frame = requestAnimationFrame(draw);
     };
     const receive = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin || !["experiment:click", "experiment:pointer"].includes(event.data?.type)) return;
+      if (event.origin !== window.location.origin || event.data?.type !== "experiment:click") return;
       const iframe = [...element.querySelectorAll("iframe")].find((item) => item.contentWindow === event.source);
       if (!iframe) return;
       const x = Number(event.data.x);
       const y = Number(event.data.y);
       if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || x > iframe.clientWidth || y > iframe.clientHeight) return;
       const bounds = iframe.getBoundingClientRect();
-      if (event.data.type === "experiment:click") burst.current(bounds.left + x, bounds.top + y);
-      else if (cursor.current) {
-        cursor.current.style.transform = `translate3d(${bounds.left + x}px, ${bounds.top + y}px, 0)`;
-        cursor.current.style.opacity = "1";
-      }
+      burst.current(bounds.left + x, bounds.top + y);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -103,15 +98,8 @@ export default function ClickSpark({ children, sparkColor = "#a47855", sparkSize
       burst.current(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
     } else burst.current(event.clientX, event.clientY);
   };
-  const pointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (!cursor.current || event.pointerType !== "mouse") return;
-    cursor.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-    cursor.current.style.opacity = "1";
-  };
-
-  return <div ref={root} className={`site-click-spark${modal ? " site-click-spark--modal" : ""}`} onClickCapture={click} onPointerDown={pointerMove} onPointerMove={pointerMove} onPointerLeave={() => { if (cursor.current) cursor.current.style.opacity = "0"; }}>
+  return <div ref={root} className={`site-click-spark${modal ? " site-click-spark--modal" : ""}`} onClickCapture={click}>
     {children}
     <canvas ref={canvas} className="click-spark__canvas" aria-hidden="true" />
-    <span ref={cursor} className="click-spark__cursor" aria-hidden="true" />
   </div>;
 }
