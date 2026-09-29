@@ -4,6 +4,7 @@ import ThemeSwitcher from "../ThemeSwitcher";
 import HallOfFame from "./HallOfFame";
 import MLProjects from "./MLProjects";
 import WorkShowcase from "./WorkShowcase";
+import PageEntrance from "../PageEntrance";
 import "./showcase.css";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function WorkPage() {
   return (
-    <div className="site-shell work-shell entrance-work showcase-shell">
+    <PageEntrance className="site-shell work-shell entrance-work showcase-shell">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />
@@ -35,6 +36,6 @@ export default function WorkPage() {
           <aside className="work-next"><span>Currently building</span><div><h2>EmbeddingVC</h2><p>A lifecycle manager for vector embeddings. In progress.</p></div><Link href="/contact">Talk about a project ↗</Link></aside>
         </WorkShowcase>
       </main>
-    </div>
+    </PageEntrance>
   );
 }

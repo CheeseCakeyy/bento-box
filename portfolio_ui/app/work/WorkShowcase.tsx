@@ -45,19 +45,23 @@ function ComponentFilm({ experiment, active }: { experiment: Experiment; active:
 function ExperimentCard({ experiment, onOpen, expanded, index }: { experiment: Experiment; onOpen: () => void; expanded: boolean; index: number }) {
   const stage = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const element = stage.current;
     if (!element) return;
-    // Only nearby blocks run their canvases and load their media.
-    const observer = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting), { rootMargin: "160px" });
+    // Load nearby previews once; preserve their state when scrolling away or expanding.
+    const observer = new IntersectionObserver(([entry]) => {
+      setActive(entry.isIntersecting);
+      if (entry.isIntersecting) setReady(true);
+    }, { rootMargin: "160px" });
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
 
   return <article className={`experiment-card experiment-card--${experiment.slug}`} aria-labelledby={`component-${experiment.slug}`}>
     <div ref={stage} className="experiment-card__stage">
-      {experiment.video ? <ComponentFilm experiment={experiment} active={active && !expanded} /> : active && !expanded ? <PreviewFrame experiment={experiment} compact /> : <div className="component-awaiting" aria-hidden="true"><span /></div>}
+      {experiment.video ? <ComponentFilm experiment={experiment} active={active && !expanded} /> : ready ? <PreviewFrame experiment={experiment} compact /> : <div className="component-awaiting" aria-hidden="true"><span /></div>}
     </div>
     <div className="experiment-card__caption">
       <div><h2 id={`component-${experiment.slug}`}><span>{String(index + 1).padStart(2, "0")}</span>{experiment.name}</h2><p>{experiment.interaction}</p></div>
@@ -76,8 +80,8 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     const view = rail.current;
     if (!view) return;
     let frame = 0;
-    let settleTimer: ReturnType<typeof setTimeout>;
-    let moving = false;
+    let scrollFrame = 0;
+    let previousTime = 0;
     let target = view.scrollLeft;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => {
@@ -90,25 +94,53 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
       if (progress.current) progress.current.style.transform = `scaleX(${max > 0 ? view.scrollLeft / max : 1})`;
     };
     const schedule = () => {
-      if (!moving) target = view.scrollLeft;
+      if (!scrollFrame) target = view.scrollLeft;
       if (!frame) frame = requestAnimationFrame(update);
+    };
+    const animate = (now: number) => {
+      const elapsed = previousTime ? Math.min(now - previousTime, 64) : 16;
+      previousTime = now;
+      target = Math.max(0, Math.min(view.scrollWidth - view.clientWidth, target));
+      const remaining = target - view.scrollLeft;
+      if (Math.abs(remaining) < .75) {
+        view.scrollLeft = target;
+        scrollFrame = 0;
+        previousTime = 0;
+        view.classList.remove("is-scrolling");
+        schedule();
+        return;
+      }
+      // A minimum pixel step avoids stalling when a browser rounds scrollLeft.
+      const step = Math.min(Math.abs(remaining), Math.max(1, Math.abs(remaining) * (1 - Math.exp(-elapsed / 85))));
+      view.scrollLeft += Math.sign(remaining) * step;
+      scrollFrame = requestAnimationFrame(animate);
     };
     const slide = (value: number, absolute = false) => {
       const max = Math.max(0, view.scrollWidth - view.clientWidth);
-      const next = Math.max(0, Math.min(max, absolute ? value : (moving ? target : view.scrollLeft) + value));
-      if (!Number.isFinite(next) || Math.abs(next - target) < .5) return false;
+      const next = Math.max(0, Math.min(max, absolute ? value : (scrollFrame ? target : view.scrollLeft) + value));
+      if (!Number.isFinite(next)) return false;
+      // Consume wheel events until the visible rail has actually reached its edge.
+      if (Math.abs(next - view.scrollLeft) < .75 && !scrollFrame) return false;
       target = next;
-      moving = true;
-      view.classList.add("is-scrolling");
-      view.scrollTo({ left: next, behavior: reduced.matches ? "instant" : "smooth" });
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(() => {
-        moving = false;
-        target = view.scrollLeft;
+      if (reduced.matches) {
+        cancelAnimationFrame(scrollFrame);
+        scrollFrame = 0;
+        previousTime = 0;
         view.classList.remove("is-scrolling");
+        view.scrollLeft = target;
         schedule();
-      }, reduced.matches ? 0 : 450);
+        return true;
+      }
+      view.classList.add("is-scrolling");
+      if (!scrollFrame) scrollFrame = requestAnimationFrame(animate);
       return true;
+    };
+    const interrupt = () => {
+      cancelAnimationFrame(scrollFrame);
+      scrollFrame = 0;
+      previousTime = 0;
+      target = view.scrollLeft;
+      view.classList.remove("is-scrolling");
     };
     scrollTo.current = slide;
     const wheel = (event: WheelEvent) => {
@@ -127,15 +159,17 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     observer.observe(view);
     view.addEventListener("scroll", schedule, { passive: true });
     view.addEventListener("wheel", wheel, { passive: false });
+    view.addEventListener("pointerdown", interrupt, { passive: true });
     window.addEventListener("message", receive);
     update();
     return () => {
       cancelAnimationFrame(frame);
-      clearTimeout(settleTimer);
+      cancelAnimationFrame(scrollFrame);
       scrollTo.current = () => false;
       observer.disconnect();
       view.removeEventListener("scroll", schedule);
       view.removeEventListener("wheel", wheel);
+      view.removeEventListener("pointerdown", interrupt);
       window.removeEventListener("message", receive);
     };
   }, []);

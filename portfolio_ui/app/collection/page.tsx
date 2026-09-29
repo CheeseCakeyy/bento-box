@@ -4,6 +4,7 @@ import BookStack from "../BookStack";
 import FragmentReader from "../FragmentReader";
 import PoemReader from "../PoemReader";
 import ThemeSwitcher from "../ThemeSwitcher";
+import PageEntrance from "../PageEntrance";
 
 export const metadata: Metadata = {
   title: "Collection — Adwait Tagalpallewar",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function CollectionPage() {
   return (
-    <div className="site-shell collection-shell entrance-collection">
+    <PageEntrance className="site-shell collection-shell entrance-collection">
       <header className="site-header">
         <Link className="identity" href="/#about" aria-label="Return to Adwait Tagalpallewar’s portfolio">
           <span className="identity-mark" aria-hidden="true" />
@@ -71,7 +72,7 @@ export default function CollectionPage() {
           <p>Nothing here is ranked. Some things just refused to be forgotten.</p>
         </aside>
       </main>
-    </div>
+    </PageEntrance>
   );
 }
 
