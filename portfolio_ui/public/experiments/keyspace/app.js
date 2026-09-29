@@ -2,6 +2,7 @@ import { createTypingMetrics } from './typing-metrics.js';
 
 (() => {
   'use strict';
+  const embedCard = document.documentElement.dataset.embed === 'card';
   const canvas = document.querySelector('#world');
   const ctx = canvas.getContext('2d', { alpha: false });
   const stage = document.querySelector('.stage');
@@ -83,7 +84,7 @@ import { createTypingMetrics } from './typing-metrics.js';
   const history = document.querySelector('#key-history');
   const countLabel = document.querySelector('#key-count');
   const soundToggle = document.querySelector('#sound-toggle');
-  let audioContext, clickBuffer, soundEnabled = true, pressCount = 0;
+  let audioContext, clickBuffer, soundEnabled = !embedCard, pressCount = 0;
   const typingRoom = document.querySelector('.typing-room');
   const typingScene = document.querySelector('.typing-scene');
   const metrics = createTypingMetrics();
@@ -313,12 +314,18 @@ import { createTypingMetrics } from './typing-metrics.js';
     sphereX = width * (mobile ? .50 : width < 900 ? .58 : .62);
     sphereY = height * (mobile ? .49 : .45);
     radius = mobile ? Math.min(width * .405, height * (height < 650 ? .17 : .22)) : Math.min(width * .27, height * (width < 1100 ? .29 : .325));
+    if (embedCard) {
+      sphereX = width * .5;
+      sphereY = height * .42;
+      radius = Math.min(width * .34, height * .31);
+    }
     layoutKeyboard();
     onScroll(); wake();
   }
   function onScroll() {
     const distance = document.querySelector('#journey').offsetHeight - innerHeight;
-    targetProgress = clamp(scrollY / Math.max(1, distance)) * 2;
+    targetProgress = embedCard ? 1 : clamp(scrollY / Math.max(1, distance)) * 2;
+    if (embedCard) progress = targetProgress;
     if (reduced.matches) progress = targetProgress;
     wake();
   }

@@ -6,6 +6,7 @@ import path from 'node:path';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const source = process.argv[2] || path.resolve(root, '../../random components');
+const blenderSource = process.argv[3] || path.resolve(root, '../../blender-codex');
 const target = path.join(root, 'public/experiments');
 await mkdir(target, { recursive: true });
 for (const name of ['keyspace', 'koi-pond', 'cherry-blossom', 'little-fizz']) {
@@ -29,6 +30,20 @@ await mkdir(path.join(target, 'rain-mouse'), { recursive: true });
 await cp(path.join(source, 'rain-mouse/renders/rain-mouse.mp4'), path.join(target, 'rain-mouse/rain-mouse.mp4'));
 await cp(path.join(source, 'rain-mouse/renders/verified-frame.png'), path.join(target, 'rain-mouse/poster.png'));
 
+await mkdir(path.join(target, 'chill'), { recursive: true });
+await cp(path.join(blenderSource, 'frontend/public/media/chill-intro-hq.mp4'), path.join(target, 'chill/chill-intro-hq.mp4'));
+await cp(path.join(blenderSource, 'frontend/public/media/chill-poster-hq.png'), path.join(target, 'chill/poster.png'));
+
+// Keep the globe centered, playable, and quiet in the compact block. The full
+// experience still has all three stages and its original composition.
+const keyspaceFile = path.join(target, 'keyspace/app.js');
+let keyspace = await readFile(keyspaceFile, 'utf8');
+keyspace = keyspace.replace("'use strict';", "'use strict';\n  const embedCard = document.documentElement.dataset.embed === 'card';")
+  .replace('soundEnabled = true', 'soundEnabled = !embedCard')
+  .replace(/ {4}layoutKeyboard\(\);\r?\n {4}onScroll\(\); wake\(\);/, '    if (embedCard) {\n      sphereX = width * .5;\n      sphereY = height * .42;\n      radius = Math.min(width * .34, height * .31);\n    }\n    layoutKeyboard();\n    onScroll(); wake();')
+  .replace('targetProgress = clamp(scrollY / Math.max(1, distance)) * 2;', 'targetProgress = embedCard ? 1 : clamp(scrollY / Math.max(1, distance)) * 2;\n    if (embedCard) progress = targetProgress;');
+await writeFile(keyspaceFile, keyspace);
+
 // Little Fizz's original build assumes a root deployment. Scope its asset URLs.
 const fizzAssets = (await readdir(path.join(target, 'little-fizz/assets'))).filter(name => /\.(js|css)$/.test(name)).map(name => `assets/${name}`);
 for (const file of ['index.html', ...fizzAssets]) {
@@ -44,4 +59,4 @@ for (const name of ['keyspace', 'koi-pond', 'cherry-blossom', 'little-fizz', 'no
   html = html.replace('</head>', '<script src="../embed.js"></script><link rel="stylesheet" href="../embed.css"></head>');
   await writeFile(file, html);
 }
-console.log('Synced six showcase experiments.');
+console.log('Synced seven showcase experiments.');

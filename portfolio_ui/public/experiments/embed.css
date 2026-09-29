@@ -47,3 +47,44 @@ html:is([data-embed="card"], [data-embed="expanded"]), :is([data-embed="card"], 
   [data-embed="expanded"] .pond-frame { height:auto; aspect-ratio:3/2; min-height:0; }
   [data-embed="expanded"] .poster h1 { font-size:42px; }
 }
+
+/* Gallery blocks contain the actual object, with no surrounding webpage. */
+[data-embed="card"] body { margin:0; padding:0; min-width:0; height:100svh; }
+[data-embed="card"][data-experiment="keyspace"] #journey { height:100svh; max-width:none; width:100%; padding:0; }
+[data-embed="card"][data-experiment="keyspace"] .stage { height:100svh; min-height:0; }
+[data-embed="card"][data-experiment="keyspace"] .stage > :not(canvas) { display:none!important; }
+[data-embed="card"][data-experiment="keyspace"] canvas { touch-action:none; }
+
+[data-embed="card"][data-experiment="koi-pond"] .sketchbook { display:grid; place-items:center; height:100svh; max-width:none; min-height:0; padding:20px 14px; }
+[data-embed="card"][data-experiment="koi-pond"] .medium-toolbar,
+[data-embed="card"][data-experiment="koi-pond"] .pond-tools,
+[data-embed="card"][data-experiment="koi-pond"] .pond-signature { display:none; }
+[data-embed="card"][data-experiment="koi-pond"] .pond-frame { height:auto; min-height:0; aspect-ratio:3/2; }
+[data-embed="card"][data-experiment="koi-pond"] .pond-frame::before,
+[data-embed="card"][data-experiment="koi-pond"] .pond-frame::after { display:none; }
+
+[data-embed="card"][data-experiment="cherry-blossom"] .intro,
+[data-embed="card"][data-experiment="cherry-blossom"] .reading-light,
+[data-embed="card"][data-experiment="cherry-blossom"] .hint { display:none; }
+[data-embed="card"][data-experiment="cherry-blossom"] #experience { height:100svh; min-height:0; }
+
+[data-embed="card"][data-experiment="little-fizz"] .experience { height:100svh; min-height:0; max-width:none; width:100%; padding:0; border-radius:0; }
+[data-embed="card"][data-experiment="little-fizz"] .header,
+[data-embed="card"][data-experiment="little-fizz"] .intro,
+[data-embed="card"][data-experiment="little-fizz"] .footer,
+[data-embed="card"][data-experiment="little-fizz"] .puppy-label,
+[data-embed="card"][data-experiment="little-fizz"] .page-caption,
+[data-embed="card"][data-experiment="little-fizz"] .scene-shade { display:none; }
+
+[data-embed="card"][data-experiment="no-plan-calendar"] body { display:grid; place-items:center; }
+[data-embed="card"][data-experiment="no-plan-calendar"] body > main { padding:24px 18px; width:100%; max-width:420px; }
+[data-embed="card"][data-experiment="no-plan-calendar"] .poster { max-width:none; }
+[data-embed="card"][data-experiment="no-plan-calendar"] .poster h1,
+[data-embed="card"][data-experiment="no-plan-calendar"] .title-rule,
+[data-embed="card"][data-experiment="no-plan-calendar"] .caption,
+[data-embed="card"][data-experiment="no-plan-calendar"] .overline,
+[data-embed="card"][data-experiment="no-plan-calendar"] .today-button { display:none; }
+[data-embed="card"][data-experiment="no-plan-calendar"] .drawing-wrap { max-width:none; }
+[data-embed="card"][data-experiment="no-plan-calendar"] .date-control { margin-top:12px; gap:8px; }
+[data-embed="card"][data-experiment="no-plan-calendar"] .date-label { min-width:0; flex:1; }
+[data-embed="card"][data-experiment="no-plan-calendar"] .arrow { width:44px; height:44px; }

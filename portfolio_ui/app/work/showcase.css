@@ -216,3 +216,55 @@
   .experiment-poster img, .showcase-tabs > button::after, .experiment-frame iframe { transition:none; }
   .experiment-dialog__card, .experiment-loading > span { animation:none; }
 }
+
+/* A sideways shelf of live objects. These rules only affect the web panel. */
+.component-gallery { --component-gap:24px; }
+.component-gallery .showcase-section-note { margin:4px 0 24px; }
+.component-gallery .showcase-section-note p { font-size:12px; }
+.component-gallery .showcase-section-note > span { display:block; font:9px ui-monospace,monospace; }
+.experiment-rail { display:grid; grid-auto-flow:column; grid-auto-columns:min(440px,calc(100% - 28px)); gap:var(--component-gap); overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; scrollbar-width:none; padding:3px 2px 12px; margin:-3px -2px 0; outline:none; }
+.experiment-rail::-webkit-scrollbar { display:none; }
+.experiment-rail.is-scrolling { scroll-snap-type:none; }
+.experiment-rail:focus-visible { outline:1px solid var(--text-muted); outline-offset:8px; }
+.component-gallery .experiment-card { display:block; grid-column:auto; scroll-snap-align:start; min-width:0; border:0; border-radius:0; background:transparent; overflow:visible; }
+.component-gallery .experiment-card__stage { height:auto; aspect-ratio:1; border-radius:12px; overflow:hidden; background:#f3f2ee; }
+.component-gallery .experiment-card--koi-pond .experiment-card__stage { background:#f6f2e9; }
+.component-gallery .experiment-card--keyspace .experiment-card__stage { background:#e9e8e1; }
+.component-gallery .experiment-card__caption { display:flex; flex-direction:row; align-items:center; justify-content:space-between; gap:16px; width:100%; min-height:0; border:0; background:transparent; padding:18px 2px 4px; cursor:default; }
+.component-gallery .experiment-card__caption h2 { display:flex; align-items:center; gap:10px; margin:0; font:500 14px/1.4 Inter,sans-serif; letter-spacing:-.02em; }
+.component-gallery .experiment-card__caption h2 > span { font:9px ui-monospace,monospace; color:var(--text-muted); letter-spacing:0; }
+.component-gallery .experiment-card__caption p { margin:6px 0 0 25px; font:10px/1.4 Inter,sans-serif; color:var(--text-muted); }
+.component-gallery .experiment-expand { position:static; display:flex; align-items:center; gap:13px; width:auto; height:auto; min-height:36px; border:1px solid var(--panel-border); border-radius:30px; padding:8px 12px; background:var(--panel); color:var(--text); box-shadow:none; font:10px/1 Inter,sans-serif; cursor:pointer; }
+.component-gallery .experiment-expand:hover { border-color:var(--text-muted); }
+.component-gallery .experiment-expand span { font-size:14px; }
+.component-gallery .experiment-frame { height:100%; }
+.component-gallery .experiment-frame iframe { height:100%; background:transparent; }
+.component-awaiting { height:100%; display:grid; place-items:center; }
+.component-awaiting > span { width:5px; height:5px; border-radius:50%; background:#bcc0b5; }
+.component-film { display:block; width:100%; height:100%; object-fit:contain; }
+.experiment-card--chill .component-film { object-fit:cover; object-position:77% center; transform:scale(1.38); }
+.component-film-controls { position:absolute; right:12px; bottom:12px; display:flex; gap:6px; }
+.component-film-controls button { width:32px; height:32px; border:1px solid #ffffff75; border-radius:50%; display:grid; place-items:center; background:#fffdf0da; color:#3f4037; font:16px Arial,sans-serif; cursor:pointer; }
+.component-gallery__footer { display:flex; align-items:center; gap:24px; margin-top:25px; }
+.component-gallery__count { min-width:60px; font:11px ui-monospace,monospace; color:var(--text); }
+.component-gallery__count > span { color:var(--text-muted); }
+.component-gallery__progress { flex:1; height:1px; background:var(--panel-border); }
+.component-gallery__progress > span { display:block; height:100%; background:var(--text); transform:scaleX(0); transform-origin:left; }
+.component-gallery__arrows { display:flex; gap:8px; }
+.component-gallery__arrows button { border:1px solid var(--panel-border); width:36px; height:36px; border-radius:50%; color:var(--text); background:transparent; font:16px Inter,sans-serif; cursor:pointer; }
+.component-gallery__arrows button:hover:not(:disabled) { background:var(--panel-raised); border-color:var(--text-muted); }
+.component-gallery__arrows button:disabled { opacity:.25; cursor:default; }
+.experiment-dialog--chill .experiment-dialog__stage { height:auto; min-height:0; aspect-ratio:4/3; overflow:hidden; }
+.experiment-dialog--chill .experiment-dialog__stage video { object-fit:cover; object-position:right center; }
+@media(max-width:600px) {
+  .component-gallery { --component-gap:16px; }
+  .component-gallery .showcase-section-note { align-items:flex-start; margin-bottom:20px; }
+  .component-gallery .showcase-section-note > span { font-size:8px; max-width:110px; text-align:right; line-height:1.6; }
+  .component-gallery .experiment-card__stage { border-radius:10px; }
+  .component-gallery .experiment-card__caption { padding-top:15px; }
+  .component-gallery .experiment-card__caption h2 { font-size:13px; }
+  .component-gallery .experiment-expand { min-height:44px; padding:8px 10px; font-size:9px; gap:8px; }
+  .component-gallery__footer { margin-top:20px; gap:16px; }
+  .component-gallery__arrows button { width:44px; height:44px; }
+  .component-film-controls button { width:36px; height:36px; }
+}
