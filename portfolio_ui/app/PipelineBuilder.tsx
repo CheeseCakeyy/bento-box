@@ -190,31 +190,31 @@ export default function PipelineBuilder() {
 
   const renderSlot = (slotIndex: number) => {
     const placedId = slots[slotIndex];
-    const module = placedId ? activePipeline.modules.find((item) => item.id === placedId) : null;
+    const pipelineModule = placedId ? activePipeline.modules.find((item) => item.id === placedId) : null;
     const position = slotIndex + 1;
 
     return (
       <button
         key={`slot-${position}`}
-        className={`pipeline-slot pipeline-slot--${position} ${module ? "is-filled" : ""} ${wrongSlot === slotIndex ? "is-wrong" : ""} ${lastPlacedSlot === slotIndex ? "is-locking" : ""} ${hoveredSlot === slotIndex ? "is-hovered" : ""}`}
+        className={`pipeline-slot pipeline-slot--${position} ${pipelineModule ? "is-filled" : ""} ${wrongSlot === slotIndex ? "is-wrong" : ""} ${lastPlacedSlot === slotIndex ? "is-locking" : ""} ${hoveredSlot === slotIndex ? "is-hovered" : ""}`}
         type="button"
         aria-label={
-          module
-            ? `Stage ${position}: ${module.label}, correctly placed`
+          pipelineModule
+            ? `Stage ${position}: ${pipelineModule.label}, correctly placed`
             : `Empty stage ${position}${selectedModule ? `. Place ${selectedModule} here` : ""}`
         }
-        disabled={Boolean(module)}
+        disabled={Boolean(pipelineModule)}
         onClick={() => {
           if (selectedModule) placeModule(selectedModule, slotIndex);
           else setStatus("Choose a module from the tray first.");
         }}
         onDragEnter={(event) => {
-          if (module) return;
+          if (pipelineModule) return;
           event.preventDefault();
           setHoveredSlot(slotIndex);
         }}
         onDragOver={(event) => {
-          if (module) return;
+          if (pipelineModule) return;
           event.preventDefault();
           event.dataTransfer.dropEffect = "move";
         }}
@@ -222,8 +222,8 @@ export default function PipelineBuilder() {
         onDrop={(event) => onSlotDrop(event, slotIndex)}
       >
         <span>{String(position).padStart(2, "0")}</span>
-        <strong>{module?.label ?? "Empty module"}</strong>
-        <small>{module ? "Locked" : selectedModule ? "Place here" : "Awaiting input"}</small>
+        <strong>{pipelineModule?.label ?? "Empty module"}</strong>
+        <small>{pipelineModule ? "Locked" : selectedModule ? "Place here" : "Awaiting input"}</small>
       </button>
     );
   };
@@ -328,7 +328,7 @@ export default function PipelineBuilder() {
 
           <div className="module-tray__modules" aria-label={`Shuffled ${activePipeline.label} modules`}>
             {moduleOrder.map((moduleId) => {
-              const module = activePipeline.modules.find((item) => item.id === moduleId)!;
+              const pipelineModule = activePipeline.modules.find((item) => item.id === moduleId)!;
               const isPlaced = placedModules.has(moduleId);
               const isSelected = selectedModule === moduleId;
 
@@ -340,13 +340,13 @@ export default function PipelineBuilder() {
                   draggable={!isPlaced}
                   disabled={isPlaced}
                   aria-pressed={isSelected}
-                  title={module.label}
+                  title={pipelineModule.label}
                   onClick={() => {
                     const nextSelection = isSelected ? null : moduleId;
                     setSelectedModule(nextSelection);
                     setStatus(
                       nextSelection
-                        ? `${module.label} selected — choose a slot.`
+                        ? `${pipelineModule.label} selected — choose a slot.`
                         : "Selection cleared. Choose another module.",
                     );
                   }}
@@ -357,7 +357,7 @@ export default function PipelineBuilder() {
                   }}
                 >
                   <span aria-hidden="true">{isPlaced ? "✓" : "⋮⋮"}</span>
-                  <strong>{module.shortLabel}</strong>
+                  <strong>{pipelineModule.shortLabel}</strong>
                 </button>
               );
             })}

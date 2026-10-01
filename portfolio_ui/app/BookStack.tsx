@@ -35,6 +35,7 @@ type BookStyle = CSSProperties & {
 export default function BookStack() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const startX = useRef<number | null>(null);
   const currentDrag = useRef(0);
   const didDrag = useRef(false);
@@ -55,6 +56,7 @@ export default function BookStack() {
     if ((event.target as HTMLElement).closest(".interactive-book-nav")) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     startX.current = event.clientX;
+    setDragging(true);
     didDrag.current = false;
   };
 
@@ -71,6 +73,7 @@ export default function BookStack() {
     if (currentDrag.current < -34) selectRelative(1);
     if (currentDrag.current > 34) selectRelative(-1);
     startX.current = null;
+    setDragging(false);
     currentDrag.current = 0;
     setDragOffset(0);
   };
@@ -102,10 +105,12 @@ export default function BookStack() {
       </header>
 
       <div className="collection-books__body">
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- A focusable carousel group supports arrow-key navigation alongside its buttons. */}
         <div
-          className={`interactive-book-stack ${startX.current !== null ? "is-dragging" : ""}`}
+          className={`interactive-book-stack ${dragging ? "is-dragging" : ""}`}
           role="group"
           aria-label="Book cover carousel. Drag, swipe, or use the left and right arrow keys."
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users can focus the carousel to navigate with arrow keys.
           tabIndex={0}
           style={{ "--book-drag": `${dragOffset}px` } as CSSProperties}
           onKeyDown={onKeyDown}

@@ -18,7 +18,7 @@ export default function ThemeSwitcher() {
   const stopCycle = () => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
-    delete document.documentElement.dataset.colorCycle;
+    document.documentElement.removeAttribute("data-color-cycle");
     setCycling(false);
   };
 
@@ -37,12 +37,13 @@ export default function ThemeSwitcher() {
 
   useEffect(() => () => {
     timers.current.forEach(clearTimeout);
-    delete document.documentElement.dataset.colorCycle;
+    document.documentElement.removeAttribute("data-color-cycle");
   }, []);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("portfolio-theme") as Theme | null;
     if (savedTheme && options.some((option) => option.value === savedTheme)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Restore browser-only preferences after hydration while keeping the server and first client render identical.
       setTheme(savedTheme);
     }
   }, []);

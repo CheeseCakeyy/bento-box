@@ -403,6 +403,7 @@ export default function AboutPage() {
                 </div>
               </section>
             </div>
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption -- This is the existing music-only player; lyric caption files are not supplied. Track title and artist are displayed above. */}
             <audio
               ref={audioRef}
               src={activeSong.audio}
@@ -424,7 +425,7 @@ export default function AboutPage() {
               </p>
             </div>
             <Link className="collection-invite__link" href="/work">
-              <span>Explore my work</span>
+              <span>Explore my projects</span>
               <span aria-hidden="true">↗</span>
             </Link>
           </article>

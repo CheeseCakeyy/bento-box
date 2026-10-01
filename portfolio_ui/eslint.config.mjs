@@ -14,6 +14,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local tooling and prebuilt third-party/demo bundles are not source files.
+    ".notebook-tools/**",
+    ".wrangler/**",
+    "public/**/vendor/**",
+    "public/experiments/koi-pond/assets/**",
+    "public/experiments/little-fizz/assets/**",
   ]),
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

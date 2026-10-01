@@ -5288,3 +5288,8 @@ a:focus-visible {
   .project-results > div:last-child { border-bottom: 0; }
   .project-results strong { font-size: 34px; }
 }
+
+/* Click sparks preserve the browser's normal pointer behavior. */
+.site-click-spark { min-height:100dvh; }
+.site-click-spark--modal { min-height:0; }
+.click-spark__canvas { position:fixed; inset:0; z-index:2147483646; display:block; width:100vw; height:100dvh; pointer-events:none; }
