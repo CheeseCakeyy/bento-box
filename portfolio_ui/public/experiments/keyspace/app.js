@@ -85,7 +85,6 @@ import { createTypingMetrics } from './typing-metrics.js';
   const countLabel = document.querySelector('#key-count');
   const soundToggle = document.querySelector('#sound-toggle');
   let audioContext, clickBuffer, soundEnabled = !embedCard, pressCount = 0;
-  const typingRoom = document.querySelector('.typing-room');
   const typingScene = document.querySelector('.typing-scene');
   const metrics = createTypingMetrics();
   const typingInput = document.querySelector('#typing-input');
@@ -422,7 +421,7 @@ import { createTypingMetrics } from './typing-metrics.js';
     if (fill) { ctx.fillStyle = fill; ctx.fill(); }
     if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = line; ctx.lineJoin = 'round'; ctx.stroke(); }
   }
-  function updateUI(p, t) {
+  function updateUI(p) {
     const nextStage = p > 1.65 ? 2 : p > .65 ? 1 : 0;
     if (nextStage !== currentStage) {
       if(currentStage===2) {pauseTyping();typingInput.blur();}

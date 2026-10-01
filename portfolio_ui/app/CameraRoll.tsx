@@ -155,12 +155,14 @@ export default function CameraRoll() {
         </div>
       </div>
 
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- The named carousel region provides keyboard navigation as well as dragging. */}
       <div
         ref={viewportRef}
         className={`camera-roll__viewport ${dragging ? "is-dragging" : ""}`}
         role="region"
         aria-roledescription="carousel"
         aria-label={`Camera roll, photo ${currentPhoto + 1} of ${imageCount}`}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users can focus the carousel to navigate with arrow keys.
         tabIndex={0}
         onKeyDown={(event) => {
           if (event.key === "ArrowRight") {

@@ -376,6 +376,7 @@ export default function MoireDesigner() {
     onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
       event.currentTarget.setPointerCapture(event.pointerId);
       stageRef.current?.focus();
+      // eslint-disable-next-line react-hooks/refs -- This callback runs on pointerdown, never during render.
       setControl(control, true);
     },
     onPointerUp: () => setControl(control, false),
