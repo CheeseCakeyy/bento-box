@@ -63,6 +63,8 @@ html:is([data-embed="card"], [data-embed="expanded"]), :is([data-embed="card"], 
 [data-embed="card"][data-experiment="koi-pond"] .pond-tools,
 [data-embed="card"][data-experiment="koi-pond"] .pond-signature { display:none; }
 [data-embed="card"][data-experiment="koi-pond"] .pond-frame { position:absolute; left:50%; top:50%; width:118%; height:auto; min-height:0; aspect-ratio:3/2; max-width:none; margin:0; transform:translate(-50%,-50%); }
+/* Cover: scale the 3:2 pond past both edges so its painted rim never shows. */
+[data-embed="card"][data-fit="cover"][data-experiment="koi-pond"] .pond-frame { width:max(132%, 198svh); }
 [data-embed="card"][data-experiment="koi-pond"] .pond-frame::before,
 [data-embed="card"][data-experiment="koi-pond"] .pond-frame::after { display:none; }
 

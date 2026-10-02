@@ -29,7 +29,7 @@ export default function WorkPage() {
         </header>
         <WorkShowcase>
           <MLProjects />
-          <details className="showcase-archive">
+          <details id="competitions" className="showcase-archive">
             <summary><span><span aria-hidden="true">↳</span> Competition results &amp; notebooks</span><span className="archive-summary-note">The experiments behind the work</span><span className="archive-toggle" aria-hidden="true" /></summary>
             <HallOfFame />
           </details>

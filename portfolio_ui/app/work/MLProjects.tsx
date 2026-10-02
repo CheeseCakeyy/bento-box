@@ -3,7 +3,7 @@ import F1ScoreGraph from "../F1ScoreGraph";
 export default function MLProjects() {
   return (
           <div className="work-case-layout">
-            <article className="work-case work-case--lead">
+            <article id="geohab" className="work-case work-case--lead">
               <header className="work-case__header">
                 <span>01 / GeoHab MLWG · 2026</span>
                 <span className="work-status"><i aria-hidden="true" /> Geospatial machine learning</span>
@@ -109,7 +109,7 @@ export default function MLProjects() {
             </article>
 
             <div className="work-case-stack">
-              <article className="work-case work-case--support">
+              <article id="f1-pit-stops" className="work-case work-case--support">
                 <header className="work-case__header">
                   <span>02 / Kaggle Playground · 2026</span>
                   <span className="work-status"><i aria-hidden="true" /> Selected project</span>
@@ -156,7 +156,7 @@ export default function MLProjects() {
                 </footer>
               </article>
 
-              <article className="work-case work-case--support">
+              <article id="folio" className="work-case work-case--support">
                 <header className="work-case__header">
                   <span>03 / Product engineering</span>
                   <span className="work-status"><i aria-hidden="true" /> Internship project</span>

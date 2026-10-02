@@ -18,6 +18,9 @@
 .entrance-home .discipline-row {
   animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 90ms backwards;
 }
+.entrance-home .featured-work {
+  animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 130ms backwards;
+}
 .entrance-home .portfolio-grid > .panel {
   animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
 }
@@ -76,6 +79,7 @@
   .entrance-contact .floating-nav,
   .entrance-home .hero-heading,
   .entrance-home .discipline-row,
+  .entrance-home .featured-work,
   .entrance-home .portfolio-grid > .panel,
   .entrance-home .floating-nav,
   .entrance-work .floating-nav,

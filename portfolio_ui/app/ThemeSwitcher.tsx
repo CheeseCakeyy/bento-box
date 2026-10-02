@@ -3,17 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
+type Accent = "red" | "green" | "blue";
 
 const options: Array<{ value: Theme; label: string; icon?: string; symbol?: string }> = [
   { value: "dark", icon: "/icons/theme-dark.png", label: "Use dark theme" },
   { value: "light", icon: "/icons/theme-light.png", label: "Use light theme" },
   { value: "system", symbol: "✦", label: "Play color cycle" },
 ];
+const accents: Array<Accent | null> = [null, "red", "green", "blue"];
+const accentName = (accent: Accent | null) => accent ?? "grayscale";
 
 export default function ThemeSwitcher() {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [accent, setAccent] = useState<Accent | null>(null);
   const [cycling, setCycling] = useState(false);
+  const nextAccent = accents[(accents.indexOf(accent) + 1) % accents.length];
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const accentRestored = useRef(false);
 
   const stopCycle = () => {
     timers.current.forEach(clearTimeout);
@@ -46,7 +52,26 @@ export default function ThemeSwitcher() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Restore browser-only preferences after hydration while keeping the server and first client render identical.
       setTheme(savedTheme);
     }
+    const savedAccent = window.localStorage.getItem("portfolio-accent") as Accent | null;
+    if (savedAccent && accents.includes(savedAccent)) {
+      setAccent(savedAccent);
+    }
   }, []);
+
+  useEffect(() => {
+    // Leave the saved accent in place until it has been restored, so navigation never flashes grayscale.
+    if (!accentRestored.current) {
+      accentRestored.current = true;
+      return;
+    }
+    if (accent) {
+      document.documentElement.dataset.colorTheme = accent;
+      window.localStorage.setItem("portfolio-accent", accent);
+    } else {
+      delete document.documentElement.dataset.colorTheme;
+      window.localStorage.removeItem("portfolio-accent");
+    }
+  }, [accent]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -85,6 +110,15 @@ export default function ThemeSwitcher() {
           )}
         </button>
       ))}
+      <button
+        className={`theme-accent ${accent ? `is-active theme-accent--${accent}` : ""}`}
+        type="button"
+        aria-label={`Accent color: ${accentName(accent)}. Switch to ${accentName(nextAccent)}`}
+        title={`Accent: ${accentName(accent)} → ${accentName(nextAccent)}`}
+        onClick={() => setAccent(nextAccent)}
+      >
+        <span className="theme-accent__dot" aria-hidden="true" />
+      </button>
     </div>
   );
 }
