@@ -6,10 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import ScrollToTop from "./ScrollToTop";
 
 const sections = [
-  { href: "/collection", label: "Collection" },
-  { href: "/tool-kit", label: "Tool kit" },
   { href: "/", label: "About" },
   { href: "/work", label: "Projects" },
+  { href: "/tool-kit", label: "Tool kit" },
+  { href: "/collection", label: "Collection" },
   { href: "/contact", label: "Contact" },
 ];
 const wakeFrames = [57, 54, 51, 48, 45, 42, 39, 12, 9, 6, 3];
