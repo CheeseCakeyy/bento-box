@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ThemeSwitcher from "./ThemeSwitcher";
 import CameraRoll from "./CameraRoll";
-import LatentSpace from "./LatentSpace";
 import MoireDesigner from "./MoireDesigner";
-import PipelineBuilder from "./PipelineBuilder";
 import FeaturedWork from "./FeaturedWork";
+import TrainLab from "./TrainLab";
+import ShakeUp from "./ShakeUp";
 
 const songs = [
   {
@@ -91,14 +91,13 @@ function formatTime(value: number) {
 }
 
 export default function AboutPage() {
-  const [localTime, setLocalTime] = useState("--:-- --");
-  const [dayProgress, setDayProgress] = useState(0);
   const [selectedSong, setSelectedSong] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const rollRef = useRef<HTMLIFrameElement>(null);
+  const pondRef = useRef<HTMLIFrameElement>(null);
   const activeSong = songs[selectedSong];
 
   const startSong = useCallback((index: number) => {
@@ -152,34 +151,16 @@ export default function AboutPage() {
     rollRef.current?.contentWindow?.postMessage({ type: "songs:active", index: selectedSong, playing: isPlaying }, window.location.origin);
   }, [selectedSong, isPlaying]);
 
+  // Card-mode demos swallow the wheel and forward it, so the page keeps scrolling over the pond.
   useEffect(() => {
-    const updateLocalTime = () => {
-      const time = new Intl.DateTimeFormat("en-IN", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
-        .format(new Date())
-        .toUpperCase();
-
-      setLocalTime(time);
-
-      const [hours, minutes] = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        hourCycle: "h23",
-      })
-        .format(new Date())
-        .split(":")
-        .map(Number);
-      setDayProgress((hours * 60 + minutes) / 1440);
+    const receive = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin || event.source !== pondRef.current?.contentWindow) return;
+      if (event.data?.type !== "experiment:wheel") return;
+      const delta = Number(event.data.delta);
+      if (Number.isFinite(delta)) window.scrollBy(0, delta);
     };
-
-    updateLocalTime();
-    const timer = window.setInterval(updateLocalTime, 30_000);
-    return () => window.clearInterval(timer);
+    window.addEventListener("message", receive);
+    return () => window.removeEventListener("message", receive);
   }, []);
 
   return (
@@ -204,9 +185,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <FeaturedWork />
-
-        <section className="about-group" aria-labelledby="group-identity">
+        <section className="about-group about-group--first" aria-labelledby="group-identity">
           <h2 className="about-group__label" id="group-identity"><span>01</span>Identity</h2>
           <div className="portfolio-grid portfolio-grid--identity">
             <article className="panel panel--bio" aria-label="Profile and biography section">
@@ -265,13 +244,14 @@ export default function AboutPage() {
                 <span className="now-live">Live</span>
               </header>
 
-              <div className="now-clock">
-                <strong>{localTime}</strong>
-                <span>Local time · IST</span>
-                <div className="now-day" style={{ "--day": dayProgress } as CSSProperties} aria-hidden="true">
-                  <span className="now-day__track"><i /></span>
-                  <span className="now-day__ticks"><b>00</b><b>06</b><b>12</b><b>18</b><b>24</b></span>
-                </div>
+              <div className="now-pond">
+                <iframe
+                  ref={pondRef}
+                  src="/experiments/koi-pond/index.html?embed=card&fit=cover"
+                  title="Koi Pond — tap the water to leave a ripple"
+                  loading="lazy"
+                />
+                <span className="now-pond__caption" aria-hidden="true">Koi pond · tap the water</span>
               </div>
 
               <div className="now-project">
@@ -297,14 +277,13 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="about-group" aria-labelledby="group-work">
-          <h2 className="about-group__label" id="group-work"><span>02</span>Work</h2>
-          <div className="portfolio-grid portfolio-grid--work">
-            <article className="panel panel--latent" aria-label="Interactive latent space section">
-              <LatentSpace />
-            </article>
+        <FeaturedWork />
 
-            <PipelineBuilder />
+        <section className="about-group" aria-labelledby="group-work">
+          <h2 className="about-group__label" id="group-work"><span>03</span>Lab</h2>
+          <div className="portfolio-grid portfolio-grid--work">
+            <TrainLab />
+            <ShakeUp />
 
             <article className="panel panel--work-invite collection-invite" aria-labelledby="work-invite-title">
               <div className="collection-invite__copy">
@@ -323,7 +302,7 @@ export default function AboutPage() {
         </section>
 
         <section className="about-group" aria-labelledby="group-personal">
-          <h2 className="about-group__label" id="group-personal"><span>03</span>Personal</h2>
+          <h2 className="about-group__label" id="group-personal"><span>04</span>Personal</h2>
           <div className="portfolio-grid portfolio-grid--personal">
             <article className="panel panel--photos" aria-label="Camera roll section">
               <CameraRoll />
@@ -405,16 +384,16 @@ export default function AboutPage() {
               />
             </article>
 
+            <article className="panel panel--sketch" aria-label="Interactive moiré spaceship design maker">
+              <MoireDesigner />
+            </article>
+
             <article className="panel panel--calendar" aria-label="No plan Society calendar">
               <iframe
                 className="no-plan-calendar"
                 src="/no-plan-calendar/index.html"
                 title="No plan Society — interactive daily calendar"
               />
-            </article>
-
-            <article className="panel panel--sketch" aria-label="Interactive moiré spaceship design maker">
-              <MoireDesigner />
             </article>
           </div>
         </section>

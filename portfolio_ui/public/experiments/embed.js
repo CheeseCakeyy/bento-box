@@ -5,6 +5,10 @@ document.documentElement.dataset.experiment = location.pathname.split('/').filte
 if (mode === 'card' || mode === 'expanded' || mode === 'poster') {
   document.documentElement.dataset.embed = mode;
 }
+// fit=cover crops a card to the artwork alone, for tiles of any aspect ratio.
+if (mode === 'card' && new URLSearchParams(location.search).get('fit') === 'cover') {
+  document.documentElement.dataset.fit = 'cover';
+}
 
 // Escape from a focused demo still dismisses the portfolio's preview dialog.
 document.addEventListener('keydown', (event) => {
