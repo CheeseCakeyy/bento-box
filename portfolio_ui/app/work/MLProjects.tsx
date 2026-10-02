@@ -1,4 +1,30 @@
 import F1ScoreGraph from "../F1ScoreGraph";
+import BezierPlayground from "./BezierPlayground";
+
+// Rank on a 1–52 axis: public leaderboard (31% of test data) vs private (69%).
+function LeaderboardRank() {
+  const teams = 52;
+  const y = (rank: number) => 12 + ((rank - 1) / (teams - 1)) * 76;
+  return (
+    <svg className="leaderboard-rank" viewBox="0 0 170 104" role="img" aria-label="GeoHab rank: 1st of 52 teams on the public leaderboard, 13th of 52 on the private leaderboard">
+      {[1, 13, 26, 52].map((rank) => (
+        <g key={rank} className="leaderboard-rank__tick">
+          <line x1="34" x2="136" y1={y(rank)} y2={y(rank)} />
+          <text x="28" y={y(rank) + 3}>{rank}</text>
+        </g>
+      ))}
+      <line className="leaderboard-rank__axis" x1="44" x2="44" y1="8" y2="92" />
+      <line className="leaderboard-rank__axis" x1="126" x2="126" y1="8" y2="92" />
+      <path className="leaderboard-rank__line" d={`M44 ${y(1)} L126 ${y(13)}`} />
+      <circle cx="44" cy={y(1)} r="4" />
+      <circle cx="126" cy={y(13)} r="4" />
+      <text className="leaderboard-rank__value" x="52" y={y(1) + 3}>#1</text>
+      <text className="leaderboard-rank__value" x="134" y={y(13) + 3}>#13</text>
+      <text className="leaderboard-rank__label" x="44" y="102">Public</text>
+      <text className="leaderboard-rank__label" x="126" y="102">Private</text>
+    </svg>
+  );
+}
 
 export default function MLProjects() {
   return (
@@ -21,15 +47,9 @@ export default function MLProjects() {
                 <span className="work-visual__label">Refuge Cove / survey map</span>
                 <figure className="geohab-map-stage">
                   <img
-                    className="geohab-map-stage__neutral"
-                    src="/work/geohab/training-map-neutral.webp"
-                    alt="Backscatter map of Refuge Cove with 6,256 ground-truth training locations and bathymetric contour lines"
-                  />
-                  <img
                     className="geohab-map-stage__color"
                     src="/work/geohab/training-map-color.webp"
-                    alt=""
-                    aria-hidden="true"
+                    alt="Backscatter map of Refuge Cove with 6,256 ground-truth training locations coloured by habitat class, over bathymetric contour lines"
                   />
                   <span className="geohab-map-stage__north" aria-hidden="true">N ↑</span>
                 </figure>
@@ -53,17 +73,19 @@ export default function MLProjects() {
                     <span><i className="class-sgz" /><b>SGZ</b>Zostera seagrass</span>
                   </div>
                   <p>
-                    Habitat labels appear on hover or keyboard focus.<br />
                     Data: Deakin Marine Mapping Group · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>
                   </p>
                 </aside>
               </div>
 
               <div className="project-story">
-                <div className="project-results" aria-label="GeoHab results">
-                  <div><strong>0.85875</strong><span>Best private weighted F1 · meta-stack</span></div>
-                  <div><strong>0.84295</strong><span>Default model · private weighted F1</span></div>
-                  <div><strong>13th</strong><span>Private leaderboard · 1st public</span></div>
+                <div className="project-results project-results--geohab" aria-label="GeoHab results">
+                  <div><strong>0.85875</strong><span>Best private weighted F1 · meta-stack<small>Weighted F1 runs 0–1; 1 is perfect</small></span></div>
+                  <div><strong>0.84295</strong><span>Shipped model · private weighted F1<small>Chosen for holding steady across both splits</small></span></div>
+                  <div className="project-rank">
+                    <LeaderboardRank />
+                    <span>1st on the public board, 13th of 52 on the private one<small>The public split was 31% of the test data</small></span>
+                  </div>
                 </div>
                 <details className="project-details">
                   <summary>Inside the project <span>Models, results &amp; deployment decisions</span></summary>
@@ -156,15 +178,55 @@ export default function MLProjects() {
                 </footer>
               </article>
 
-              <article id="folio" className="work-case work-case--support">
+              <article id="vectorflow" className="work-case work-case--support">
                 <header className="work-case__header">
-                  <span>03 / Product engineering</span>
-                  <span className="work-status"><i aria-hidden="true" /> Internship project</span>
+                  <span>03 / Desktop app · 2026</span>
+                  <span className="work-status"><i aria-hidden="true" /> Open source</span>
                 </header>
                 <div className="work-case__intro work-case__intro--compact">
-                  <div><h2>Folio</h2></div>
-                  <p>An internship project where I worked on an embedding-based matchmaking system for a job portal built for design students.</p>
+                  <div><h2>VectorFlow</h2></div>
+                  <p>A local Windows desktop app that automatically redraws a video as animated cubic Bézier curves. Choose a video, convert it, then preview or export the result. No manual tracing.</p>
                 </div>
+                <div className="work-visual work-visual--bezier">
+                  <BezierPlayground />
+                </div>
+                <div className="project-story">
+                  <div className="project-results project-results--pair">
+                    <div><strong>6</strong><span>Export formats · MP4, animated SVG, SVG &amp; PNG sequences, JSON, ProRes 4444</span></div>
+                    <div><strong>0</strong><span>Uploads · every frame is processed on your own machine</span></div>
+                  </div>
+                  <details className="project-details">
+                    <summary>Inside the project <span>Tracing, tracking &amp; editing</span></summary>
+                    <div className="project-details__body">
+                      <p className="project-summary">Every frame becomes real cubic curves: the exported SVGs contain actual <code>C</code> path commands, and each project stores the control points, stable path IDs and motion per frame.</p>
+
+                      <h3>How it works</h3>
+                      <p>OpenCV decodes frames at the chosen output rate and smooths nearly stationary pixels. Optical flow and conservative shape matching give each path a persistent ID, so confident fits reuse their curve topology from frame to frame. Filled-colour mode learns a palette across the clip, then fits closed contours and holes.</p>
+                      <h3>Editing after conversion</h3>
+                      <p>A cleanup workspace lets you drag a curve&apos;s four handles, delete or simplify paths, and apply edits to one frame or a whole tracked segment. Text and artwork can be replaced inside a marked region and follow its motion. Edits are reversible and never overwrite the original frame data.</p>
+                      <h3>Built to stay responsive</h3>
+                      <p>The PySide6 interface keeps conversion and FFmpeg export off the UI thread and writes frames to disk incrementally instead of holding the whole video in memory.</p>
+                      <p className="project-credit">Tracking is geometric rather than semantic, so fast deformation, occlusion or hard cuts can break a track. Those limits are documented in the repository.</p>
+                      <div className="project-links"><a href="https://github.com/CheeseCakeyy/VectorFlow" target="_blank" rel="noreferrer">Source code ↗</a></div>
+                    </div>
+                  </details>
+                </div>
+                <footer className="work-case__footer work-case__footer--compact">
+                  <div><span>Focus</span><strong>Computer vision · Desktop app</strong></div>
+                  <a
+                    className="work-case__link"
+                    href="https://github.com/CheeseCakeyy/VectorFlow"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Open the VectorFlow source code on GitHub in a new tab"
+                  >
+                    Source code ↗
+                  </a>
+                </footer>
+              </article>
+            </div>
+
+            <article id="folio" className="work-case work-case--row">
                 <div className="work-visual work-visual--matching" aria-label="Embedding-based matchmaking between anonymous student profiles and job roles">
                   <span className="work-visual__label">Embedding match / system overview</span>
                   <div className="folio-match" aria-hidden="true">
@@ -207,20 +269,21 @@ export default function MLProjects() {
                     </div>
                   </div>
                 </div>
-                <footer className="work-case__footer work-case__footer--compact">
-                  <div><span>Focus</span><strong>Embeddings · Recommendation systems</strong></div>
-                  <a
-                    className="work-case__link"
-                    href="https://folio-aipoweredrecruitment.onrender.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Open the Folio AI-powered recruitment dashboard in a new tab"
-                  >
-                    Live demo ↗
-                  </a>
-                </footer>
-              </article>
-            </div>
+                <div className="work-case__row-copy">
+                  <header className="work-case__header">
+                    <span>04 / Product engineering</span>
+                    <span className="work-status"><i aria-hidden="true" /> Internship project</span>
+                  </header>
+                  <div className="work-case__intro work-case__intro--compact">
+                    <div><h2>Folio</h2></div>
+                    <p>A job portal for design students. I designed the user flow and data flow for the whole system and built its matchmaking pipeline, which ranks students against roles using vector embeddings stored in ChromaDB.</p>
+                  </div>
+                  <footer className="work-case__footer work-case__footer--compact">
+                    <div><span>Focus</span><strong>Embeddings · ChromaDB · System design</strong></div>
+                    <span className="work-case__handover">Since handed over to another team</span>
+                  </footer>
+                </div>
+            </article>
           </div>
 
   );

@@ -269,3 +269,134 @@
   .component-gallery__arrows button { width:44px; height:44px; }
   .component-film-controls button { width:36px; height:36px; }
 }
+
+/* ---- Projects refresh: wider page, GeoHab map as the centrepiece, VectorFlow, Folio row, web teaser ---- */
+.showcase-page { max-width:none; padding:30px 20px 170px; }
+
+/* The map fills the card at full colour. Its black survey background is reused:
+   the cove sits right of centre and the dataset readout lives in the free space on the left. */
+.work-showcase .work-visual--geohab { position:relative; display:grid; grid-template-columns:1fr; height:auto; min-height:0; gap:0; padding:0; background:#050505; }
+.work-showcase .geohab-map-stage { position:relative; height:clamp(320px,42vw,560px); min-height:0; margin:0; overflow:hidden; border:0; border-radius:0; background:#050505; }
+.work-showcase .geohab-map-stage img.geohab-map-stage__color { object-fit:contain; object-position:72% 50%; opacity:1; transition:transform .7s cubic-bezier(.22,1,.36,1); }
+.work-showcase .work-visual--geohab:hover .geohab-map-stage__color { transform:scale(1.025); }
+.work-showcase .geohab-map-stage__north { top:18px; right:20px; font-size:9px; color:#ffffffb3; }
+.work-showcase .geohab-map-readout { position:absolute; top:28px; bottom:28px; left:28px; width:250px; grid-template-columns:1fr; grid-template-rows:auto auto minmax(0,1fr) auto; gap:18px; padding:0; color:#e9e9e2; }
+.work-showcase .geohab-map-readout header span, .work-showcase .geohab-map-readout dt, .work-showcase .geohab-map-legend span, .work-showcase .geohab-map-readout > p, .work-showcase .geohab-map-readout > p a { color:#e9e9e299; }
+.work-showcase .geohab-map-readout header span, .work-showcase .geohab-map-readout dt { font-size:9px; }
+.work-showcase .geohab-map-readout header strong { font-size:34px; color:#f2f2ec; }
+.work-showcase .geohab-map-readout dl { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding:16px 0; border-color:#ffffff1f; }
+.work-showcase .geohab-map-readout dd { font-size:14px; color:#f2f2ec; }
+.work-showcase .geohab-map-legend { display:grid; align-content:start; gap:11px; }
+.work-showcase .geohab-map-legend span { grid-template-columns:8px 40px minmax(0,1fr); font-size:10px; }
+.work-showcase .geohab-map-legend i { width:8px; height:8px; }
+.work-showcase .geohab-map-legend b { color:#f2f2ec; }
+.work-showcase .geohab-map-readout > p { padding-top:12px; border-top:1px solid #ffffff1f; font-size:8px; }
+.geohab-map-legend .class-alg { background:#e46d55; }
+.geohab-map-legend .class-fmat { background:#d2ab61; }
+.geohab-map-legend .class-nvb { background:#8793a1; }
+.geohab-map-legend .class-sgam { background:#55a58f; }
+.geohab-map-legend .class-sgz { background:#78a95f; }
+
+/* Numbers with their context, plus the public → private rank story. */
+.work-showcase .project-results small { display:block; margin-top:4px; font-size:10px; line-height:1.5; color:color-mix(in srgb,var(--text) 42%,transparent); }
+.work-showcase .project-results--geohab { grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.35fr); align-items:center; }
+.work-showcase .project-rank { display:grid; grid-template-columns:150px minmax(0,1fr); align-items:center; gap:16px; }
+.work-showcase .project-rank > span { max-width:30ch; margin:0; color:var(--text); font-size:12px; }
+.leaderboard-rank { width:150px; height:auto; overflow:visible; }
+.leaderboard-rank__tick line { stroke:color-mix(in srgb,var(--text) 10%,transparent); stroke-dasharray:2 3; }
+.leaderboard-rank text { fill:var(--text-muted); font:700 7px ui-monospace,monospace; }
+.leaderboard-rank__tick text { text-anchor:end; }
+.leaderboard-rank__axis { stroke:var(--panel-border); }
+.leaderboard-rank__line { fill:none; stroke:var(--text); stroke-width:1.6; }
+.leaderboard-rank circle { fill:var(--text); stroke:var(--panel); stroke-width:2; }
+.leaderboard-rank .leaderboard-rank__value { fill:var(--text); font-size:10px; }
+.leaderboard-rank .leaderboard-rank__label { text-anchor:middle; text-transform:uppercase; letter-spacing:.08em; }
+
+/* VectorFlow: an interactive cubic Bézier, like the app's own playground. */
+.work-showcase .work-visual--bezier { height:230px; min-height:230px; padding:14px 18px; background:color-mix(in srgb,var(--panel-raised) 75%,var(--background)); }
+.bezier-playground { display:grid; grid-template-rows:minmax(0,1fr) auto; gap:8px; height:100%; }
+.bezier-playground svg { width:100%; height:100%; min-height:0; overflow:visible; border:1px solid var(--panel-border); border-radius:6px; background-color:var(--panel); background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px); background-size:20px 20px; touch-action:none; }
+.bezier-playground__curve { fill:none; stroke:var(--text); stroke-width:2.4; stroke-linecap:round; }
+.bezier-playground__hull { fill:none; stroke:color-mix(in srgb,var(--text) 14%,transparent); stroke-dasharray:3 4; }
+.bezier-playground__handle { stroke:var(--text-muted); stroke-width:1; stroke-dasharray:3 3; }
+.bezier-playground__tracer { fill:var(--text); opacity:.5; }
+.bezier-playground__point { cursor:grab; outline:none; }
+.bezier-playground svg.is-dragging, .bezier-playground svg.is-dragging .bezier-playground__point { cursor:grabbing; }
+.bezier-playground__hit { fill:transparent; transition:fill .15s; }
+.bezier-playground__point:hover .bezier-playground__hit, .bezier-playground__point:focus-visible .bezier-playground__hit { fill:var(--ghost-strong); }
+.bezier-playground__point.is-anchor rect { fill:var(--text); }
+.bezier-playground__point.is-control circle:not(.bezier-playground__hit) { fill:var(--panel); stroke:var(--text); stroke-width:1.6; }
+.bezier-playground__point text { fill:var(--text-muted); font:700 10px ui-monospace,monospace; pointer-events:none; }
+.bezier-playground__readout { display:flex; flex-wrap:wrap; align-items:center; gap:4px 16px; color:var(--text-muted); font:9px ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+.bezier-playground__readout b { margin-right:5px; color:var(--text); font-weight:700; }
+.bezier-playground__readout em { margin-left:auto; font-style:normal; }
+.work-showcase .project-details__body code { font:12px ui-monospace,monospace; color:var(--text); }
+
+/* Folio: a compact closing entry, visual on the left. */
+.work-showcase .work-case--row { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); }
+.work-showcase .work-case--row > .work-visual { order:0; height:auto; min-height:220px; border-bottom:0; border-right:1px solid var(--panel-border); }
+.work-case__row-copy { display:flex; flex-direction:column; min-width:0; }
+.work-case__handover { color:var(--text-muted); font:9px ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; }
+
+/* A glimpse of the Web & interaction tab under the ML work. */
+.web-teaser { margin-top:36px; }
+.web-teaser__header { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:16px; }
+.web-teaser__header h2 { margin:6px 0 0; font:500 22px/1.2 Inter,sans-serif; letter-spacing:-.04em; }
+.web-teaser__all { display:inline-flex; align-items:center; gap:10px; padding:7px 13px; border:1px solid var(--panel-border); border-radius:999px; font-size:12px; transition:gap .18s, background-color .18s; }
+.web-teaser__all:hover { gap:16px; background:var(--panel-raised); }
+.web-teaser__list { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+.web-teaser__card { display:grid; gap:4px; min-width:0; color:var(--text); }
+.web-teaser__poster { display:block; aspect-ratio:4/3; margin-bottom:8px; overflow:hidden; border:1px solid var(--panel-border); border-radius:8px; background:#f3f2ee; }
+.web-teaser__poster img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .55s cubic-bezier(.2,.7,.3,1); }
+.web-teaser__card:hover .web-teaser__poster img, .web-teaser__card:focus-visible .web-teaser__poster img { transform:scale(1.05); }
+.web-teaser__card--koi-pond .web-teaser__poster { background:#7e9b85; }
+.web-teaser__card--keyspace .web-teaser__poster { background:#e9e8e1; }
+.web-teaser__card--keyspace .web-teaser__poster img { object-fit:contain; }
+.web-teaser__card--cherry-blossom .web-teaser__poster img { object-position:74% center; }
+.web-teaser__card strong { font-size:14px; font-weight:500; letter-spacing:-.02em; }
+.web-teaser__card > span:last-child { color:var(--text-muted); font-size:11px; }
+.web-teaser__card:focus-visible { outline:2px solid var(--text); outline-offset:4px; border-radius:8px; }
+
+/* Live cards open on their poster; the demo fades in over it once loaded. */
+.experiment-frame__poster { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover; }
+.experiment-card--keyspace .experiment-frame__poster { object-fit:contain; }
+.experiment-card--cherry-blossom .experiment-frame__poster { object-position:74% center; }
+.experiment-frame.has-poster iframe { position:relative; transition:opacity .6s ease; }
+.experiment-frame.has-poster .experiment-loading { inset:auto auto 12px 12px; flex-direction:row; gap:8px; padding:6px 11px; border-radius:999px; background:#fffdf4e0; font-size:10px; color:#4c5548; }
+.experiment-frame.has-poster .experiment-loading > span { width:11px; height:11px; }
+
+/* Narrower screens: centre the map and move the readout into a strip beneath it. */
+@media(max-width:1100px) {
+  .work-showcase .geohab-map-stage img.geohab-map-stage__color { object-position:50% 50%; }
+  .work-showcase .geohab-map-readout { position:static; width:auto; grid-template-columns:auto auto minmax(0,1fr); grid-template-rows:auto; align-items:center; gap:16px 28px; padding:18px 22px; border-top:1px solid #ffffff1f; }
+  .work-showcase .geohab-map-readout header strong { font-size:24px; }
+  .work-showcase .geohab-map-readout dl { grid-template-columns:repeat(4,auto); gap:6px 18px; padding:0; border:0; }
+  .work-showcase .geohab-map-legend { display:flex; flex-wrap:wrap; gap:8px 16px; }
+  .work-showcase .geohab-map-legend span { display:inline-flex; gap:6px; font-size:9px; }
+  .work-showcase .geohab-map-readout > p { grid-column:1/-1; padding:0; border:0; }
+}
+@media(max-width:900px) {
+  .work-showcase .geohab-map-readout { grid-template-columns:1fr 1fr; }
+  .work-showcase .geohab-map-legend { grid-column:1/-1; grid-row:auto; }
+  .web-teaser__list { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:768px) {
+  .showcase-page { padding:38px 16px 150px; }
+  .work-showcase .project-results--geohab { grid-template-columns:1fr 1fr; }
+  .work-showcase .project-rank { grid-column:1/-1; padding-left:0; }
+  .work-showcase .work-case--row { grid-template-columns:1fr; }
+  .work-showcase .work-case--row > .work-visual { border-right:0; border-bottom:1px solid var(--panel-border); }
+}
+@media(max-width:600px) {
+  .work-showcase .work-visual--geohab { display:grid; padding:0; height:auto; }
+  .work-showcase .geohab-map-stage { height:280px; }
+  .work-showcase .geohab-map-readout { display:grid; grid-template-columns:1fr; padding:16px; }
+  .work-showcase .geohab-map-readout dl { grid-template-columns:repeat(2,auto); }
+  .work-showcase .geohab-map-readout > p { grid-column:auto; }
+  .work-showcase .project-rank { grid-template-columns:130px minmax(0,1fr); }
+  .leaderboard-rank { width:130px; }
+  .bezier-playground__readout em { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .web-teaser__poster img, .work-showcase .geohab-map-stage img.geohab-map-stage__color, .experiment-frame.has-poster iframe { transition:none; }
+}

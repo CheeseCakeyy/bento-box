@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScrollToTop from "./ScrollToTop";
 
 const sections = [
@@ -105,8 +105,27 @@ export default function PortfolioNav() {
     };
   }, [pathname]);
 
+  // On Projects the nav tucks away while scrolling down so it never covers card footers.
+  const [tucked, setTucked] = useState(false);
+  useEffect(() => {
+    if (pathname !== "/work") return;
+    let last = window.scrollY;
+    const update = () => {
+      const y = window.scrollY;
+      const nearBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
+      if (Math.abs(y - last) < 6) return;
+      setTucked(y > last && y > 160 && !nearBottom);
+      last = y;
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      setTucked(false);
+    };
+  }, [pathname]);
+
   return (
-    <div className={`floating-nav-wrap traveler-nav-wrap${pathname === "/tool-kit" ? " toolkit-nav-wrap" : ""}`}>
+    <div className={`floating-nav-wrap traveler-nav-wrap${pathname === "/tool-kit" ? " toolkit-nav-wrap" : ""}${tucked ? " is-tucked" : ""}`}>
       <nav ref={nav} className="floating-nav" aria-label="Primary navigation">
         <span ref={shadow} className="nav-traveler-shadow" aria-hidden="true" />
         <span ref={actor} className="nav-cat" data-phase="sleeping" aria-hidden="true">

@@ -61,7 +61,7 @@ function ExperimentCard({ experiment, onOpen, expanded, index }: { experiment: E
 
   return <article className={`experiment-card experiment-card--${experiment.slug}`} aria-labelledby={`component-${experiment.slug}`}>
     <div ref={stage} className="experiment-card__stage">
-      {experiment.video ? <ComponentFilm experiment={experiment} active={active && !expanded} /> : ready ? <PreviewFrame experiment={experiment} compact /> : <div className="component-awaiting" aria-hidden="true"><span /></div>}
+      {experiment.video ? <ComponentFilm experiment={experiment} active={active && !expanded} /> : ready ? <PreviewFrame experiment={experiment} compact /> : experiment.poster ? <img className="experiment-frame__poster" src={experiment.poster} alt="" /> : <div className="component-awaiting" aria-hidden="true"><span /></div>}
     </div>
     <div className="experiment-card__caption">
       <div><h2 id={`component-${experiment.slug}`}><span>{String(index + 1).padStart(2, "0")}</span>{experiment.name}</h2><p>{experiment.interaction}</p></div>
@@ -70,7 +70,7 @@ function ExperimentCard({ experiment, onOpen, expanded, index }: { experiment: E
   </article>;
 }
 
-function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null; onSelect: (experiment: Experiment) => void }) {
+function ExperimentGallery({ selected, onSelect, focusSlug }: { selected: Experiment | null; onSelect: (experiment: Experiment) => void; focusSlug: string | null }) {
   const rail = useRef<HTMLDivElement>(null);
   const progress = useRef<HTMLSpanElement>(null);
   const scrollTo = useRef<(value: number, absolute?: boolean) => boolean>(() => false);
@@ -174,6 +174,17 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     };
   }, []);
 
+  // A teaser poster on the ML tab links straight to its card in the rail.
+  useEffect(() => {
+    const view = rail.current;
+    const index = experiments.findIndex((experiment) => experiment.slug === focusSlug);
+    const card = view?.children[index] as HTMLElement | undefined;
+    const first = view?.firstElementChild as HTMLElement | null;
+    if (!view || !card || !first) return;
+    const frame = requestAnimationFrame(() => scrollTo.current(card.offsetLeft - first.offsetLeft, true));
+    return () => cancelAnimationFrame(frame);
+  }, [focusSlug]);
+
   function move(direction: number) {
     const view = rail.current;
     const card = view?.firstElementChild as HTMLElement | null;
@@ -203,15 +214,21 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
 export default function WorkShowcase({ children }: { children: ReactNode }) {
   const [tab, setTab] = useState<"ml" | "web">("ml");
   const [selected, setSelected] = useState<Experiment | null>(null);
+  const [focusSlug, setFocusSlug] = useState<string | null>(null);
+  const root = useRef<HTMLDivElement>(null);
   const tabButtons = useRef<(HTMLButtonElement | null)[]>([]);
   const closePreview = useCallback(() => setSelected(null), []);
 
   useEffect(() => {
     const update = () => {
       const hash = window.location.hash;
-      setTab(hash === "#web" ? "web" : "ml");
-      // Deep links from the About page (#geohab, #competitions…) land on, and open, their section.
-      const target = hash.length > 1 && hash !== "#ml" && hash !== "#web" ? document.getElementById(hash.slice(1)) : null;
+      const web = hash === "#web" || hash.startsWith("#web-");
+      setTab(web ? "web" : "ml");
+      setFocusSlug(hash.startsWith("#web-") ? hash.slice(5) : null);
+      // Deep links from the About page (#geohab, #competitions…) land on, and open, their section;
+      // web links (#web-koi-pond…) land on the tabs so the chosen card is in view.
+      const target = web ? hash.startsWith("#web-") ? root.current : null
+        : hash.length > 1 && hash !== "#ml" ? document.getElementById(hash.slice(1)) : null;
       if (!target) return;
       if (target instanceof HTMLDetailsElement) target.open = true;
       requestAnimationFrame(() => target.scrollIntoView({
@@ -240,14 +257,14 @@ export default function WorkShowcase({ children }: { children: ReactNode }) {
     tabButtons.current[next]?.focus();
   }
 
-  return <div className="work-showcase">
+  return <div ref={root} className="work-showcase">
     <div className="showcase-tabs" role="tablist" aria-label="Project categories">
-      {([{ id: "ml", label: "ML & systems", count: "03" }, { id: "web", label: "Web & interaction", count: String(experiments.length).padStart(2, "0") }] as const).map((item, index) => <button key={item.id} ref={(element) => { tabButtons.current[index] = element; }} type="button" role="tab" id={`work-tab-${item.id}`} aria-selected={tab === item.id} aria-controls={`work-panel-${item.id}`} tabIndex={tab === item.id ? 0 : -1} onClick={() => choose(item.id)} onKeyDown={(event) => navigateTabs(event, index)}>{item.label}<span>{item.count}</span></button>)}
+      {([{ id: "ml", label: "ML & systems", count: "04" }, { id: "web", label: "Web & interaction", count: String(experiments.length).padStart(2, "0") }] as const).map((item, index) => <button key={item.id} ref={(element) => { tabButtons.current[index] = element; }} type="button" role="tab" id={`work-tab-${item.id}`} aria-selected={tab === item.id} aria-controls={`work-panel-${item.id}`} tabIndex={tab === item.id ? 0 : -1} onClick={() => choose(item.id)} onKeyDown={(event) => navigateTabs(event, index)}>{item.label}<span>{item.count}</span></button>)}
       <span className="showcase-tab-note" aria-hidden="true">Selected projects / 2026</span>
     </div>
     <section role="tabpanel" id="work-panel-ml" aria-labelledby="work-tab-ml" tabIndex={0} hidden={tab !== "ml"} className="showcase-panel showcase-panel--ml">{children}</section>
     <section role="tabpanel" id="work-panel-web" aria-labelledby="work-tab-web" tabIndex={0} hidden={tab !== "web"} className="showcase-panel showcase-panel--web">
-      {tab === "web" && <ExperimentGallery selected={selected} onSelect={setSelected} />}
+      {tab === "web" && <ExperimentGallery selected={selected} onSelect={setSelected} focusSlug={focusSlug} />}
     </section>
     {selected && <ExperimentDialog experiment={selected} onClose={closePreview} />}
   </div>;

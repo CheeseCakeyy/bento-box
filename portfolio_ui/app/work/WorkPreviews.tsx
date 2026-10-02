@@ -41,8 +41,11 @@ export function PreviewFrame({ experiment, compact = false, frameRef }: { experi
     return () => clearTimeout(timer);
   }, []);
 
-  return <div className={`experiment-frame ${loaded ? "is-loaded" : ""}`}>
-    {!loaded && <div className="experiment-loading" role="status"><span />{slow ? "Taking a little longer…" : "Opening a small world…"}{slow && <a href={demoUrl(experiment)} target="_blank" rel="noreferrer">Open separately ↗</a>}</div>}
+  // Show the poster straight away, then fade the live demo in over it once it has loaded.
+  const poster = experiment.poster;
+  return <div className={`experiment-frame ${loaded ? "is-loaded" : ""} ${poster ? "has-poster" : ""}`}>
+    {poster && <img className="experiment-frame__poster" src={poster} alt="" />}
+    {!loaded && <div className="experiment-loading" role="status"><span />{slow ? "Taking a little longer…" : poster ? "Loading live demo…" : "Opening a small world…"}{slow && <a href={demoUrl(experiment)} target="_blank" rel="noreferrer">Open separately ↗</a>}</div>}
     <iframe ref={frameRef} src={`${demoUrl(experiment, compact)}${!compact && experiment.inline ? "?embed=expanded" : ""}`} title={`${experiment.name} ${compact ? "inline" : "expanded"} interactive preview`} loading="eager" onLoad={() => setLoaded(true)} />
   </div>;
 }
