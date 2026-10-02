@@ -107,6 +107,110 @@ function VectorFlowVisual() {
   );
 }
 
+// GeoHab placeholder: a stylised cove where a model sweep classifies the seafloor into the
+// five real habitat classes, each drawn as its own glyph so it reads in any theme.
+type Habitat = "alg" | "fmat" | "nvb" | "sgam" | "sgz";
+const HABITATS: Array<{ id: Habitat; code: string }> = [
+  { id: "alg", code: "ALG" },
+  { id: "fmat", code: "FMAT" },
+  { id: "nvb", code: "NVB" },
+  { id: "sgam", code: "SGAM" },
+  { id: "sgz", code: "SGZ" },
+];
+const SEABED_BOTTOM = 94;
+const coastAt = (x: number) => 30 + 16 * Math.sin((x + 20) / 34) + 6 * Math.sin(x / 11 + 2);
+// Integer hash keeps the pattern identical on the server and in the browser.
+const noiseAt = (i: number, j: number, salt: number) => {
+  let h = Math.imul(i * 374761393 + j * 668265263 + salt * 2147483647, 1274126177);
+  h = Math.imul(h ^ (h >>> 13), 1103515245);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+};
+const seabedCells = (() => {
+  const cells: Array<{ x: number; y: number; habitat: Habitat }> = [];
+  for (let i = 0; i < 29; i += 1) {
+    for (let j = 0; j < 14; j += 1) {
+      const x = 3.5 + i * 7;
+      const y = 3.5 + j * 7;
+      const depth = y - coastAt(x);
+      if (depth < 3 || y > SEABED_BOTTOM - 2) continue;
+      const d = depth + (noiseAt(i, j, 1) - 0.5) * 10;
+      let habitat: Habitat = d < 9 ? "sgz" : d < 19 ? "sgam" : d < 33 ? "alg" : "nvb";
+      if (d > 14 && d < 42 && noiseAt(i, j, 2) > 0.84) habitat = "fmat";
+      cells.push({ x, y, habitat });
+    }
+  }
+  return cells;
+})();
+const coastline = Array.from({ length: 41 }, (_, index) => `${index ? "L" : "M"}${index * 5} ${coastAt(index * 5).toFixed(1)}`).join(" ");
+const contours = [12, 25, 40, 56].map((offset) =>
+  Array.from({ length: 41 }, (_, index) => {
+    const x = index * 5;
+    return `${index ? "L" : "M"}${x} ${Math.min(SEABED_BOTTOM, coastAt(x) + offset + 2 * Math.sin(x / 9 + offset)).toFixed(1)}`;
+  }).join(" "),
+);
+const sweep = { dur: "6s", repeatCount: "indefinite" };
+
+function HabitatGlyph({ habitat, x, y }: { habitat: Habitat; x: number; y: number }) {
+  if (habitat === "alg") return <circle className="geo-alg" cx={x} cy={y} r="1.7" />;
+  if (habitat === "fmat") return <rect className="geo-fmat" x={x - 1.6} y={y - 1.6} width="3.2" height="3.2" />;
+  if (habitat === "sgam") return <line className="geo-grass" x1={x} y1={y - 2.2} x2={x} y2={y + 2.2} />;
+  if (habitat === "sgz") return <line className="geo-grass" x1={x - 1.8} y1={y + 1.8} x2={x + 1.8} y2={y - 1.8} />;
+  return <circle className="geo-nvb" cx={x} cy={y} r="0.8" />;
+}
+
+function GeoHabVisual() {
+  const svg = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      svg.current?.pauseAnimations();
+      svg.current?.setCurrentTime(3.6);
+    }
+  }, []);
+
+  return (
+    <svg ref={svg} className="featured-card__vector featured-card__geohab" viewBox="0 0 200 112" aria-hidden="true">
+      <defs>
+        <pattern id="geohab-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="4" />
+        </pattern>
+        <clipPath id="geohab-sweep">
+          <rect x="0" y="0" width="0" height="112">
+            <animate attributeName="width" values="0;200;200" keyTimes="0;0.6;1" {...sweep} />
+          </rect>
+        </clipPath>
+      </defs>
+      <path className="featured-card__land" d={`${coastline} L200 0 L0 0 Z`} />
+      {contours.map((d) => <path key={d} className="featured-card__contour" d={d} />)}
+      <path className="featured-card__coast" d={coastline} />
+      <g className="featured-card__backscatter">
+        {seabedCells.map((cell) => <circle key={`${cell.x}-${cell.y}`} cx={cell.x} cy={cell.y} r="0.7" />)}
+      </g>
+      <g clipPath="url(#geohab-sweep)">
+        <g>
+          <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" {...sweep} />
+          {seabedCells.map((cell) => <HabitatGlyph key={`${cell.x}-${cell.y}`} {...cell} />)}
+        </g>
+      </g>
+      <line className="featured-card__sweep" x1="0" x2="0" y1="0" y2={SEABED_BOTTOM}>
+        <animate attributeName="x1" values="0;200;200" keyTimes="0;0.6;1" {...sweep} />
+        <animate attributeName="x2" values="0;200;200" keyTimes="0;0.6;1" {...sweep} />
+        <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.58;0.6;1" {...sweep} />
+      </line>
+      <text className="featured-card__tag" x="8" y="13">REFUGE COVE · 25 CM GRID</text>
+      <text className="featured-card__tag" x="192" y="13" textAnchor="end">N ↑</text>
+      <g className="featured-card__legend">
+        <rect x="0" y={SEABED_BOTTOM + 2} width="200" height={112 - SEABED_BOTTOM - 2} />
+        {HABITATS.map((item, index) => (
+          <g key={item.id}>
+            <HabitatGlyph habitat={item.id} x={12 + index * 38} y={SEABED_BOTTOM + 9} />
+            <text className="featured-card__tag" x={18 + index * 38} y={SEABED_BOTTOM + 11}>{item.code}</text>
+          </g>
+        ))}
+      </g>
+    </svg>
+  );
+}
+
 const projects: Array<{
   id: string;
   index: string;
@@ -128,7 +232,7 @@ const projects: Array<{
     metric: "0.859",
     metricLabel: "Private weighted F1",
     note: "1st public · 13th private",
-    visual: <img className="featured-card__map" src="/work/geohab/training-map-color.webp" alt="" loading="lazy" />,
+    visual: <GeoHabVisual />,
     href: "/work#geohab",
   },
   {

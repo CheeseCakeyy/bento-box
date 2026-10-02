@@ -572,22 +572,61 @@ a:focus-visible {
   background-size: 20px 20px;
 }
 
-.featured-card--geohab .featured-card__visual {
-  background: #050505;
+/* GeoHab: cove, contours, and a classifier sweep over the seabed. */
+.featured-card__land {
+  fill: url(#geohab-hatch);
 }
 
-.featured-card__map {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 42%;
-  transform: scale(1.02);
-  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+#geohab-hatch line {
+  stroke: color-mix(in srgb, var(--text) 16%, transparent);
+  stroke-width: 0.8;
 }
 
-.featured-card:hover .featured-card__map {
-  transform: scale(1.09);
+.featured-card__coast {
+  fill: none;
+  stroke: color-mix(in srgb, var(--text) 60%, transparent);
+  stroke-width: 1;
+}
+
+.featured-card__contour {
+  fill: none;
+  stroke: color-mix(in srgb, var(--text) 16%, transparent);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 2;
+}
+
+.featured-card__backscatter circle {
+  fill: color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.featured-card__geohab .geo-alg {
+  fill: var(--text);
+}
+
+.featured-card__geohab .geo-fmat {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 0.8;
+}
+
+.featured-card__geohab .geo-grass {
+  stroke: var(--text);
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+
+.featured-card__geohab .geo-nvb {
+  fill: var(--text-muted);
+}
+
+.featured-card__sweep {
+  stroke: var(--text);
+  stroke-width: 1;
+  filter: drop-shadow(0 0 3px var(--text));
+}
+
+.featured-card__legend rect {
+  fill: color-mix(in srgb, var(--panel) 88%, transparent);
 }
 
 .featured-card__chart,
@@ -783,7 +822,6 @@ a:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .featured-card,
-  .featured-card__map,
   .featured-card__chart .featured-card__pulse {
     animation: none;
     transition: none;
