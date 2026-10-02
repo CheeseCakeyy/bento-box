@@ -24,18 +24,19 @@ test("home renders the portfolio and project navigation", async () => {
   assert.match(html, /aria-label="Theme controls"/);
 });
 
-test("projects renders both category tabs and all ML projects", async () => {
+test("projects renders ML and web sections on one page", async () => {
   const html = await render("/work/");
   assert.match(html, /<title>Projects — Adwait Tagalpallewar<\/title>/);
-  assert.match(html, /role="tablist"/);
-  assert.match(html, /id="work-tab-ml"/);
-  assert.match(html, /id="work-tab-web"/);
+  assert.match(html, /id="ml"/);
+  assert.match(html, /id="web"/);
   assert.match(html, /GeoHab/);
+  assert.match(html, /VectorFlow/);
   assert.match(html, /Folio/);
   assert.match(html, /F1/);
   assert.match(html, /Competition results/);
-  // Hidden web previews must not load before the tab is selected.
-  assert.doesNotMatch(html, /<iframe[^>]*src="\/experiments\//);
+  assert.match(html, /Buffer City/);
+  // Live previews load only once their card scrolls into view, never in the initial HTML.
+  assert.doesNotMatch(html, /<iframe[^>]*src="(\/experiments\/|https:\/\/buffer-city)/);
 });
 
 for (const path of ["/collection/", "/contact/", "/tool-kit/"]) {

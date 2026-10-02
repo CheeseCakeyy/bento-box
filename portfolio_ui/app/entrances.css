@@ -37,10 +37,10 @@
 .entrance-work .showcase-margin-note {
   animation: entrance-fade 900ms ease-out 70ms backwards;
 }
-.entrance-work .showcase-tabs {
+.entrance-work .showcase-section-heading {
   animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 90ms backwards;
 }
-.entrance-work .showcase-panel:not([hidden]) {
+.entrance-work .work-case-layout {
   animation: entrance-rise 900ms cubic-bezier(.22, 1, .36, 1) 150ms backwards;
 }
 .entrance-collection .collection-kicker,
@@ -85,8 +85,8 @@
   .entrance-work .floating-nav,
   .entrance-work .showcase-heading > div,
   .entrance-work .showcase-margin-note,
-  .entrance-work .showcase-tabs,
-  .entrance-work .showcase-panel:not([hidden]) {
+  .entrance-work .showcase-section-heading,
+  .entrance-work .work-case-layout {
     animation: entrance-fade 120ms ease-out backwards;
   }
 }
@@ -99,8 +99,8 @@
 .entrance-collection[data-entrance-complete] .collection-bento__grid > *,
 .entrance-work[data-entrance-complete] .showcase-heading > div,
 .entrance-work[data-entrance-complete] .showcase-margin-note,
-.entrance-work[data-entrance-complete] .showcase-tabs,
-.entrance-work[data-entrance-complete] .showcase-panel:not([hidden]) {
+.entrance-work[data-entrance-complete] .showcase-section-heading,
+.entrance-work[data-entrance-complete] .work-case-layout {
   animation: none;
 }
 

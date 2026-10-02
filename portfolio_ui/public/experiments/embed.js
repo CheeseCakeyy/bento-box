@@ -87,10 +87,11 @@ if (!mode && window.parent === window) {
 if (mode === 'card' && window.parent !== window) {
   document.addEventListener('wheel', (event) => {
     if (event.ctrlKey) return;
+    const sideways = Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey;
     const value = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
     const delta = value * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerWidth : 1);
     event.preventDefault();
-    window.parent.postMessage({ type: 'experiment:wheel', delta }, location.origin);
+    window.parent.postMessage({ type: 'experiment:wheel', delta, axis: sideways ? 'x' : 'y' }, location.origin);
   }, { passive: false });
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('#world');
