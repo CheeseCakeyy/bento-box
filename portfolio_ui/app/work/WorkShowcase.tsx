@@ -144,13 +144,11 @@ function ExperimentGallery({ selected, onSelect, focusSlug }: { selected: Experi
       view.classList.remove("is-scrolling");
     };
     scrollTo.current = slide;
-    // The rail sits mid-page, so only sideways gestures (trackpad swipes or Shift + wheel) move it;
-    // a plain vertical wheel keeps scrolling the page.
+    // Over the rail, any wheel (vertical included) moves it sideways. At either end slide() returns
+    // false, so the event falls through and the page carries on scrolling — nobody gets trapped.
     const wheel = (event: WheelEvent) => {
       if (event.ctrlKey) return;
-      const sideways = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-      if (!sideways && !event.shiftKey) return;
-      const delta = sideways ? event.deltaX : event.deltaY;
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
       const pixels = delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? view.clientWidth : 1);
       if (slide(pixels)) event.preventDefault();
     };
@@ -158,9 +156,7 @@ function ExperimentGallery({ selected, onSelect, focusSlug }: { selected: Experi
       if (event.origin !== window.location.origin || event.data?.type !== "experiment:wheel") return;
       if (![...view.querySelectorAll("iframe")].some((iframe) => iframe.contentWindow === event.source)) return;
       const delta = Number(event.data.delta);
-      if (!Number.isFinite(delta)) return;
-      if (event.data.axis === "x" && slide(delta)) return;
-      window.scrollBy(0, delta);
+      if (Number.isFinite(delta) && !slide(delta)) window.scrollBy(0, delta);
     };
     const observer = new ResizeObserver(schedule);
     observer.observe(view);
@@ -201,7 +197,7 @@ function ExperimentGallery({ selected, onSelect, focusSlug }: { selected: Experi
   }
 
   return <div className="component-gallery">
-    <div className="showcase-section-note"><p>A little room for play.</p><span>Scroll sideways. Try something.</span></div>
+    <div className="showcase-section-note"><p>A little room for play.</p><span>Scroll over the cards to move sideways.</span></div>
     {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- A named scroll region supports arrow, Home, and End navigation. */}
     <div ref={rail} className="experiment-rail" role="region" aria-label="Interactive web components. Scroll sideways, swipe, or use the arrow buttons." tabIndex={0} onKeyDown={(event) => {
       if (event.target !== event.currentTarget) return;
