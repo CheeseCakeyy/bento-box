@@ -34,5 +34,14 @@
   </main>
   <footer><span>SEVEN DAYS. ZERO OBLIGATIONS.</span><span class="footer-hint">Pick a day. Say hello. <span>↗</span></span><span>MAKE ROOM FOR NOTHING.</span></footer>
   <script type="module" src="./main.js?v=2"></script>
+  <script>
+    // Forward clicks so the portfolio can play its click sound and sparks.
+    if (window.parent !== window) {
+      document.addEventListener("pointerdown", (event) => {
+        if (!event.isPrimary) return;
+        window.parent.postMessage({ type: "experiment:click", x: event.clientX, y: event.clientY }, location.origin);
+      }, { passive: true });
+    }
+  </script>
 </body>
 </html>

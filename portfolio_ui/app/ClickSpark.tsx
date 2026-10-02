@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { playClickSound } from "./clickSound";
 
 type Spark = { x: number; y: number; angle: number; started: number };
 
@@ -79,6 +80,7 @@ export default function ClickSpark({ children, sparkColor = "#a47855", sparkSize
       const y = Number(event.data.y);
       if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || x > iframe.clientWidth || y > iframe.clientHeight) return;
       const bounds = iframe.getBoundingClientRect();
+      playClickSound();
       burst.current(bounds.left + x, bounds.top + y);
     };
     resize();
@@ -93,6 +95,7 @@ export default function ClickSpark({ children, sparkColor = "#a47855", sparkSize
   }, [duration, sparkColor, sparkCount, sparkRadius, sparkSize]);
 
   const click = (event: MouseEvent<HTMLDivElement>) => {
+    playClickSound();
     if (event.detail === 0 && event.target instanceof Element) {
       const bounds = event.target.getBoundingClientRect();
       burst.current(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);

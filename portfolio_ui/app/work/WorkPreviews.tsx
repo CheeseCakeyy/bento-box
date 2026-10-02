@@ -17,11 +17,14 @@ export type Experiment = {
   video?: boolean;
   videoSrc?: string;
   interaction?: string;
+  // Hosted elsewhere: the card shows the poster, and the live site opens in the preview dialog.
+  url?: string;
 };
 
 export const experiments: Experiment[] = [
   { slug: "koi-pond", name: "Koi Pond", description: "Leave a ripple. Stay a while.", medium: "Watercolor · Interactive simulation", hint: "Touch the water, feed the koi, or try another drawing medium.", interaction: "Tap the water", poster: "/experiments/koi-pond/art/poster.webp", inline: true },
   { slug: "keyspace", name: "Keyspace", description: "Small keys. A whole world.", medium: "Creative coding · Keyboard interaction", hint: "Scroll to transform. Type, drag, and make it your own.", interaction: "Drag or play the keys", poster: "/experiments/keyspace/globe.webp" },
+  { slug: "buffer-city", name: "Buffer City", description: "Nine neighborhoods. One inhabited drawing.", medium: "ASCII · Explorable 3D city", hint: "Click a street to walk there. WASD or arrows to walk, drag to orbit, scroll to zoom.", interaction: "Walk the streets", poster: "/experiments/buffer-city/poster.webp", url: "https://buffer-city.vercel.app/" },
   { slug: "cherry-blossom", name: "Cherry Blossom", description: "A quiet pool. A moment of spring.", medium: "WebGL · Water & light", hint: "Touch the water or drop a stone to send ripples through the petals.", interaction: "Touch to ripple", poster: "/experiments/cherry-blossom/assets/blossom-scene.webp" },
   { slug: "little-fizz", name: "Little Fizz", description: "Small friend. Big feelings.", medium: "WebGL · Playful physics", hint: "Move your pointer to lead the ice puppy. Tap for a little happy.", interaction: "Move, drag, or boop", poster: "/experiments/little-fizz/poster.webp" },
   { slug: "chill", name: "CHILL", description: "A little cherry. A little chill.", medium: "Blender · Animation", hint: "The original CHILL glass, ice, and pouring animation. Pause or replay to take your time.", interaction: "Glass, ice & a little fizz", poster: "/experiments/chill/poster.png", video: true, videoSrc: "/experiments/chill/chill-intro-hq.mp4" },
@@ -30,6 +33,7 @@ export const experiments: Experiment[] = [
 ];
 
 function demoUrl(experiment: Experiment, compact = false) {
+  if (experiment.url) return experiment.url;
   return `/experiments/${experiment.slug}/index.html${compact ? "?embed=card" : ""}`;
 }
 
@@ -41,8 +45,11 @@ export function PreviewFrame({ experiment, compact = false, frameRef }: { experi
     return () => clearTimeout(timer);
   }, []);
 
-  return <div className={`experiment-frame ${loaded ? "is-loaded" : ""}`}>
-    {!loaded && <div className="experiment-loading" role="status"><span />{slow ? "Taking a little longer…" : "Opening a small world…"}{slow && <a href={demoUrl(experiment)} target="_blank" rel="noreferrer">Open separately ↗</a>}</div>}
+  // Show the poster straight away, then fade the live demo in over it once it has loaded.
+  const poster = experiment.poster;
+  return <div className={`experiment-frame ${loaded ? "is-loaded" : ""} ${poster ? "has-poster" : ""}`}>
+    {poster && <img className="experiment-frame__poster" src={poster} alt="" />}
+    {!loaded && <div className="experiment-loading" role="status"><span />{slow ? "Taking a little longer…" : poster ? "Loading live demo…" : "Opening a small world…"}{slow && <a href={demoUrl(experiment)} target="_blank" rel="noreferrer">Open separately ↗</a>}</div>}
     <iframe ref={frameRef} src={`${demoUrl(experiment, compact)}${!compact && experiment.inline ? "?embed=expanded" : ""}`} title={`${experiment.name} ${compact ? "inline" : "expanded"} interactive preview`} loading="eager" onLoad={() => setLoaded(true)} />
   </div>;
 }

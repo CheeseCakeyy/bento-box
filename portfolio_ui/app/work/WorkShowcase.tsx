@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { experiments, ExperimentDialog, PreviewFrame, type Experiment } from "./WorkPreviews";
 
 function ComponentFilm({ experiment, active }: { experiment: Experiment; active: boolean }) {
@@ -61,7 +61,8 @@ function ExperimentCard({ experiment, onOpen, expanded, index }: { experiment: E
 
   return <article className={`experiment-card experiment-card--${experiment.slug}`} aria-labelledby={`component-${experiment.slug}`}>
     <div ref={stage} className="experiment-card__stage">
-      {experiment.video ? <ComponentFilm experiment={experiment} active={active && !expanded} /> : ready ? <PreviewFrame experiment={experiment} compact /> : <div className="component-awaiting" aria-hidden="true"><span /></div>}
+      {experiment.url ? <button type="button" className="experiment-external" onClick={onOpen} aria-label={`Open the live ${experiment.name} preview`}><img className="experiment-frame__poster" src={experiment.poster} alt="" /><span>Live site · click to explore <i aria-hidden="true">↗</i></span></button>
+        : experiment.video ? <ComponentFilm experiment={experiment} active={active && !expanded} /> : ready ? <PreviewFrame experiment={experiment} compact /> : experiment.poster ? <img className="experiment-frame__poster" src={experiment.poster} alt="" /> : <div className="component-awaiting" aria-hidden="true"><span /></div>}
     </div>
     <div className="experiment-card__caption">
       <div><h2 id={`component-${experiment.slug}`}><span>{String(index + 1).padStart(2, "0")}</span>{experiment.name}</h2><p>{experiment.interaction}</p></div>
@@ -70,7 +71,7 @@ function ExperimentCard({ experiment, onOpen, expanded, index }: { experiment: E
   </article>;
 }
 
-function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null; onSelect: (experiment: Experiment) => void }) {
+function ExperimentGallery({ selected, onSelect, focusSlug }: { selected: Experiment | null; onSelect: (experiment: Experiment) => void; focusSlug: string | null }) {
   const rail = useRef<HTMLDivElement>(null);
   const progress = useRef<HTMLSpanElement>(null);
   const scrollTo = useRef<(value: number, absolute?: boolean) => boolean>(() => false);
@@ -143,6 +144,8 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
       view.classList.remove("is-scrolling");
     };
     scrollTo.current = slide;
+    // Over the rail, any wheel (vertical included) moves it sideways. At either end slide() returns
+    // false, so the event falls through and the page carries on scrolling — nobody gets trapped.
     const wheel = (event: WheelEvent) => {
       if (event.ctrlKey) return;
       const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
@@ -174,6 +177,17 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
     };
   }, []);
 
+  // A teaser poster on the ML tab links straight to its card in the rail.
+  useEffect(() => {
+    const view = rail.current;
+    const index = experiments.findIndex((experiment) => experiment.slug === focusSlug);
+    const card = view?.children[index] as HTMLElement | undefined;
+    const first = view?.firstElementChild as HTMLElement | null;
+    if (!view || !card || !first) return;
+    const frame = requestAnimationFrame(() => scrollTo.current(card.offsetLeft - first.offsetLeft, true));
+    return () => cancelAnimationFrame(frame);
+  }, [focusSlug]);
+
   function move(direction: number) {
     const view = rail.current;
     const card = view?.firstElementChild as HTMLElement | null;
@@ -183,7 +197,7 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
   }
 
   return <div className="component-gallery">
-    <div className="showcase-section-note"><p>A little room for play.</p><span>Scroll sideways. Try something.</span></div>
+    <div className="showcase-section-note"><p>A little room for play.</p><span>Scroll over the cards to move sideways.</span></div>
     {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- A named scroll region supports arrow, Home, and End navigation. */}
     <div ref={rail} className="experiment-rail" role="region" aria-label="Interactive web components. Scroll sideways, swipe, or use the arrow buttons." tabIndex={0} onKeyDown={(event) => {
       if (event.target !== event.currentTarget) return;
@@ -200,18 +214,19 @@ function ExperimentGallery({ selected, onSelect }: { selected: Experiment | null
   </div>;
 }
 
-export default function WorkShowcase({ children }: { children: ReactNode }) {
-  const [tab, setTab] = useState<"ml" | "web">("ml");
+// Every project on one page: ML & systems first, then the web & interaction gallery.
+export default function WorkShowcase({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
   const [selected, setSelected] = useState<Experiment | null>(null);
-  const tabButtons = useRef<(HTMLButtonElement | null)[]>([]);
+  const [focusSlug, setFocusSlug] = useState<string | null>(null);
   const closePreview = useCallback(() => setSelected(null), []);
 
   useEffect(() => {
     const update = () => {
       const hash = window.location.hash;
-      setTab(hash === "#web" ? "web" : "ml");
-      // Deep links from the About page (#geohab, #competitions…) land on, and open, their section.
-      const target = hash.length > 1 && hash !== "#ml" && hash !== "#web" ? document.getElementById(hash.slice(1)) : null;
+      setFocusSlug(hash.startsWith("#web-") ? hash.slice(5) : null);
+      // Deep links (#geohab, #competitions, #web, #web-koi-pond…) land on, and open, their section.
+      const id = hash.startsWith("#web-") ? "web" : hash.slice(1);
+      const target = id ? document.getElementById(id) : null;
       if (!target) return;
       if (target instanceof HTMLDetailsElement) target.open = true;
       requestAnimationFrame(() => target.scrollIntoView({
@@ -224,31 +239,22 @@ export default function WorkShowcase({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("hashchange", update);
   }, []);
 
-  function choose(value: "ml" | "web") {
-    setTab(value);
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#${value}`);
-  }
-  function navigateTabs(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    if (event.altKey || event.ctrlKey || event.metaKey) return;
-    let next = index;
-    if (event.key === "ArrowRight" || event.key === "ArrowLeft") next = 1 - index;
-    else if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = 1;
-    else return;
-    event.preventDefault();
-    choose(next === 0 ? "ml" : "web");
-    tabButtons.current[next]?.focus();
-  }
-
   return <div className="work-showcase">
-    <div className="showcase-tabs" role="tablist" aria-label="Project categories">
-      {([{ id: "ml", label: "ML & systems", count: "03" }, { id: "web", label: "Web & interaction", count: String(experiments.length).padStart(2, "0") }] as const).map((item, index) => <button key={item.id} ref={(element) => { tabButtons.current[index] = element; }} type="button" role="tab" id={`work-tab-${item.id}`} aria-selected={tab === item.id} aria-controls={`work-panel-${item.id}`} tabIndex={tab === item.id ? 0 : -1} onClick={() => choose(item.id)} onKeyDown={(event) => navigateTabs(event, index)}>{item.label}<span>{item.count}</span></button>)}
-      <span className="showcase-tab-note" aria-hidden="true">Selected projects / 2026</span>
-    </div>
-    <section role="tabpanel" id="work-panel-ml" aria-labelledby="work-tab-ml" tabIndex={0} hidden={tab !== "ml"} className="showcase-panel showcase-panel--ml">{children}</section>
-    <section role="tabpanel" id="work-panel-web" aria-labelledby="work-tab-web" tabIndex={0} hidden={tab !== "web"} className="showcase-panel showcase-panel--web">
-      {tab === "web" && <ExperimentGallery selected={selected} onSelect={setSelected} />}
+    <section id="ml" className="showcase-section" aria-labelledby="ml-title">
+      <header className="showcase-section-heading">
+        <h2 id="ml-title">ML &amp; systems</h2>
+        <span>04</span>
+        <a href="#web" className="showcase-section-jump">Web &amp; interaction <span aria-hidden="true">↓</span></a>
+      </header>
+      {children}
     </section>
+    <section id="web" className="showcase-section showcase-section--web" aria-labelledby="web-title">
+      <header className="showcase-section-heading">
+        <h2 id="web-title">Web &amp; interaction</h2>
+        <span>{String(experiments.length).padStart(2, "0")}</span>      </header>
+      <ExperimentGallery selected={selected} onSelect={setSelected} focusSlug={focusSlug} />
+    </section>
+    {footer}
     {selected && <ExperimentDialog experiment={selected} onClose={closePreview} />}
   </div>;
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import CopyEmailButton from "../CopyEmailButton";
 import ThemeSwitcher from "../ThemeSwitcher";
+import ContactStatus from "./ContactStatus";
 
 export const metadata: Metadata = {
   title: "Contact — Adwait Tagalpallewar",
@@ -42,6 +43,7 @@ export default function ContactPage() {
             ))}
           </div>
         </section>
+        <ContactStatus />
       </main>
     </div>
   );
