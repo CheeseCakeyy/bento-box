@@ -207,7 +207,18 @@ export default function WorkShowcase({ children }: { children: ReactNode }) {
   const closePreview = useCallback(() => setSelected(null), []);
 
   useEffect(() => {
-    const update = () => setTab(window.location.hash === "#web" ? "web" : "ml");
+    const update = () => {
+      const hash = window.location.hash;
+      setTab(hash === "#web" ? "web" : "ml");
+      // Deep links from the About page (#geohab, #competitions…) land on, and open, their section.
+      const target = hash.length > 1 && hash !== "#ml" && hash !== "#web" ? document.getElementById(hash.slice(1)) : null;
+      if (!target) return;
+      if (target instanceof HTMLDetailsElement) target.open = true;
+      requestAnimationFrame(() => target.scrollIntoView({
+        block: "start",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      }));
+    };
     update();
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);

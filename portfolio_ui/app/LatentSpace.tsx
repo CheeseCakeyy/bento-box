@@ -36,10 +36,10 @@ function seededRandom(seed: number) {
 
 function createPoints(seed: number) {
   const random = seededRandom(seed);
-  return Array.from({ length: 72 }, (_, index): LatentPoint => ({
+  return Array.from({ length: 126 }, (_, index): LatentPoint => ({
     cluster: index % clusterNames.length,
     angle: random() * Math.PI * 2,
-    radius: 0.025 + random() * 0.13,
+    radius: 0.03 + random() * random() * 0.2,
     size: 1.2 + random() * 2.2,
     drift: 0.14 + random() * 0.32,
     phase: random() * Math.PI * 2,
@@ -70,6 +70,8 @@ export default function LatentSpace() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let width = 1;
     let height = 1;
+    // Point size and link reach grow with the tile, so a wide tile reads as a field, not a speck.
+    let scale = 1;
     let animationFrame = 0;
     let separation = activeRef.current ? 1 : 0;
     let palette = {
@@ -93,6 +95,7 @@ export default function LatentSpace() {
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
+      scale = Math.min(1.8, Math.max(1, Math.min(width, height) / 260));
       canvas.width = Math.round(width * pixelRatio);
       canvas.height = Math.round(height * pixelRatio);
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -109,7 +112,7 @@ export default function LatentSpace() {
         const centerX = (resting[0] + (expanded[0] - resting[0]) * separation) * width;
         const centerY = (resting[1] + (expanded[1] - resting[1]) * separation) * height;
         const motion = reduceMotion ? 0 : time * 0.00018 * point.drift;
-        const radius = point.radius * Math.min(width, height) * (0.7 + separation * 0.3);
+        const radius = point.radius * Math.min(width, height) * (0.85 + separation * 0.35);
         let x = centerX + Math.cos(point.angle + motion + point.phase) * radius;
         let y = centerY + Math.sin(point.angle + motion * 1.3 + point.phase) * radius * 0.72;
 
@@ -138,8 +141,9 @@ export default function LatentSpace() {
           const second = positions[j];
           if (first.cluster !== second.cluster) continue;
           const distance = Math.hypot(first.x - second.x, first.y - second.y);
-          if (distance > 44) continue;
-          context.globalAlpha = (1 - distance / 44) * (0.14 + separation * 0.18);
+          const reach = 44 * scale;
+          if (distance > reach) continue;
+          context.globalAlpha = (1 - distance / reach) * (0.14 + separation * 0.18);
           context.beginPath();
           context.moveTo(first.x, first.y);
           context.lineTo(second.x, second.y);
@@ -151,7 +155,7 @@ export default function LatentSpace() {
         context.globalAlpha = 0.38 + separation * 0.46;
         context.fillStyle = point.cluster === 0 ? palette.accent : palette.point;
         context.beginPath();
-        context.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+        context.arc(point.x, point.y, point.size * scale, 0, Math.PI * 2);
         context.fill();
       });
       context.globalAlpha = 1;

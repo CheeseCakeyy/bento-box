@@ -172,7 +172,7 @@
     <canvas id="stage"></canvas>
 
     <div class="hud" id="edition">
-      Interactive record<br /><b>Tracks 01 &mdash; 10</b>
+      <span id="editionLabel">Tap a cover to play</span><br /><b id="editionTitle">Tracks 01 &mdash; 10</b>
     </div>
 
     <div class="hud" id="counter">
@@ -184,7 +184,7 @@
 
     <div class="hud" id="hint">
       <div class="dot"></div>
-      <span id="hintText">Move to steer &mdash; hold to boost &mdash; click to pause</span>
+      <span id="hintText">Tap a cover to play &mdash; hold to boost</span>
     </div>
 
     <script src="/paper-roll/vendor/three.min.js"></script>
@@ -333,7 +333,21 @@
           if (event.data && event.data.type === "portfolio-theme") {
             applyTheme(event.data.theme);
           }
+          if (event.data && event.data.type === "songs:active") {
+            showActiveTrack(Number(event.data.index), Boolean(event.data.playing));
+          }
         });
+
+        // The page owns the audio; the roll only reports which cover was tapped.
+        var editionLabel = document.getElementById("editionLabel");
+        var editionTitle = document.getElementById("editionTitle");
+        function showActiveTrack(index, playing) {
+          var track = TRACKS[index];
+          if (!track) return;
+          editionLabel.textContent =
+            (playing ? "Now playing" : "Selected") + " · " + String(index + 1).padStart(2, "0");
+          editionTitle.textContent = track.title;
+        }
 
         try {
           new MutationObserver(function () {
@@ -1242,6 +1256,49 @@
         var lastPointerT = -1e9;
         var autoAngle = Math.PI * 0.25;
 
+        // ---- cover picking: which printed album sits under the pointer ----
+        var pickRay = new THREE.Raycaster();
+        var pickNdc = new THREE.Vector2();
+        var pickTargets = [barrel, capR, capL, ribbon];
+        var pointerInside = false;
+        var hoverX = 0,
+          hoverY = 0,
+          hoveredTrack = -1,
+          hoverFrame = 0;
+
+        function pickTrack(x, y) {
+          pickNdc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+          pickRay.setFromCamera(pickNdc, camera);
+          // The ribbon is rebuilt in place every frame, so its bounds go stale.
+          ribbonGeo.computeBoundingSphere();
+          var hits = pickRay.intersectObjects(pickTargets, false);
+          if (!hits.length || !hits[0].uv) return -1;
+          var hitInfo = hits[0];
+          if (hitInfo.object !== barrel && hitInfo.object !== ribbon) return -1;
+          // Ignore the tail of the trail, which has already dissolved into the floor.
+          if (hitInfo.object === ribbon && hitInfo.face && sArr[hitInfo.face.a] < uTailS.value + 2.0) return -1;
+          var u = hitInfo.uv.x + (hitInfo.object === barrel ? barrelTex.offset.x : 0);
+          u -= Math.floor(u);
+          return Math.min(ATLAS_N - 1, Math.floor(u * ATLAS_N));
+        }
+
+        function selectTrack(index) {
+          window.parent.postMessage({ type: "songs:select", index: index }, window.location.origin);
+          showHint("Playing &mdash; " + TRACKS[index].title, 2.2);
+        }
+
+        function updateHover() {
+          var track = pointerInside ? pickTrack(hoverX, hoverY) : -1;
+          if (track === hoveredTrack) return;
+          hoveredTrack = track;
+          canvas.style.cursor = track >= 0 ? "pointer" : "";
+          if (track >= 0) showHint("Tap to play &mdash; " + TRACKS[track].title, 1.6);
+        }
+
+        document.documentElement.addEventListener("pointerleave", function () {
+          pointerInside = false;
+        });
+
         function onPointer(e) {
           var x = e.clientX,
             y = e.clientY;
@@ -1254,6 +1311,11 @@
           ndc.y = -(y / window.innerHeight) * 2 + 1;
           pointerActive = true;
           lastPointerT = performance.now();
+          if (e.pointerType === "mouse") {
+            pointerInside = true;
+            hoverX = x;
+            hoverY = y;
+          }
         }
         window.addEventListener("pointermove", onPointer, { passive: true });
         window.addEventListener("pointerdown", onPointer, { passive: true });
@@ -1292,9 +1354,9 @@
         function setPaused(p) {
           paused = p;
           if (paused) {
-            showHint("Paused &mdash; click anywhere to resume", 0);
+            showHint("Paused &mdash; tap the floor to resume", 0);
           } else {
-            showHint("Cruising &mdash; hold to boost &mdash; click to pause", 2.6);
+            showHint("Cruising &mdash; tap a cover to play", 2.6);
           }
         }
 
@@ -1345,7 +1407,9 @@
             var wasBoosting = boostActive;
             releaseBoost(wasBoosting);
             if (!wasBoosting && dx * dx + dy * dy < 64 && performance.now() - downT < 450) {
-              setPaused(!paused);
+              var track = pickTrack(e.clientX, e.clientY);
+              if (track >= 0) selectTrack(track);
+              else setPaused(!paused);
             }
           },
           { passive: true },
@@ -1474,6 +1538,9 @@
           updateHUD();
 
           renderer.render(scene, camera);
+          // Covers keep moving under a still pointer, so re-check a few times a second.
+          hoverFrame = (hoverFrame + 1) % 6;
+          if (hoverFrame === 0) updateHover();
         }
 
         window.addEventListener("resize", function () {
@@ -1502,6 +1569,7 @@
         });
 
         frame();
+        window.parent.postMessage({ type: "songs:ready" }, window.location.origin);
       })();
     </script>
   </body>

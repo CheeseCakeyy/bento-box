@@ -82,18 +82,37 @@ function getPipeline(pipelineId: PipelineId) {
   return PIPELINES.find((pipeline) => pipeline.id === pipelineId) ?? PIPELINES[0];
 }
 
+// The first challenge arrives nearly built, so the one missing stage explains the game.
+const STARTER = getPipeline("rag");
+const STARTER_SLOTS = STARTER.modules.map((module, index) => (index < STARTER.modules.length - 1 ? module.id : null));
+const STARTER_PREVIEW = STARTER.modules.map((module, index) => ({
+  position: String(index + 1).padStart(2, "0"),
+  label: module.shortLabel,
+  missing: index === STARTER.modules.length - 1,
+}));
+
+function PreviewStage({ stage }: { stage: (typeof STARTER_PREVIEW)[number] }) {
+  return (
+    <i className={stage.missing ? "is-missing" : ""}>
+      <b>{stage.position}</b>
+      <span>{stage.missing ? "Missing stage" : stage.label}</span>
+      {stage.missing && <em className="pipeline-launch__question">?</em>}
+    </i>
+  );
+}
+
 export default function PipelineBuilder() {
   const [hasStarted, setHasStarted] = useState(false);
   const [pipelineId, setPipelineId] = useState<PipelineId>("rag");
   const activePipeline = useMemo(() => getPipeline(pipelineId), [pipelineId]);
-  const [slots, setSlots] = useState<Array<string | null>>(() => Array(getPipeline("rag").modules.length).fill(null));
+  const [slots, setSlots] = useState<Array<string | null>>(STARTER_SLOTS);
   const [moduleOrder, setModuleOrder] = useState<string[]>(() => getPipeline("rag").initialOrder);
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [draggedModule, setDraggedModule] = useState<string | null>(null);
   const [hoveredSlot, setHoveredSlot] = useState<number | null>(null);
   const [wrongSlot, setWrongSlot] = useState<number | null>(null);
   const [lastPlacedSlot, setLastPlacedSlot] = useState<number | null>(null);
-  const [status, setStatus] = useState("Select a module, then choose its position.");
+  const [status, setStatus] = useState("Five stages are locked. Find the missing module and place it in stage 06.");
   const feedbackTimerRef = useRef<number | null>(null);
 
   const placedModules = useMemo(
@@ -102,6 +121,7 @@ export default function PipelineBuilder() {
   );
   const placedCount = placedModules.size;
   const complete = placedCount === activePipeline.modules.length;
+  const lastOpenSlot = placedCount === activePipeline.modules.length - 1 ? slots.indexOf(null) : -1;
 
   useEffect(
     () => () => {
@@ -196,7 +216,7 @@ export default function PipelineBuilder() {
     return (
       <button
         key={`slot-${position}`}
-        className={`pipeline-slot pipeline-slot--${position} ${pipelineModule ? "is-filled" : ""} ${wrongSlot === slotIndex ? "is-wrong" : ""} ${lastPlacedSlot === slotIndex ? "is-locking" : ""} ${hoveredSlot === slotIndex ? "is-hovered" : ""}`}
+        className={`pipeline-slot pipeline-slot--${position} ${pipelineModule ? "is-filled" : ""} ${wrongSlot === slotIndex ? "is-wrong" : ""} ${lastPlacedSlot === slotIndex ? "is-locking" : ""} ${hoveredSlot === slotIndex ? "is-hovered" : ""} ${lastOpenSlot === slotIndex ? "is-target" : ""}`}
         type="button"
         aria-label={
           pipelineModule
@@ -241,26 +261,27 @@ export default function PipelineBuilder() {
           </span>
 
           <span className="pipeline-launch__preview" aria-hidden="true">
+            <span className="pipeline-launch__preview-caption">{STARTER.label} · 5 / 6 placed</span>
             <span className="pipeline-launch__preview-row">
-              <i><b /></i><em>→</em><i><b /></i>
+              <PreviewStage stage={STARTER_PREVIEW[0]} /><em>→</em><PreviewStage stage={STARTER_PREVIEW[1]} />
             </span>
             <span className="pipeline-launch__preview-turn">↓</span>
             <span className="pipeline-launch__preview-row is-reversed">
-              <i><b /></i><em>←</em><i><b /></i>
+              <PreviewStage stage={STARTER_PREVIEW[3]} /><em>←</em><PreviewStage stage={STARTER_PREVIEW[2]} />
             </span>
             <span className="pipeline-launch__preview-turn is-left">↓</span>
             <span className="pipeline-launch__preview-row">
-              <i><b /></i><em>→</em><i><b /></i>
+              <PreviewStage stage={STARTER_PREVIEW[4]} /><em>→</em><PreviewStage stage={STARTER_PREVIEW[5]} />
             </span>
           </span>
 
           <span className="pipeline-launch__copy">
             <span>
-              <small>From my project workflow</small>
-              <strong>Try completing the pipelines behind my projects</strong>
-              <span>RAG · ML · Agile lifecycles</span>
+              <small>One stage is missing</small>
+              <strong>Can you finish the pipeline?</strong>
+              <span>Then try the ML &amp; Agile lifecycles</span>
             </span>
-            <span className="pipeline-launch__action">Explore the flows <i aria-hidden="true">↗</i></span>
+            <span className="pipeline-launch__action">Place the last stage <i aria-hidden="true">↗</i></span>
           </span>
         </button>
       ) : (
