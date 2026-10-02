@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { clickSoundEnabled, playClickSound, setClickSoundEnabled } from "./clickSound";
 
 type Theme = "dark" | "light" | "system";
 type Accent = "red" | "green" | "blue";
@@ -17,6 +18,7 @@ export default function ThemeSwitcher() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [accent, setAccent] = useState<Accent | null>(null);
   const [cycling, setCycling] = useState(false);
+  const [sound, setSound] = useState(true);
   const nextAccent = accents[(accents.indexOf(accent) + 1) % accents.length];
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const accentRestored = useRef(false);
@@ -56,6 +58,7 @@ export default function ThemeSwitcher() {
     if (savedAccent && accents.includes(savedAccent)) {
       setAccent(savedAccent);
     }
+    setSound(clickSoundEnabled());
   }, []);
 
   useEffect(() => {
@@ -118,6 +121,25 @@ export default function ThemeSwitcher() {
         onClick={() => setAccent(nextAccent)}
       >
         <span className="theme-accent__dot" aria-hidden="true" />
+      </button>
+      <button
+        className={`theme-sound ${sound ? "is-active" : ""}`}
+        type="button"
+        aria-label={sound ? "Mute click sounds" : "Turn on click sounds"}
+        aria-pressed={sound}
+        title={sound ? "Click sounds on" : "Click sounds off"}
+        onClick={() => {
+          setClickSoundEnabled(!sound);
+          if (!sound) playClickSound(true);
+          setSound(!sound);
+        }}
+      >
+        <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+          <path d="M3.5 7.5h3l4-3.5v12l-4-3.5h-3z" fill="currentColor" />
+          {sound
+            ? <><path d="M13.2 7.2a4 4 0 0 1 0 5.6" /><path d="M15.4 5a7 7 0 0 1 0 10" /></>
+            : <path d="M13.5 7.5l5 5m0-5l-5 5" />}
+        </svg>
       </button>
     </div>
   );

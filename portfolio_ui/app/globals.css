@@ -351,6 +351,13 @@ a:focus-visible {
   opacity: 1;
 }
 
+.theme-sound svg path + path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
 .theme-indicator {
   position: absolute;
   top: 4px;
